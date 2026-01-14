@@ -2,6 +2,8 @@
 
 namespace ModularityNoticeboard;
 
+use ModularityNoticeboard\Data\Posttype;
+
 class Noticeboard extends \Modularity\Module
 {
     public $slug = 'noticeboard';
@@ -19,11 +21,96 @@ class Noticeboard extends \Modularity\Module
     public function data(): array
     {
         $fields = $this->getFields();
-        $data = [];
 
-        $data['post'];
+        $data = [
+            'groupByNoticeType' => !empty($fields['group_by_notice_type']) ? $fields['group_by_notice_type'] : true,
+        ];
+
+        $data['notices'] = $this->getNotices($data['groupByNoticeType']);
 
         return $data;
+    }
+
+    public function getNotices($groupByNoticeType = true)
+    {
+        $postType = Posttype::NOTICE_POST_TYPE;
+        $taxonomy = Posttype::NOTICE_TAXONOMY;
+
+        $args = [
+            'post_type' => $postType,
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'orderby' => 'post_date',
+            'order' => 'DESC',
+        ];
+
+        $query = new \WP_Query($args);
+        $posts = $query->posts ?: [];
+
+        // Helper to map a WP_Post to an array used by the view
+        $map_post = function($p) {
+            return [
+                'ID' => $p->ID,
+                'title' => get_the_title($p),
+                'excerpt' => get_the_excerpt($p),
+                'content' => apply_filters('the_content', $p->post_content),
+                'date' => get_the_date('', $p),
+                'post_date' => $p->post_date,
+                'permalink' => get_permalink($p),
+                'post' => $p,
+            ];
+        };
+
+        if (!$groupByNoticeType) {
+            $result = array_map($map_post, $posts);
+            wp_reset_postdata();
+            return $result;
+        }
+
+        // Group by taxonomy terms
+        $groups = [];
+
+        foreach ($posts as $p) {
+            $terms = wp_get_post_terms($p->ID, $taxonomy);
+
+            if (is_wp_error($terms) || empty($terms)) {
+                $tid = 0;
+                if (!isset($groups[$tid])) {
+                    $groups[$tid] = [
+                        'term' => [
+                            'term_id' => 0,
+                            'name' => '',
+                            'description' => '',
+                            'slug' => '',
+                        ],
+                        'notices' => [],
+                    ];
+                }
+                $groups[$tid]['notices'][] = $map_post($p);
+                continue;
+            }
+
+            foreach ($terms as $t) {
+                $tid = intval($t->term_id);
+                if (!isset($groups[$tid])) {
+                    $groups[$tid] = [
+                        'term' => [
+                            'term_id' => $t->term_id,
+                            'name' => $t->name,
+                            'description' => $t->description,
+                            'slug' => $t->slug,
+                        ],
+                        'notices' => [],
+                    ];
+                }
+                $groups[$tid]['notices'][] = $map_post($p);
+            }
+        }
+
+        wp_reset_postdata();
+
+        // Convert associative groups to indexed array and return
+        return array_values($groups);
     }
 
     /**

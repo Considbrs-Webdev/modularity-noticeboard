@@ -13,6 +13,10 @@ class ACF
 
         // Remove field groups from taxonomies
         add_filter('acf/load_field_group', [$this, 'removeTaxonomyFieldgroups'], 10, 1);
+        
+        // Admin scripts for auto-filling unarchive date
+        add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
+        add_action('wp_ajax_modularity_noticeboard_get_term_archiving', [$this, 'ajax_get_term_archiving']);
     }
 
     public function removePosttypeFieldgroups($field_group) {
@@ -72,6 +76,68 @@ class ACF
         }
 
         return $field_group;
+    }
+
+    /**
+     * Enqueue admin JS for notice editing screens
+     */
+    public function enqueueAdminScripts()
+    {
+        if (!is_admin()) {
+            return;
+        }
+
+        if (!function_exists('get_current_screen')) {
+            return;
+        }
+
+        $screen = get_current_screen();
+        if (!$screen || empty($screen->post_type)) {
+            return;
+        }
+
+        if ($screen->post_type !== Posttype::NOTICE_POST_TYPE) {
+            return;
+        }
+
+        $handle = 'modularity-noticeboard-admin-archiving';
+        $src = MODULARITY_NOTICEBOARD_URL . '/source/js/admin-archiving.js';
+        $deps = ['jquery', 'acf-input'];
+        $ver = file_exists(MODULARITY_NOTICEBOARD_PATH . 'source/js/admin-archiving.js') ? filemtime(MODULARITY_NOTICEBOARD_PATH . 'source/js/admin-archiving.js') : false;
+        wp_enqueue_script($handle, $src, $deps, $ver, true);
+        wp_localize_script($handle, 'modularityNoticeboard', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('modularity_noticeboard_archiving'),
+        ]);
+    }
+
+    /**
+     * AJAX endpoint to return archiving settings for a taxonomy term
+     */
+    public function ajax_get_term_archiving()
+    {
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error('forbidden', 403);
+        }
+
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['nonce']), 'modularity_noticeboard_archiving')) {
+            wp_send_json_error('invalid_nonce', 403);
+        }
+
+        $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+        if (!$term_id) {
+            wp_send_json_error('invalid_term', 400);
+        }
+
+        $taxonomy = Posttype::NOTICE_TAXONOMY;
+
+        $automatic = get_field('automatic_archiving', $taxonomy . '_' . $term_id);
+        $days = get_field('archiving_days', $taxonomy . '_' . $term_id);
+
+        wp_send_json_success([
+            'automatic' => (bool) $automatic,
+            'days' => intval($days),
+        ]);
     }
 
     /**
