@@ -132,11 +132,18 @@ class ACF
         $taxonomy = Posttype::NOTICE_TAXONOMY;
 
         $automatic = get_field('automatic_archiving', $taxonomy . '_' . $term_id);
-        $days = get_field('archiving_days', $taxonomy . '_' . $term_id);
+        $days = intval(get_field('archiving_days', $taxonomy . '_' . $term_id));
+
+        $unarchive_date = null;
+        if ($automatic && $days > 0) {
+            $ts = current_time('timestamp');
+            $unarchive_date = date('Y-m-d', $ts + ($days * DAY_IN_SECONDS));
+        }
 
         wp_send_json_success([
             'automatic' => (bool) $automatic,
-            'days' => intval($days),
+            'days' => $days,
+            'unarchive_date' => $unarchive_date,
         ]);
     }
 

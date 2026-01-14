@@ -86,7 +86,16 @@
         function onTermSelected(val){
             if(!val) { return; }
             fetchTermArchiving(val, function(data){
-                if(!data || !data.automatic || !data.days) { return; }
+                if(!data) { return; }
+
+                // Prefer server-calculated unarchive_date
+                if(data.unarchive_date) {
+                    setUnarchiveDate(unarchiveFieldKey, unarchiveField, data.unarchive_date);
+                    return;
+                }
+
+                // Fallback: compute client-side when server did not provide a date
+                if(!data.automatic || !data.days) { return; }
                 var days = parseInt(data.days, 10);
                 if(isNaN(days) || days <= 0) { return; }
                 var d = new Date();
