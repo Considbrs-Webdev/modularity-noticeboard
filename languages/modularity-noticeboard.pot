@@ -1,0 +1,116 @@
+# Copyright (C) 2026 Consid Borås AB
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: Modularity Noticeboard 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/modularity-noticeboard\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-01-14T13:04:39+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: modularity-noticeboard\n"
+
+#. Plugin Name of the plugin
+#: modularity-noticeboard.php
+msgid "Modularity Noticeboard"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: modularity-noticeboard.php
+msgid "https://github.com/considbrs-webdev/modularity-noticeboard.git"
+msgstr ""
+
+#. Description of the plugin
+#: modularity-noticeboard.php
+msgid "A Modularity module that implements a municipal digital noticeboard for publishing legally binding public notices—meeting summons, agendas, adjusted minutes and decisions—replacing the physical noticeboard, managing appeal deadlines under municipal law, and providing accessible, auditable, and integratable publication workflows."
+msgstr ""
+
+#. Author of the plugin
+#: modularity-noticeboard.php
+msgid "Consid Borås AB"
+msgstr ""
+
+#. Author URI of the plugin
+#: modularity-noticeboard.php
+msgid "https://github.com/considbrs-webdev"
+msgstr ""
+
+#: source/php/Data/Posttype.php:19
+msgctxt "Post type general name"
+msgid "Notices"
+msgstr ""
+
+#: source/php/Data/Posttype.php:20
+msgctxt "Post type singular name"
+msgid "Notice"
+msgstr ""
+
+#: source/php/Data/Posttype.php:21
+msgctxt "Admin Menu name"
+msgid "Notices"
+msgstr ""
+
+#: source/php/Data/Posttype.php:22
+msgctxt "Add New on Toolbar"
+msgid "Notice"
+msgstr ""
+
+#: source/php/Data/Posttype.php:23
+msgid "Add New"
+msgstr ""
+
+#: source/php/Data/Posttype.php:24
+msgid "Add New Notice"
+msgstr ""
+
+#: source/php/Data/Posttype.php:25
+msgid "New Notice"
+msgstr ""
+
+#: source/php/Data/Posttype.php:26
+msgid "Edit Notice"
+msgstr ""
+
+#: source/php/Data/Posttype.php:27
+msgid "View Notice"
+msgstr ""
+
+#: source/php/Data/Posttype.php:28
+msgid "All Notices"
+msgstr ""
+
+#: source/php/Data/Posttype.php:29
+msgid "Search Notices"
+msgstr ""
+
+#: source/php/Data/Posttype.php:30
+msgid "Parent Notices:"
+msgstr ""
+
+#: source/php/Data/Posttype.php:31
+msgid "No notices found."
+msgstr ""
+
+#: source/php/Data/Posttype.php:32
+msgid "No notices found in Trash."
+msgstr ""
+
+#: source/php/Data/Posttype.php:33
+msgid "Notice archives"
+msgstr ""
+
+#: source/php/Module/Noticeboard.php:14
+msgid "Noticeboard"
+msgstr ""
+
+#: source/php/Module/Noticeboard.php:15
+msgid "Noticeboards"
+msgstr ""
+
+#: source/php/Module/Noticeboard.php:16
+msgid "Display noticeboard messages"
+msgstr ""

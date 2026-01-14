@@ -1,0 +1,110 @@
+<?php 
+
+if (function_exists('acf_add_local_field_group')) {
+    acf_add_local_field_group(array(
+    'key' => 'group_69679a7feea9d',
+    'title' => __('Noticeboard: Notice settings', 'modularity-toc'),
+    'fields' => array(
+        0 => array(
+            'key' => 'field_69679b0c8b9bf',
+            'label' => __('Notice type', 'modularity-toc'),
+            'name' => 'notice_type',
+            'aria-label' => '',
+            'type' => 'taxonomy',
+            'instructions' => '',
+            'required' => 1,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'taxonomy' => 'noticeboard_notice_type',
+            'add_term' => 0,
+            'save_terms' => 0,
+            'load_terms' => 0,
+            'return_format' => 'id',
+            'field_type' => 'select',
+            'allow_null' => 0,
+            'acfe_bidirectional' => array(
+                'acfe_bidirectional_enabled' => '0',
+            ),
+            'allow_in_bindings' => 0,
+            'bidirectional' => 0,
+            'multiple' => 0,
+            'bidirectional_target' => array(
+            ),
+        ),
+        1 => array(
+            'key' => 'field_69679a808b9be',
+            'label' => __('Unarchive date', 'modularity-toc'),
+            'name' => 'unarchive_date',
+            'aria-label' => '',
+            'type' => 'date_picker',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'display_format' => 'Y-m-d',
+            'return_format' => 'Y-m-d',
+            'first_day' => 1,
+            'default_to_current_date' => 0,
+            'allow_in_bindings' => 0,
+        ),
+        2 => array(
+            'key' => 'field_69679b488b9c0',
+            'label' => __('Protocol / PDF', 'modularity-toc'),
+            'name' => 'pdf_file',
+            'aria-label' => '',
+            'type' => 'link',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'return_format' => 'url',
+            'allow_in_bindings' => 0,
+        ),
+    ),
+    'location' => array(
+        0 => array(
+            0 => array(
+                'param' => 'post_type',
+                'operator' => '==',
+                'value' => 'noticeboard_notice',
+            ),
+        ),
+    ),
+    'menu_order' => 0,
+    'position' => 'side',
+    'style' => 'default',
+    'label_placement' => 'left',
+    'instruction_placement' => 'label',
+    'hide_on_screen' => array(
+        0 => 'discussion',
+        1 => 'comments',
+        2 => 'revisions',
+        3 => 'format',
+        4 => 'page_attributes',
+        5 => 'featured_image',
+        6 => 'categories',
+    ),
+    'active' => true,
+    'description' => '',
+    'show_in_rest' => 0,
+    'display_title' => '',
+    'acfe_autosync' => array(
+        0 => 'json',
+    ),
+    'acfe_form' => 0,
+    'acfe_meta' => '',
+    'acfe_note' => '',
+));
+}
