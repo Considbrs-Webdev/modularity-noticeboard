@@ -11,6 +11,7 @@ class Posttype {
     {
         add_action('init', [$this, 'register_post_type']);
         add_action('init', [$this, 'register_taxonomy']);
+        add_action('add_meta_boxes', [$this, 'remove_taxonomy_meta_box'], 11);
     }
 
     /**
@@ -88,6 +89,14 @@ class Posttype {
         ];
 
         register_taxonomy(self::NOTICE_TAXONOMY, [self::NOTICE_POST_TYPE], $args);
+    }
+
+    /**
+     * Remove the taxonomy meta box since ACF handles the term selection.
+     */
+    public function remove_taxonomy_meta_box()
+    {
+        remove_meta_box(self::NOTICE_TAXONOMY . 'div', self::NOTICE_POST_TYPE, 'side');
     }
 
 }

@@ -22,6 +22,7 @@ class ACF
             'group_56d83cff12bb3', // Navigation settings
             'group_6784bb5c51d70', // Post icon
             'group_64227d79a7f57', // Quick links
+            'group_591c10ab88d77', // Feedback forwarding
         ];
 
         // Target this specific field group
@@ -29,12 +30,41 @@ class ACF
             return $field_group;
         }
 
-        // Only on post type edit screens
-        if (!is_admin() || empty($_GET['post_type'])) {
+        // Only on post type edit screens or during ACF AJAX loads
+        if (!is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
             return $field_group;
         }
 
-        $postType = sanitize_text_field($_GET['post_type']);
+        $postType = '';
+
+        // Priority sources for post type
+        if (!empty($_REQUEST['post_type'])) {
+            $postType = sanitize_text_field($_REQUEST['post_type']);
+        } elseif (!empty($_GET['post_type'])) {
+            $postType = sanitize_text_field($_GET['post_type']);
+        } elseif (!empty($_GET['post'])) {
+            $post_id = intval($_GET['post']);
+            $postType = get_post_type($post_id) ?: '';
+        } elseif (!empty($_REQUEST['post_id'])) {
+            $raw = $_REQUEST['post_id'];
+            if (is_string($raw) && strpos($raw, 'post_') === 0) {
+                $post_id = intval(substr($raw, 5));
+            } else {
+                $post_id = intval($raw);
+            }
+            if ($post_id) {
+                $postType = get_post_type($post_id) ?: '';
+            }
+        } elseif (function_exists('get_current_screen')) {
+            $screen = get_current_screen();
+            if ($screen && !empty($screen->post_type)) {
+                $postType = sanitize_text_field($screen->post_type);
+            }
+        }
+
+        if (empty($postType)) {
+            return $field_group;
+        }
 
         // Disable for specific post type
         if ($postType === Posttype::NOTICE_POST_TYPE) {

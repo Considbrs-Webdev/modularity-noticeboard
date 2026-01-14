@@ -24,6 +24,9 @@ class App
 
         // ACF customisation
         new Admin\ACF();
+
+        // Admin configuration (remove unwanted publish meta/actions)
+        new Admin\Config();
     }
 
     /**
