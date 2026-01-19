@@ -12,7 +12,13 @@ class Posttype {
     {
         add_action('init', [$this, 'register_post_type']);
         add_action('init', [$this, 'register_taxonomy']);
+
         add_action('add_meta_boxes', [$this, 'remove_taxonomy_meta_box'], 11);
+
+        add_filter('post_type_link', [$this, 'filter_post_permalink'], 10, 2);
+        add_filter('the_content', [$this, 'append_protocol_link'], 20);
+        
+        
     }
 
     /**
@@ -123,6 +129,69 @@ class Posttype {
     {
         remove_meta_box('tags' . 'div' . '-' . self::NOTICE_TAXONOMY, self::NOTICE_POST_TYPE, 'side');
         remove_meta_box('tags' . 'div' . '-' . self::NOTICE_GROUP_TAXONOMY, self::NOTICE_POST_TYPE, 'side');
+    }
+
+    /**
+     * Filter the permalink for notices.
+     * Return the regular permalink if the post has content, otherwise return the pdf file field.
+     */
+    public function filter_post_permalink($post_link, $post)
+    {
+        if (is_numeric($post)) {
+            $post = get_post($post);
+        }
+
+        if (! $post || $post->post_type !== self::NOTICE_POST_TYPE) {
+            return $post_link;
+        }
+
+        if (isset($post->post_content) && trim((string) $post->post_content) !== '') {
+            return $post_link;
+        }
+
+        $pdf = function_exists('get_field') ? get_field('pdf_file', $post->ID) : '';
+
+        if (! empty($pdf)) {
+            return $pdf;
+        }
+
+        return $post_link;
+    }
+
+    /**
+     * Append a protocol link to the end of the content for notices that have content.
+     */
+    public function append_protocol_link($content)
+    {
+        if (is_admin()) {
+            return $content;
+        }
+
+        global $post;
+
+        if (! $post || $post->post_type !== self::NOTICE_POST_TYPE) {
+            return $content;
+        }
+
+        if (! isset($post->post_content) || trim((string) $post->post_content) === '') {
+            return $content;
+        }
+
+        $pdf = function_exists('get_field') ? get_field('pdf_file', $post->ID) : '';
+
+        if (empty($pdf)) {
+            return $content;
+        }
+
+        $link_text = __('Link to protocol (PDF)', 'modularity-noticeboard');
+
+        $append = sprintf(
+            '<p class="notice-protocol"><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
+            esc_url($pdf),
+            esc_html($link_text)
+        );
+
+        return $content . $append;
     }
 
 }
