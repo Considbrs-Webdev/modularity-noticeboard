@@ -57,6 +57,35 @@
             'prepend' => '',
             'append' => __('days', 'modularity-toc'),
         ),
+        2 => array(
+            'key' => 'field_696de06fdcf52',
+            'label' => __('Only count work days', 'modularity-toc'),
+            'name' => 'only_count_work_days',
+            'aria-label' => '',
+            'type' => 'true_false',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => array(
+                0 => array(
+                    0 => array(
+                        'field' => 'field_696798e397f46',
+                        'operator' => '==',
+                        'value' => '1',
+                    ),
+                ),
+            ),
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'message' => '',
+            'default_value' => 0,
+            'allow_in_bindings' => 0,
+            'ui_on_text' => '',
+            'ui_off_text' => '',
+            'ui' => 1,
+        ),
     ),
     'location' => array(
         0 => array(

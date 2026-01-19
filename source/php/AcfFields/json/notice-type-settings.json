@@ -53,6 +53,35 @@
             "step": 1,
             "prepend": "",
             "append": "days"
+        },
+        {
+            "key": "field_696de06fdcf52",
+            "label": "Only count work days",
+            "name": "only_count_work_days",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_696798e397f46",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
         }
     ],
     "location": [

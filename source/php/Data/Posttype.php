@@ -6,6 +6,7 @@ class Posttype {
 
     public const NOTICE_POST_TYPE = 'noticeboard_notice';
     public const NOTICE_TAXONOMY = 'noticeboard_notice_type';
+    public const NOTICE_GROUP_TAXONOMY = 'notice_group';
 
     public function __construct()
     {
@@ -65,21 +66,21 @@ class Posttype {
     public function register_taxonomy()
     {
         $labels = [
-            'name'                       => _x('Notice types', 'Taxonomy general name', 'modularity-noticeboard'),
-            'singular_name'              => _x('Notice type', 'Taxonomy singular name', 'modularity-noticeboard'),
-            'search_items'               => __('Search notice types', 'modularity-noticeboard'),
-            'all_items'                  => __('All notice types', 'modularity-noticeboard'),
-            'parent_item'                => __('Parent notice type', 'modularity-noticeboard'),
-            'parent_item_colon'          => __('Parent notice type:', 'modularity-noticeboard'),
-            'edit_item'                  => __('Edit notice type', 'modularity-noticeboard'),
-            'update_item'                => __('Update notice type', 'modularity-noticeboard'),
-            'add_new_item'               => __('Add new notice type', 'modularity-noticeboard'),
-            'new_item_name'              => __('New notice type name', 'modularity-noticeboard'),
-            'menu_name'                  => __('Notice types', 'modularity-noticeboard'),
+            'name'                       => _x('Types', 'Taxonomy general name', 'modularity-noticeboard'),
+            'singular_name'              => _x('Type', 'Taxonomy singular name', 'modularity-noticeboard'),
+            'search_items'               => __('Search types', 'modularity-noticeboard'),
+            'all_items'                  => __('All types', 'modularity-noticeboard'),
+            'parent_item'                => __('Parent type', 'modularity-noticeboard'),
+            'parent_item_colon'          => __('Parent type:', 'modularity-noticeboard'),
+            'edit_item'                  => __('Edit type', 'modularity-noticeboard'),
+            'update_item'                => __('Update type', 'modularity-noticeboard'),
+            'add_new_item'               => __('Add new type', 'modularity-noticeboard'),
+            'new_item_name'              => __('New type name', 'modularity-noticeboard'),
+            'menu_name'                  => __('Types', 'modularity-noticeboard'),
         ];
 
         $args = [
-            'hierarchical'          => true,
+            'hierarchical'          => false,
             'labels'                => $labels,
             'show_ui'               => true,
             'show_admin_column'     => true,
@@ -89,6 +90,30 @@ class Posttype {
         ];
 
         register_taxonomy(self::NOTICE_TAXONOMY, [self::NOTICE_POST_TYPE], $args);
+
+        $group_labels = [
+            'name'                       => _x('Groups', 'Taxonomy general name', 'modularity-noticeboard'),
+            'singular_name'              => _x('Group', 'Taxonomy singular name', 'modularity-noticeboard'),
+            'search_items'               => __('Search groups', 'modularity-noticeboard'),
+            'all_items'                  => __('All groups', 'modularity-noticeboard'),
+            'edit_item'                  => __('Edit group', 'modularity-noticeboard'),
+            'update_item'                => __('Update group', 'modularity-noticeboard'),
+            'add_new_item'               => __('Add new group', 'modularity-noticeboard'),
+            'new_item_name'              => __('New group name', 'modularity-noticeboard'),
+            'menu_name'                  => __('Groups', 'modularity-noticeboard'),
+        ];
+
+        $group_args = [
+            'hierarchical'          => false,
+            'labels'                => $group_labels,
+            'show_ui'               => true,
+            'show_admin_column'     => true,
+            'query_var'             => true,
+            'rewrite'               => ['slug' => 'notice-group'],
+            'show_in_rest'          => true,
+        ];
+
+        register_taxonomy(self::NOTICE_GROUP_TAXONOMY, [self::NOTICE_POST_TYPE], $group_args);
     }
 
     /**
@@ -96,7 +121,8 @@ class Posttype {
      */
     public function remove_taxonomy_meta_box()
     {
-        remove_meta_box(self::NOTICE_TAXONOMY . 'div', self::NOTICE_POST_TYPE, 'side');
+        remove_meta_box('tags' . 'div' . '-' . self::NOTICE_TAXONOMY, self::NOTICE_POST_TYPE, 'side');
+        remove_meta_box('tags' . 'div' . '-' . self::NOTICE_GROUP_TAXONOMY, self::NOTICE_POST_TYPE, 'side');
     }
 
 }

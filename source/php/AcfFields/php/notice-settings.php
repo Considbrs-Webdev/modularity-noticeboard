@@ -72,6 +72,36 @@
             'return_format' => 'url',
             'allow_in_bindings' => 0,
         ),
+        3 => array(
+            'key' => 'field_696de607ef8bd',
+            'label' => __('Group', 'modularity-toc'),
+            'name' => 'group',
+            'aria-label' => '',
+            'type' => 'taxonomy',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'taxonomy' => 'notice_group',
+            'add_term' => 0,
+            'save_terms' => 1,
+            'load_terms' => 1,
+            'return_format' => 'id',
+            'field_type' => 'select',
+            'allow_null' => 1,
+            'acfe_bidirectional' => array(
+                'acfe_bidirectional_enabled' => '0',
+            ),
+            'allow_in_bindings' => 0,
+            'bidirectional' => 0,
+            'multiple' => 0,
+            'bidirectional_target' => array(
+            ),
+        ),
     ),
     'location' => array(
         0 => array(

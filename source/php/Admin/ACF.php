@@ -14,9 +14,57 @@ class ACF
         // Remove field groups from taxonomies
         add_filter('acf/load_field_group', [$this, 'removeTaxonomyFieldgroups'], 10, 1);
         
+        // Rename a specific field group when shown on taxonomy term screens
+        add_filter('acf/get_field_group_title', [$this, 'maybeRenameFieldGroupForTaxonomy'], 10, 2);
+        
         // Admin scripts for auto-filling unarchive date
         add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
         add_action('wp_ajax_modularity_noticeboard_get_term_archiving', [$this, 'ajax_get_term_archiving']);
+    }
+
+    /**
+     * Rename a specific ACF field group when displayed on our taxonomy screens
+     * but don't change it when editing the field group in ACF admin.
+     *
+     * @param string $title
+     * @param array  $field_group
+     * @return string
+     */
+    public function maybeRenameFieldGroupForTaxonomy($title, $field_group)
+    {
+        // Target this specific field group
+        if (empty($field_group['key']) || $field_group['key'] !== 'group_696798e2dc065') {
+            return $title;
+        }
+
+        // If we're in the ACF field group editor, leave the title as-is
+        if (is_admin()) {
+            if (function_exists('get_current_screen')) {
+                $screen = get_current_screen();
+                if ($screen && !empty($screen->post_type) && $screen->post_type === 'acf-field-group') {
+                    return $title;
+                }
+            }
+
+            if (!empty($_GET['post'])) {
+                $post_id = intval($_GET['post']);
+                if ($post_id && get_post_type($post_id) === 'acf-field-group') {
+                    return $title;
+                }
+            }
+        }
+
+        // Only modify the title when shown on taxonomy edit screens for our taxonomy
+        if (!is_admin() || empty($_GET['taxonomy'])) {
+            return $title;
+        }
+
+        $taxonomy = sanitize_text_field($_GET['taxonomy']);
+        if ($taxonomy === Posttype::NOTICE_TAXONOMY) {
+            return __('Detailed settings', 'modularity-noticeboard');
+        }
+
+        return $title;
     }
 
     public function removePosttypeFieldgroups($field_group) {
@@ -157,6 +205,10 @@ class ACF
         $groupsToRemove = [
             'group_63e6002cc129c', // Advanced term settings
         ];
+        $taxonomiesToClean = [
+            Posttype::NOTICE_TAXONOMY,
+            Posttype::NOTICE_GROUP_TAXONOMY,
+        ];
 
         // Target this specific field group
         if (!in_array($field_group['key'], $groupsToRemove)) {
@@ -171,7 +223,7 @@ class ACF
         $taxonomy = sanitize_text_field($_GET['taxonomy']);
 
         // Disable for specific taxonomy
-        if ($taxonomy === Posttype::NOTICE_TAXONOMY) {
+        if (in_array($taxonomy, $taxonomiesToClean)) {
             return false; // ← removes the field group completely
         }
 

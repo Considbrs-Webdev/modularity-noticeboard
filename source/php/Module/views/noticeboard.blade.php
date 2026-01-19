@@ -1,6 +1,8 @@
 @if (!$hideTitle)
     @typography([
-        'element' => 'h4'
+        'element' => 'h2',
+        'variant' => $titleVariant ?? 'h2',
+        'classList' => ['noticeboard-title', 'u-margin__bottom--2']
     ])
         {{ $postTitle }}
     @endtypography
@@ -8,63 +10,16 @@
 
 @if (!empty($groupByNoticeType))
     @foreach ($notices as $group)
-        @php
-            $term = $group['term'] ?? [];
-            $groupNotices = $group['notices'] ?? [];
-        @endphp
+        @group()
+            @include('partials.notice-term', ['term' => $group['term'] ?? [], 'isLast' => $loop->last])
 
-        @if (!empty($term['name']))
-            @typography([
-                'element' => 'h5',
-                'classList' => ['mb-2 mt-4']
-            ])
-                {{ $term['name'] }}
-            @endtypography
-        @endif
-
-        @if (!empty($term['description']))
-            @typography([
-                'element' => 'div',
-                'classList' => ['mb-3 noticeboard-term-description']
-            ])
-                {!! wpautop($term['description']) !!}
-            @endtypography
-        @endif
-
-        @foreach ($groupNotices as $notice)
-            <div class="mb-4">
-                @typography([
-                    'element' => 'h6',
-                    'classList' => ['mb-1']
-                ])
-                    {{ $notice['title'] ?? '' }}
-                @endtypography
-
-                @typography([
-                    'element' => 'div',
-                    'classList' => ['noticeboard-notice-content']
-                ])
-                    {!! $notice['content'] ?? '' !!}
-                @endtypography
-            </div>
-        @endforeach
+            @foreach ($group['notices'] ?? [] as $notice)
+                @include('partials.notice', ['notice' => $notice, 'isLast' => $loop->last])
+            @endforeach
+        @endgroup
     @endforeach
 @else
     @foreach ($notices as $notice)
-        <div class="mb-4">
-            @typography([
-                'element' => 'h6',
-                'classList' => ['mb-1']
-            ])
-                {{ $notice['title'] ?? '' }}
-            @endtypography
-
-            @typography([
-                'element' => 'div',
-                'classList' => ['noticeboard-notice-content']
-            ])
-                {!! $notice['content'] ?? '' !!}
-            @endtypography
-        </div>
+        @include('partials.notice', ['notice' => $notice, 'isLast' => $loop->last])
     @endforeach
 @endif
