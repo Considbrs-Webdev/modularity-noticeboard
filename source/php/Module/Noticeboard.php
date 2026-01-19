@@ -123,8 +123,21 @@ class Noticeboard extends \Modularity\Module
 
     private function getContent($post)
     {
-        $content = 'Testing testing';
-        return $content;
+        $dateFormat = get_option('date_format');
+        $content = '<span class="label">%s:</span> ' . get_the_date('', $post);
+
+        $archiveDate = get_field('archive_date', $post->ID);
+        if ($archiveDate) {
+            $content .= '<br><span class="label">%s:</span> ' . date_i18n($dateFormat, strtotime($archiveDate));
+        }
+
+        $content = sprintf(
+            $content,
+            $this->wpService->applyFilters('Modularity/Module/Noticeboard/PublishedLabel', __('Published', 'modularity-noticeboard')),
+            $this->wpService->applyFilters('Modularity/Module/Noticeboard/ArchiveDateLabel', __('Archive date', 'modularity-noticeboard'))
+        );
+
+        return $this->wpService->applyFilters('Modularity/Module/Noticeboard/NoticeContent', $content, $post);
     }
 
     private function getGroup($post)

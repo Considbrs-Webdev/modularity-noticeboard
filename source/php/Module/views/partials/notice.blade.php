@@ -2,7 +2,7 @@
     'link' => $notice['permalink'],
     'classList' => array_merge(
         ['c-card--noticeboard', 'noticeboard-notice'],
-        !empty($isLast) ? ['is-last'] : ['u-margin__bottom--3']
+        !empty($isLast) ? ['is-last'] : ['u-margin__bottom--2']
     )
 ])
     <div class="c-card__header u-padding__bottom--0">
@@ -14,7 +14,7 @@
             {{ $notice['title'] ?? '' }}
         @endtypography
     </div>
-    <div class="c-card__body">
+    <div class="c-card__body u-padding--2">
         @typography([
             'element' => 'span',
             'classList' => ['noticeboard-notice-content']

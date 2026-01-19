@@ -27,11 +27,11 @@
     }
 
     // Set both the hidden ACF value and the visible datepicker input
-    function setUnarchiveDate(unarchiveFieldKey, unarchiveField, str){
-        var shortKey = unarchiveFieldKey.replace(/^field_/, '');
+    function setArchiveDate(archiveFieldKey, archiveField, str){
+        var shortKey = archiveFieldKey.replace(/^field_/, '');
 
         // Hidden ACF input storing the saved value
-        var $hidden = $('#acf-field_' + shortKey + ', input[name="acf[' + unarchiveFieldKey + ']"]');
+        var $hidden = $('#acf-field_' + shortKey + ', input[name="acf[' + archiveFieldKey + ']"]');
         if($hidden.length){
             $hidden.val(str).trigger('change');
         }
@@ -40,7 +40,7 @@
         var $visible = $('#acf-field_' + shortKey).closest('.acf-field').find('input.hasDatepicker, input[type="text"]').first();
         if(!$visible || !$visible.length){
             $visible = $('input.hasDatepicker, input[type="text"]').filter(function(){
-                return $(this).closest('.acf-field').data('key') === unarchiveFieldKey;
+                return $(this).closest('.acf-field').data('key') === archiveFieldKey;
             }).first();
         }
 
@@ -52,17 +52,17 @@
         }
 
         // Fallback to ACF field API
-        if(unarchiveField && typeof unarchiveField.val === 'function'){
-            try{ unarchiveField.val(str); } catch(e){}
+        if(archiveField && typeof archiveField.val === 'function'){
+            try{ archiveField.val(str); } catch(e){}
         }
     }
 
     acf.add_action('ready append', function($el){
         var noticeFieldKey = 'field_69679b0c8b9bf'; // notice_type taxonomy field key
-        var unarchiveFieldKey = 'field_69679a808b9be'; // unarchive_date field key
+        var archiveFieldKey = 'field_69679a808b9be'; // archive_date field key
 
         var noticeTypeField = acf.getField(noticeFieldKey);
-        var unarchiveField = acf.getField(unarchiveFieldKey);
+        var archiveField = acf.getField(archiveFieldKey);
 
         if(!noticeTypeField) { return; }
 
@@ -88,9 +88,9 @@
             fetchTermArchiving(val, function(data){
                 if(!data) { return; }
 
-                // Prefer server-calculated unarchive_date
-                if(data.unarchive_date) {
-                    setUnarchiveDate(unarchiveFieldKey, unarchiveField, data.unarchive_date);
+                // Prefer server-calculated archive_date
+                if(data.archive_date) {
+                    setArchiveDate(archiveFieldKey, archiveField, data.archive_date);
                     return;
                 }
 
@@ -101,7 +101,7 @@
                 var d = new Date();
                 d.setDate(d.getDate() + days);
                 var dateStr = formatDateYMD(d);
-                setUnarchiveDate(unarchiveFieldKey, unarchiveField, dateStr);
+                setArchiveDate(archiveFieldKey, archiveField, dateStr);
             });
         }
 

@@ -37,8 +37,8 @@
         ),
         1 => array(
             'key' => 'field_69679a808b9be',
-            'label' => __('Unarchive date', 'modularity-toc'),
-            'name' => 'unarchive_date',
+            'label' => __('Archive date', 'modularity-toc'),
+            'name' => 'archive_date',
             'aria-label' => '',
             'type' => 'date_picker',
             'instructions' => '',
