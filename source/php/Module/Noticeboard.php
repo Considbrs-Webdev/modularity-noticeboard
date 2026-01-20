@@ -25,10 +25,17 @@ class Noticeboard extends \Modularity\Module
         $this->wpService = \Modularity\Helper\WpService::get();
         $fields = $this->getFields();
 
-        $noticesToShow = $data['noticesToShow'] ?? 5;
+        $archiveMode = isset($fields['archive_mode']) ? $fields['archive_mode'] : false;
+        $groupByNoticeType = isset($fields['group_by_notice_type']) ? $fields['group_by_notice_type'] : true;
+        $specificTypes = !$archiveMode && isset($fields['specific_types']) && is_array($fields['specific_types']) 
+            ? $fields['specific_types'] 
+            : [];
+        $noticesToShow = $archiveMode 
+            ? -1 
+            : ($fields['notices_to_show'] ?? 5);
 
         $data = [
-            'groupByNoticeType' => isset($fields['group_by_notice_type']) ? $fields['group_by_notice_type'] : true,
+            'groupByNoticeType' => $groupByNoticeType
         ];
 
         if (isset($this->hideTitle) && $this->hideTitle !== false) {
@@ -36,14 +43,22 @@ class Noticeboard extends \Modularity\Module
         }
         
         $data['noticeTitleVariant'] = $this->wpService->applyFilters('Modularity/Module/Noticeboard/NoticeTitleVariant', 'h4');
-        $data['notices'] = $this->getNotices($data['groupByNoticeType'], $noticesToShow);
+        $data['notices'] = $this->getNotices($groupByNoticeType, $noticesToShow, $specificTypes);
 
         $data['groupIcon'] = ['icon' => $this->wpService->applyFilters('Modularity/Module/Noticeboard/GroupIcon', 'account_balance')];
 
         return $data;
     }
 
-    public function getNotices($groupByNoticeType = true, $noticesToShow = 5)
+    /**
+     * Get notices from the custom post type, optionally grouped by notice type taxonomy
+     *
+     * @param bool $groupByNoticeType whether to group notices by their notice type taxonomy
+     * @param int $noticesToShow how many notices to show
+     * @param array $specificTypes specific notice type term IDs to filter by
+     * @return array
+     */
+    public function getNotices($groupByNoticeType = true, $noticesToShow = 5, $specificTypes = [])
     {
         $postType = Posttype::NOTICE_POST_TYPE;
         $taxonomy = Posttype::NOTICE_TAXONOMY;
@@ -55,6 +70,16 @@ class Noticeboard extends \Modularity\Module
             'orderby' => 'post_date',
             'order' => 'DESC',
         ];
+
+        if (!empty($specificTypes)) {
+            $args['tax_query'] = [
+                [
+                    'taxonomy' => $taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $specificTypes,
+                ],
+            ];
+        }
 
         $query = new \WP_Query($args);
         $posts = $query->posts ?: [];

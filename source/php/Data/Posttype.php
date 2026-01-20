@@ -30,7 +30,7 @@ class Posttype {
         $labels = [
             'name'                  => _x('Notices', 'Post type general name', 'modularity-noticeboard'),
             'singular_name'         => _x('Notice', 'Post type singular name', 'modularity-noticeboard'),
-            'menu_name'             => _x('Notices', 'Admin Menu name', 'modularity-noticeboard'),
+            'menu_name'             => _x('Noticeboard', 'Admin Menu name', 'modularity-noticeboard'),
             'name_admin_bar'        => _x('Notice', 'Add New on Toolbar', 'modularity-noticeboard'),
             'add_new'               => __('Add New', 'modularity-noticeboard'),
             'add_new_item'          => __('Add New Notice', 'modularity-noticeboard'),
