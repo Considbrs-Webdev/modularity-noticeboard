@@ -3,6 +3,9 @@
 namespace ModularityNoticeboard;
 
 use ModularityNoticeboard\Data\Posttype;
+use ModularityNoticeboard\Admin\Settings;
+
+use WPService\WpService;
 
 class Noticeboard extends \Modularity\Module
 {
@@ -11,7 +14,8 @@ class Noticeboard extends \Modularity\Module
     public $supports = array();
     public $isBlockCompatible = true;
 
-    private $wpService;
+    private WPService $wpService;
+    private $displayAs;
 
     public function init()
     {
@@ -25,27 +29,54 @@ class Noticeboard extends \Modularity\Module
         $this->wpService = \Modularity\Helper\WpService::get();
         $fields = $this->getFields();
 
-        $archiveMode = isset($fields['archive_mode']) ? $fields['archive_mode'] : false;
+        $this->displayAs = isset($fields['display_as']) ? $fields['display_as'] : 'card';
+        $archiveMode = isset($fields['archive_mode']) && is_bool($fields['archive_mode']) ? $fields['archive_mode'] : false;
+        $archiveLink = isset($fields['archive_button']) && is_bool($fields['archive_button']) ? $fields['archive_button'] : false;
         $groupByNoticeType = isset($fields['group_by_notice_type']) ? $fields['group_by_notice_type'] : true;
-        $specificTypes = !$archiveMode && isset($fields['specific_types']) && is_array($fields['specific_types']) 
-            ? $fields['specific_types'] 
+        $specificTypes = !$archiveMode && isset($fields['specific_types']) && is_array($fields['specific_types'])
+            ? $fields['specific_types']
             : [];
-        $noticesToShow = $archiveMode 
-            ? -1 
+        $noticesToShow = $archiveMode
+            ? -1
             : ($fields['notices_to_show'] ?? 5);
 
         $data = [
-            'groupByNoticeType' => $groupByNoticeType
+            'groupByNoticeType' => $groupByNoticeType,
+            'archiveMode' => $archiveMode,
+            'archiveLink' => $archiveLink === true ? Settings::getMainPageUrl() : false,
+            'displayAs' => $this->displayAs,
         ];
 
-        if (isset($this->hideTitle) && $this->hideTitle !== false) {
-            $data['titleVariant'] = $this->wpService->applyFilters('Modularity/Module/Noticeboard/TitleVariant', 'h2');
-        }
-        
-        $data['noticeTitleVariant'] = $this->wpService->applyFilters('Modularity/Module/Noticeboard/NoticeTitleVariant', 'h4');
         $data['notices'] = $this->getNotices($groupByNoticeType, $noticesToShow, $specificTypes);
 
         $data['groupIcon'] = ['icon' => $this->wpService->applyFilters('Modularity/Module/Noticeboard/GroupIcon', 'account_balance')];
+        $data['groupTitleVariant'] = $this->wpService->applyFilters('Modularity/Module/Noticeboard/GroupTitleVariant', $archiveMode ? 'h2' : 'h3');
+        $data['noticeTitleVariant'] = $this->wpService->applyFilters('Modularity/Module/Noticeboard/NoticeTitleVariant', 'h4');
+
+        if (isset($this->hideTitle) && $this->hideTitle !== false) {
+            $data['titleVariant'] = $this->wpService->applyFilters(
+                'Modularity/Module/Noticeboard/TitleVariant',
+                'h2'
+            );
+        }
+
+        if ($archiveLink) {
+            $data['archiveLabel'] = $this->wpService->applyFilters(
+                'Modularity/Module/Noticeboard/ArchiveLabel',
+                __('To noticeboard', 'modularity-noticeboard')
+            );
+            $data['archiveIcon'] = $this->wpService->applyFilters(
+                'Modularity/Module/Noticeboard/ArchiveIcon',
+                'arrow_forward'
+            );
+            $data['archiveButtonStyle'] = $this->wpService->applyFilters(
+                'Modularity/Module/Noticeboard/ArchiveButtonStyle',
+                [
+                    'color' => 'primary',
+                    'style' => 'filled',
+                ]
+            );
+        }
 
         return $data;
     }
@@ -85,14 +116,24 @@ class Noticeboard extends \Modularity\Module
         $posts = $query->posts ?: [];
 
         // Helper to map a WP_Post to an array used by the view
-        $map_post = function($p) {
-            return [
+        $map_post = function ($p) {
+            $data = [
+                'id' => $p->ID,
                 'title' => get_the_title($p),
-                'content' => $this->getContent($p),
                 'permalink' => get_permalink($p),
+                'content' => $this->getContent($p),
+                'published' => $this->getPublishDate($p),
+                'publishedTimestamp' => strtotime($p->post_date),
+                'archives' => $this->getArchiveDate($p),
+                'type' => $this->getType($p),
                 'group' => $this->getGroup($p),
             ];
+
+            $data['tags'] = $this->getPostTags($data);
+
+            return $data;
         };
+
 
         if (!$groupByNoticeType) {
             $result = array_map($map_post, $posts);
@@ -146,14 +187,37 @@ class Noticeboard extends \Modularity\Module
         return array_values($groups);
     }
 
-    private function getContent($post)
+    /**
+     * Get the publish date for a notice post
+     */
+    private function getPublishDate($post)
     {
-        $dateFormat = get_option('date_format');
-        $content = '<span class="label">%s:</span> ' . get_the_date('', $post);
+        return get_the_date('', $post);
+    }
 
+    /**
+     * Get the archive date for a notice post
+     */
+    private function getArchiveDate($post)
+    {
         $archiveDate = get_field('archive_date', $post->ID);
         if ($archiveDate) {
-            $content .= '<br><span class="label">%s:</span> ' . date_i18n($dateFormat, strtotime($archiveDate));
+            $dateFormat = get_option('date_format');
+            return date_i18n($dateFormat, strtotime($archiveDate));
+        }
+        return null;
+    }
+
+    /**
+     * Get the content for a notice post, including published and archive dates
+     */
+    private function getContent($post)
+    {
+        $content = '<span class="label">%s:</span> ' . $this->getPublishDate($post);
+
+        $archiveDate = $this->getArchiveDate($post);
+        if ($archiveDate) {
+            $content .= '<br><span class="label">%s:</span> ' . $archiveDate;
         }
 
         $content = sprintf(
@@ -165,22 +229,60 @@ class Noticeboard extends \Modularity\Module
         return $this->wpService->applyFilters('Modularity/Module/Noticeboard/NoticeContent', $content, $post);
     }
 
+    /**
+     * Get tags for a notice post based on its type and group
+     */
+    private function getPostTags($data)
+    {
+        $tags = [];
+
+        if ($this->displayAs === 'news' && !empty($data['type'])) {
+            $tags[] = [
+                'label' => $data['type'],
+            ];
+        }
+
+        if (!empty($data['group'])) {
+            $tags[] = [
+                'label' => $data['group'],
+            ];
+        }
+
+        return $tags;
+    }
+
+    /**
+     * Get the notice type (first term) for a notice post
+     */
+    private function getType($post)
+    {
+        $typeTaxonomy = Posttype::NOTICE_TAXONOMY;
+        $terms = wp_get_post_terms($post->ID, $typeTaxonomy);
+
+        if (is_wp_error($terms) || empty($terms)) {
+            return '';
+        }
+
+        $term = $terms[0];
+
+        return $term->name;
+    }
+
+    /**
+     * Get the notice group (first term) for a notice post
+     */
     private function getGroup($post)
     {
         $groupTaxonomy = Posttype::NOTICE_GROUP_TAXONOMY;
         $terms = wp_get_post_terms($post->ID, $groupTaxonomy);
 
         if (is_wp_error($terms) || empty($terms)) {
-            return [];
+            return '';
         }
 
         $term = $terms[0];
 
-        return [
-            [
-                'label' => $term->name
-            ]
-        ];
+        return $term->name;
     }
 
     /**

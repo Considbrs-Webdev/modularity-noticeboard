@@ -22,11 +22,11 @@ class App
         // Register post types
         new Data\Posttype();
 
+        // Admin settings
+        new Admin\Settings();
+
         // ACF customisation
         new Admin\ACF();
-
-        // Admin configuration (remove unwanted publish meta/actions)
-        new Admin\Config();
     }
 
     /**

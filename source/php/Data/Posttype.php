@@ -2,6 +2,7 @@
 
 namespace ModularityNoticeboard\Data;
 
+use ModularityNoticeboard\Admin\Settings;
 class Posttype {
 
     public const NOTICE_POST_TYPE = 'noticeboard_notice';
@@ -38,11 +39,10 @@ class Posttype {
             'edit_item'             => __('Edit Notice', 'modularity-noticeboard'),
             'view_item'             => __('View Notice', 'modularity-noticeboard'),
             'all_items'             => __('All Notices', 'modularity-noticeboard'),
-            'search_items'          => __('Search Notices', 'modularity-noticeboard'),
-            'parent_item_colon'     => __('Parent Notices:', 'modularity-noticeboard'),
             'not_found'             => __('No notices found.', 'modularity-noticeboard'),
             'not_found_in_trash'    => __('No notices found in Trash.', 'modularity-noticeboard'),
             'archives'              => __('Notice archives', 'modularity-noticeboard'),
+            'search_items'          => __('Search notices', 'modularity-noticeboard'),
         ];
 
         $args = [
@@ -54,7 +54,7 @@ class Posttype {
             'query_var'             => true,
             'rewrite'               => ['slug' => 'notice', 'with_front' => false],
             'capability_type'       => 'post',
-            'has_archive'           => true,
+            'has_archive'           => !Settings::useCustomArchivePage(),
             'hierarchical'          => false,
             'menu_position'         => 20,
             'supports'              => ['title', 'editor'],
@@ -76,8 +76,6 @@ class Posttype {
             'singular_name'              => _x('Type', 'Taxonomy singular name', 'modularity-noticeboard'),
             'search_items'               => __('Search types', 'modularity-noticeboard'),
             'all_items'                  => __('All types', 'modularity-noticeboard'),
-            'parent_item'                => __('Parent type', 'modularity-noticeboard'),
-            'parent_item_colon'          => __('Parent type:', 'modularity-noticeboard'),
             'edit_item'                  => __('Edit type', 'modularity-noticeboard'),
             'update_item'                => __('Update type', 'modularity-noticeboard'),
             'add_new_item'               => __('Add new type', 'modularity-noticeboard'),

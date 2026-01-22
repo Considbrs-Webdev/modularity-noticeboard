@@ -4,7 +4,8 @@
 ])
     @if (!empty($term['name'] ?? ''))
         @typography([
-            'element' => 'h3',
+            'element' => 'h2',
+            'variant' => $groupTitleVariant,
             'classList' => ['noticeboard-term-title', 'u-margin__bottom--1']
         ])
             {{ $term['name'] ?? '' }}

@@ -3,15 +3,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Modularity Noticeboard 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/modularity-noticeboard\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/modularity-"
+"noticeboard\n"
+"POT-Creation-Date: 2026-01-22T16:20:01+00:00\n"
+"PO-Revision-Date: 2026-01-22 17:20+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-22T16:20:01+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: Poedit 3.8\n"
 "X-Domain: modularity-noticeboard\n"
 
 #. Plugin Name of the plugin
@@ -26,7 +28,12 @@ msgstr ""
 
 #. Description of the plugin
 #: modularity-noticeboard.php
-msgid "A Modularity module that implements a municipal digital noticeboard for publishing legally binding public notices—meeting summons, agendas, adjusted minutes and decisions—replacing the physical noticeboard, managing appeal deadlines under municipal law, and providing accessible, auditable, and integratable publication workflows."
+msgid ""
+"A Modularity module that implements a municipal digital noticeboard for "
+"publishing legally binding public notices—meeting summons, agendas, adjusted "
+"minutes and decisions—replacing the physical noticeboard, managing appeal "
+"deadlines under municipal law, and providing accessible, auditable, and "
+"integratable publication workflows."
 msgstr ""
 
 #. Author of the plugin
@@ -41,168 +48,168 @@ msgstr ""
 
 #: source/php/Admin/ACF.php:64
 msgid "Detailed settings"
-msgstr ""
+msgstr "Detaljerade inställningar"
 
 #: source/php/Data/Posttype.php:32
 msgctxt "Post type general name"
 msgid "Notices"
-msgstr ""
+msgstr "Notiser"
 
 #: source/php/Data/Posttype.php:33
 msgctxt "Post type singular name"
 msgid "Notice"
-msgstr ""
+msgstr "Notis"
 
 #: source/php/Data/Posttype.php:34
 msgctxt "Admin Menu name"
 msgid "Noticeboard"
-msgstr ""
+msgstr "Anslagstavla"
 
 #: source/php/Data/Posttype.php:35
 msgctxt "Add New on Toolbar"
 msgid "Notice"
-msgstr ""
+msgstr "Notis"
 
 #: source/php/Data/Posttype.php:36
 msgid "Add New"
-msgstr ""
+msgstr "Lägg till ny"
 
 #: source/php/Data/Posttype.php:37
 msgid "Add New Notice"
-msgstr ""
+msgstr "Lägg till ny notis"
 
 #: source/php/Data/Posttype.php:38
 msgid "New Notice"
-msgstr ""
+msgstr "Ny notis"
 
 #: source/php/Data/Posttype.php:39
 msgid "Edit Notice"
-msgstr ""
+msgstr "Redigera notis"
 
 #: source/php/Data/Posttype.php:40
 msgid "View Notice"
-msgstr ""
+msgstr "Visa notis"
 
 #: source/php/Data/Posttype.php:41
 msgid "All Notices"
-msgstr ""
+msgstr "Alla notiser"
 
 #: source/php/Data/Posttype.php:42
 msgid "No notices found."
-msgstr ""
+msgstr "Inga notiser hittades."
 
 #: source/php/Data/Posttype.php:43
 msgid "No notices found in Trash."
-msgstr ""
+msgstr "Inga notiser i papperskorgen."
 
 #: source/php/Data/Posttype.php:44
 msgid "Notice archives"
-msgstr ""
+msgstr "Notisarkiv"
 
 #: source/php/Data/Posttype.php:45
 msgid "Search notices"
-msgstr ""
+msgstr "Sök notiser"
 
 #: source/php/Data/Posttype.php:75
 msgctxt "Taxonomy general name"
 msgid "Types"
-msgstr ""
+msgstr "Typer"
 
 #: source/php/Data/Posttype.php:76
 msgctxt "Taxonomy singular name"
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: source/php/Data/Posttype.php:77
 msgid "Search types"
-msgstr ""
+msgstr "Sök typer"
 
 #: source/php/Data/Posttype.php:78
 msgid "All types"
-msgstr ""
+msgstr "Alla typer"
 
 #: source/php/Data/Posttype.php:79
 msgid "Edit type"
-msgstr ""
+msgstr "Redigera typ"
 
 #: source/php/Data/Posttype.php:80
 msgid "Update type"
-msgstr ""
+msgstr "Uppdatera typ"
 
 #: source/php/Data/Posttype.php:81
 msgid "Add new type"
-msgstr ""
+msgstr "Lägg till ny typ"
 
 #: source/php/Data/Posttype.php:82
 msgid "New type name"
-msgstr ""
+msgstr "Namn på ny typ"
 
 #: source/php/Data/Posttype.php:83
 msgid "Types"
-msgstr ""
+msgstr "Typer"
 
 #: source/php/Data/Posttype.php:99
 msgctxt "Taxonomy general name"
 msgid "Groups"
-msgstr ""
+msgstr "Grupper"
 
 #: source/php/Data/Posttype.php:100
 msgctxt "Taxonomy singular name"
 msgid "Group"
-msgstr ""
+msgstr "Grupp"
 
 #: source/php/Data/Posttype.php:101
 msgid "Search groups"
-msgstr ""
+msgstr "Sök grupper"
 
 #: source/php/Data/Posttype.php:102
 msgid "All groups"
-msgstr ""
+msgstr "Alla grupper"
 
 #: source/php/Data/Posttype.php:103
 msgid "Edit group"
-msgstr ""
+msgstr "Redigera grupp"
 
 #: source/php/Data/Posttype.php:104
 msgid "Update group"
-msgstr ""
+msgstr "Uppdatera grupp"
 
 #: source/php/Data/Posttype.php:105
 msgid "Add new group"
-msgstr ""
+msgstr "Lägg till ny grupp"
 
 #: source/php/Data/Posttype.php:106
 msgid "New group name"
-msgstr ""
+msgstr "Namn på ny grupp"
 
 #: source/php/Data/Posttype.php:107
 msgid "Groups"
-msgstr ""
+msgstr "Grupper"
 
 #: source/php/Data/Posttype.php:184
 msgid "Link to protocol (PDF)"
-msgstr ""
+msgstr "Länk till protokoll (PDF)"
 
 #: source/php/Module/Noticeboard.php:22
 msgid "Noticeboard"
-msgstr ""
+msgstr "Anslagstavla"
 
 #: source/php/Module/Noticeboard.php:23
 msgid "Noticeboards"
-msgstr ""
+msgstr "Anslagstavlor"
 
 #: source/php/Module/Noticeboard.php:24
 msgid "Display noticeboard messages"
-msgstr ""
+msgstr "Visa meddelanden från anslagstavlan"
 
 #: source/php/Module/Noticeboard.php:66
 msgid "To noticeboard"
-msgstr ""
+msgstr "Till anslagstavlan"
 
 #: source/php/Module/Noticeboard.php:225
 msgid "Published"
-msgstr ""
+msgstr "Anslagsdatum"
 
 #: source/php/Module/Noticeboard.php:226
 msgid "Archive date"
-msgstr ""
+msgstr "Nedtagningsdatum"

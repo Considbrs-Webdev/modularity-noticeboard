@@ -25,7 +25,7 @@ define('MODULARITY_NOTICEBOARD_MODULE_VIEW_PATH', plugin_dir_path(__FILE__) . 's
 define('MODULARITY_NOTICEBOARD_MODULE_PATH', MODULARITY_NOTICEBOARD_PATH . 'source/php/Module/');
     
 add_action('init', function() {
-    load_plugin_textdomain('modularity-toc', false, plugin_basename(dirname(__FILE__)) . '/languages');
+    load_plugin_textdomain('modularity-noticeboard', false, plugin_basename(dirname(__FILE__)) . '/languages');
 }); 
 
 // Autoload from plugin
@@ -40,7 +40,9 @@ add_action('acf/init', function () {
     $acfExportManager->setTextdomain('modularity-toc');
     $acfExportManager->setExportFolder(MODULARITY_NOTICEBOARD_PATH . 'source/php/AcfFields/');
     $acfExportManager->autoExport(array(
+        'notice-general-settings' => 'group_69720e679fc2b',
         'notice-type-settings' => 'group_696798e2dc065',
+        'notice-module-settings' => 'group_6967a7194079d',
         'notice-settings' => 'group_69679a7feea9d',
     ));
     $acfExportManager->import();
