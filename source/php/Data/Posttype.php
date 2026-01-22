@@ -18,8 +18,6 @@ class Posttype {
 
         add_filter('post_type_link', [$this, 'filter_post_permalink'], 10, 2);
         add_filter('the_content', [$this, 'append_protocol_link'], 20);
-        
-        
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace ModularityNoticeboard;
 
-use ModularityNoticeboard\AcfFields\AcfFieldLoader;
 use ModularityNoticeboard\Helper\CacheBust;
+use ModularityNoticeboard\Decorators\Decorators;
 
 class App
 {
@@ -27,6 +27,9 @@ class App
 
         // ACF customisation
         new Admin\ACF();
+
+        // ACF customisation
+        new Decorators();
     }
 
     /**
