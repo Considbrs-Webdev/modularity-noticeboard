@@ -1,5 +1,5 @@
 {
-    "name": "alingsas-kommun/modularity-noticeboard",
+    "name": "considbrs-webdev/modularity-noticeboard",
     "description": "A Modularity module that implements a municipal digital noticeboard for publishing legally binding public notices—meeting summons, agendas, adjusted minutes and decisions—replacing the physical noticeboard, managing appeal deadlines under municipal law, and providing accessible, auditable, and integratable publication workflows.",
     "type": "wordpress-plugin",
     "license": "MIT",
@@ -11,27 +11,12 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "extra": {
-        "installer-paths": {
-            "vendor/{$vendor}/{$name}": [
-                "type:wordpress-muplugin",
-                "type:wordpress-theme",
-                "type:wordpress-plugin",
-                "type:acf-plugin"
-            ]
-        }
-    },
-    "require": {
+    "suggest": {
         "helsingborg-stad/municipio": "^6.0.0"
     },
     "autoload": {
         "psr-4": {
             "ModularityNoticeboard\\": "source/php/"
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true
         }
     }
 }
