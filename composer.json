@@ -11,6 +11,9 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "require": {
+        "azuyalabs/yasumi": "^2.7"
+    },
     "suggest": {
         "helsingborg-stad/municipio": "^6.0.0"
     },

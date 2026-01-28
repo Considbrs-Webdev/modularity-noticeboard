@@ -17,7 +17,7 @@ class ACF
         // Rename a specific field group when shown on taxonomy term screens
         add_filter('acf/get_field_group_title', [$this, 'maybeRenameFieldGroupForTaxonomy'], 10, 2);
         
-        // Admin scripts for auto-filling unarchive date
+        // Admin scripts for auto-filling archive date
         add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
         add_action('wp_ajax_modularity_noticeboard_get_term_archiving', [$this, 'ajax_get_term_archiving']);
     }
@@ -181,17 +181,23 @@ class ACF
 
         $automatic = get_field('automatic_archiving', $taxonomy . '_' . $term_id);
         $days = intval(get_field('archiving_days', $taxonomy . '_' . $term_id));
+        $onlyWorkDays = get_field('only_count_work_days', $taxonomy . '_' . $term_id);
 
-        $unarchive_date = null;
+        $archive_date = null;
         if ($automatic && $days > 0) {
             $ts = current_time('timestamp');
-            $unarchive_date = date('Y-m-d', $ts + ($days * DAY_IN_SECONDS));
+            if ($onlyWorkDays) {
+                $un_ts = $this->addWorkdays($ts, $days);
+                $archive_date = date('Y-m-d', $un_ts);
+            } else {
+                $archive_date = date('Y-m-d', $ts + ($days * DAY_IN_SECONDS));
+            }
         }
 
         wp_send_json_success([
             'automatic' => (bool) $automatic,
             'days' => $days,
-            'unarchive_date' => $unarchive_date,
+            'archive_date' => $archive_date,
         ]);
     }
 
@@ -228,5 +234,59 @@ class ACF
         }
 
         return $field_group;
+    }
+
+    /**
+     * Add given number of workdays to a timestamp, skipping weekends and Swedish public holidays.
+     *
+     * @param int $timestamp
+     * @param int $workdays
+     * @return int
+     */
+    private function addWorkdays($timestamp, $workdays)
+    {
+        $ts = (int) $timestamp;
+        $added = 0;
+
+        while ($added < $workdays) {
+            $ts += DAY_IN_SECONDS;
+
+            // Skip weekends
+            $weekday = intval(date('N', $ts)); // 6 = Sat, 7 = Sun
+            if ($weekday >= 6) {
+                continue;
+            }
+
+            // Skip Swedish public holidays
+            if ($this->isSwedishHolidayTimestamp($ts)) {
+                continue;
+            }
+
+            $added++;
+        }
+
+        return $ts;
+    }
+
+    /**
+     * Determine whether a timestamp falls on a Swedish "red day" (public holiday).
+     * Uses the Yasumi library for accurate Swedish holiday data.
+     *
+     * @param int $timestamp
+     * @return bool
+     */
+    private function isSwedishHolidayTimestamp($timestamp)
+    {
+        $year = intval(date('Y', $timestamp));
+        $date = new \DateTime();
+        $date->setTimestamp($timestamp);
+
+        try {
+            $holidays = \Yasumi\Yasumi::create('Sweden', $year);
+            return $holidays->isHoliday($date);
+        } catch (\Exception $e) {
+            // Fallback: if Yasumi fails, don't treat as holiday
+            return false;
+        }
     }
 }

@@ -3,12 +3,33 @@
     "title": "Noticeboard settings",
     "fields": [
         {
+            "key": "field_697a06c6be319",
+            "label": "Post type name",
+            "name": "post_type_slug",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "If you want a particular name for the notice post type, for instance notis, you can replace this value. Don't forget to save permalinks after changing this.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "notice",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_697221a4b9062",
             "label": "Use specific page for noticeboard",
             "name": "custom_archive_page",
             "aria-label": "",
             "type": "true_false",
-            "instructions": "",
+            "instructions": "Don't forget to save permalinks after changing this",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -25,7 +46,7 @@
         },
         {
             "key": "field_69720e67a61d4",
-            "label": "Noticeboard main page",
+            "label": "Noticeboard archive page",
             "name": "noticeboard_main_page",
             "aria-label": "",
             "type": "post_object",
@@ -65,6 +86,27 @@
             "ui": 1,
             "bidirectional_target": [],
             "save_post_type": ""
+        },
+        {
+            "key": "field_697a0cd481bf1",
+            "label": "Breadcrumb title",
+            "name": "breadcrumb_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "Notices",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [

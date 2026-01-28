@@ -4,6 +4,7 @@ namespace ModularityNoticeboard;
 
 use ModularityNoticeboard\Data\Posttype;
 use ModularityNoticeboard\Admin\Settings;
+use ModularityNoticeboard\Helper\NoticeHelper;
 
 use WPService\WpService;
 
@@ -121,10 +122,10 @@ class Noticeboard extends \Modularity\Module
                 'id' => $p->ID,
                 'title' => get_the_title($p),
                 'permalink' => get_permalink($p),
-                'content' => $this->getContent($p),
-                'published' => $this->getPublishDate($p),
+                'content' => NoticeHelper::getContent($p),
+                'published' => NoticeHelper::getPublishDate($p),
                 'publishedTimestamp' => strtotime($p->post_date),
-                'archives' => $this->getArchiveDate($p),
+                'archives' => NoticeHelper::getArchiveDate($p),
                 'type' => $this->getType($p),
                 'group' => $this->getGroup($p),
             ];
@@ -185,48 +186,6 @@ class Noticeboard extends \Modularity\Module
 
         // Convert associative groups to indexed array and return
         return array_values($groups);
-    }
-
-    /**
-     * Get the publish date for a notice post
-     */
-    private function getPublishDate($post)
-    {
-        return get_the_date('', $post);
-    }
-
-    /**
-     * Get the archive date for a notice post
-     */
-    private function getArchiveDate($post)
-    {
-        $archiveDate = get_field('archive_date', $post->ID);
-        if ($archiveDate) {
-            $dateFormat = get_option('date_format');
-            return date_i18n($dateFormat, strtotime($archiveDate));
-        }
-        return null;
-    }
-
-    /**
-     * Get the content for a notice post, including published and archive dates
-     */
-    private function getContent($post)
-    {
-        $content = '<span class="label">%s:</span> ' . $this->getPublishDate($post);
-
-        $archiveDate = $this->getArchiveDate($post);
-        if ($archiveDate) {
-            $content .= '<br><span class="label">%s:</span> ' . $archiveDate;
-        }
-
-        $content = sprintf(
-            $content,
-            $this->wpService->applyFilters('Modularity/Module/Noticeboard/PublishedLabel', __('Published', 'modularity-noticeboard')),
-            $this->wpService->applyFilters('Modularity/Module/Noticeboard/ArchiveDateLabel', __('Archive date', 'modularity-noticeboard'))
-        );
-
-        return $this->wpService->applyFilters('Modularity/Module/Noticeboard/NoticeContent', $content, $post);
     }
 
     /**

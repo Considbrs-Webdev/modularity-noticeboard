@@ -50,7 +50,10 @@ class Posttype {
             'show_ui'               => true,
             'show_in_menu'          => true,
             'query_var'             => true,
-            'rewrite'               => ['slug' => 'notice', 'with_front' => false],
+            'rewrite'               => [
+                'slug' => Settings::getPostTypeSlug(), 
+                'with_front' => false
+            ],
             'capability_type'       => 'post',
             'has_archive'           => !Settings::useCustomArchivePage(),
             'hierarchical'          => false,

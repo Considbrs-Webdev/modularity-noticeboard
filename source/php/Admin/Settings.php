@@ -32,6 +32,52 @@ class Settings
     }
 
     /**
+     * Get the post type slug from ACF options
+     *
+     * @return string|null
+     */
+    public static function getPostTypeSlug()
+    {
+        if (!function_exists('get_field')) {
+            return null;
+        }
+
+        $postTypeSlug = get_field('post_type_slug', self::OPTION_PAGE_SLUG);
+
+        if (empty($postTypeSlug)) {
+            $postTypeSlug = 'notice';
+        }
+
+        return $postTypeSlug;
+    }
+
+    /**
+     * Get the Noticeboard main page ID from ACF options
+     * 
+     * @return int|null
+     */
+    public static function getMainPageId(): ?int
+    {
+        if (!function_exists('get_field')) {
+            return null;
+        }
+
+        $useCustomArchivePage = get_field('custom_archive_page', self::OPTION_PAGE_SLUG);
+
+        if (!isset($useCustomArchivePage) || $useCustomArchivePage !== true) {
+            return null;
+        }
+
+        $page = get_field('noticeboard_main_page', self::OPTION_PAGE_SLUG);
+
+        if (!$page || !is_numeric($page)) {
+            return null;
+        }
+
+        return intval($page);
+    }
+
+    /**
      * Get the Noticeboard main page as a WP_Post from ACF options
      *
      * If the stored value is an ID (int or numeric string) this will return
@@ -52,7 +98,7 @@ class Settings
             return get_post_type_archive_link(Posttype::NOTICE_POST_TYPE);
         }
 
-        $page = get_field('noticeboard_main_page', self::OPTION_PAGE_SLUG);
+        $page = self::getMainPageId();
 
         if (!$page || !is_numeric($page)) {
             return get_post_type_archive_link(Posttype::NOTICE_POST_TYPE);
@@ -77,5 +123,20 @@ class Settings
         $useCustomArchivePage = get_field('custom_archive_page', self::OPTION_PAGE_SLUG);
 
         return isset($useCustomArchivePage) && $useCustomArchivePage === true;
+    }
+
+    public static function getBreadcumbTitle(): string
+    {
+        if (!function_exists('get_field')) {
+            return __('Notices', 'modularity-noticeboard');
+        }
+
+        $customTitle = get_field('breadcrumb_title', self::OPTION_PAGE_SLUG);
+
+        if (empty($customTitle)) {
+            return __('Notices', 'modularity-noticeboard');
+        }
+
+        return $customTitle;
     }
 }

@@ -16,6 +16,14 @@
     }
   }
 
+  .noticeboard__meta {
+    display: block;
+    margin-top: calc(var(--base, 8px) * 1);
+    span.label {
+      font-weight: bold;
+    }
+  }
+
   .c-tags {
     --tag-background: var(--c-button-primary-color, var(--color-primary, #000));
     --tag-border-radius: var(--radius-sm, 0);

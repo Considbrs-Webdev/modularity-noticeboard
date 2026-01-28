@@ -3,7 +3,6 @@
 namespace ModularityNoticeboard;
 
 use ModularityNoticeboard\Helper\CacheBust;
-use ModularityNoticeboard\Decorators\Decorators;
 
 class App
 {
@@ -21,15 +20,18 @@ class App
 
         // Register post types
         new Data\Posttype();
+        
+        // Template data
+        new Data\Template();
 
         // Admin settings
         new Admin\Settings();
 
         // ACF customisation
         new Admin\ACF();
-
+    
         // ACF customisation
-        new Decorators();
+        new Frontend\Breadcrumbs();
     }
 
     /**
