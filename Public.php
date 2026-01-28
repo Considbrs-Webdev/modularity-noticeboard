@@ -2,8 +2,8 @@
 
 use ComponentLibrary\Init as ComponentLibraryInit;
 
-if (!function_exists('modularity_toc_render_blade_view')) {
-    function modularity_toc_render_blade_view($view, $data = [], $compress = true)
+if (!function_exists('modularity_noticeboard_render_blade_view')) {
+    function modularity_noticeboard_render_blade_view($view, $data = [], $compress = true)
     {
         $componentLibrary = new ComponentLibraryInit([]);
         $bladeEngine = $componentLibrary->getEngine();
