@@ -58,7 +58,7 @@ class App
      */
     public function enqueueScripts()
     {
-        $scriptFile = CacheBust::name('js/modularity-noticeboard.js');
+        /* $scriptFile = CacheBust::name('js/modularity-noticeboard.js');
 
         if ($scriptFile) {
             wp_enqueue_script(
@@ -68,7 +68,7 @@ class App
                 null,
                 true
             );
-        }
+        } */
     }
 
     /**
