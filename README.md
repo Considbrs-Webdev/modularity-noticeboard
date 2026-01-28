@@ -1,170 +1,146 @@
-# Modularity Table of Contents
+# Modularity Noticeboard
 
-A Modularity module that automatically generates a dynamic, linked table of contents based on headings found on the page. Features a mobile-optimized drawer interface and optional sticky sidebar positioning.
-
-## Description
-
-This plugin provides a Table of Contents module for the Modularity plugin ecosystem. It automatically scans the page content and generates a navigable list of headings, making it easier for users to quickly jump to different sections of long-form content.
+A Modularity module that implements a municipal digital noticeboard for publishing legally binding public notices—meeting summons, agendas, adjusted minutes and decisions—replacing the physical noticeboard, managing appeal deadlines under municipal law, and providing accessible, auditable, and integratable publication workflows.
 
 ## Features
 
-- **Automatic Heading Detection**: Automatically finds and lists headings from the page content
-- **Customizable Heading Levels**: Choose which heading levels (H2, H3, H4) to include in the table of contents
-- **Multiple Container Support**: Scans specific content areas including:
-  - Sidebar content areas
-  - Article content
-  - Main content area
-- **Card Display Option**: Option to display the TOC inside a styled card component
-- **Smart Card Filtering**: Option to ignore headings inside cards except for card headers
-- **Smooth Navigation**: Clickable links that navigate smoothly to each section
-- **Active State Tracking**: Highlights the current section as users scroll through the page
-- **Mobile Drawer Interface**: On mobile devices (below 78em/1248px), TOC appears in a slide-out drawer with a fixed toggle button
-- **Sliding Track Indicator**: Visual indicator that follows the active section
-- **Sticky Sidebar Support**: Option to make the entire sidebar column sticky when TOC is present
-- **Responsive Design**: Works seamlessly across all device sizes with dedicated mobile and desktop UX
+### Custom Post Type for Notices
 
-## Configuration Options
+The plugin registers a custom post type `noticeboard_notice` for managing notices. Each notice can contain:
 
-### Module Instance Settings
+- Title and content
+- Publication date
+- Archive/expiration date
+- Attached PDF documents
+- Protocol links
 
-Configure these settings for each individual TOC module instance:
+### Taxonomies
 
-1. **Include headings from following sidebars**: 
-- **Content area (above article)**
-- **Content area (below article)**
-- **Main container bottom**
-2. **Which heading levels to include**: Choose from H2, H3, and/or H4 headings (default: H2)
-3. **Place in card**: Toggle to display the TOC within a card component
-4. **Ignore card sub-headers**: Option to exclude headings inside cards (except card headers)
+Two taxonomies are available for organizing notices:
 
-### Global Settings
+- **Notice Types** (`noticeboard_notice_type`) – Categorize notices by type (e.g., meeting summons, agendas, decisions, minutes)
+- **Notice Groups** (`notice_group`) – Assign notices to responsible groups or departments (e.g., municipal board, committees)
 
-Configure these settings once for all TOC modules (found in Settings > Table of Contents):
+### Modularity Module
 
-1. **Show sliding track**: Display a visual sliding track indicator that follows the active section (default: enabled)
-2. **Hide on mobile**: Hide the TOC module completely on mobile devices below 78em
-3. **Sticky list**: Make the entire sidebar column sticky when it contains a TOC module
+The Noticeboard module can be placed on any page using Modularity and offers the following display settings:
 
-## CSS Variables
+- **Display style** – Choose how notices are presented (e.g., card view)
+- **Number of notices** – Limit how many notices to show
+- **Filter by notice type** – Show only specific types of notices
+- **Group by notice type** – Organize displayed notices by their type
+- **Archive mode** – Display all notices (useful for archive pages)
+- **Archive link button** – Add a link to the full noticeboard archive
 
-The module uses the following CSS custom properties that can be customized in your theme:
+### Archive Support
 
-### Mobile Drawer
-- `--modularity-toc-mobile-handle-bg`: Background color of the mobile toggle button (default: `var(--c-button-primary-color, #333)`)
-- `--modularity-toc-mobile-handle-color`: Text/icon color of the mobile toggle button (default: `var(--c-button-primary-color-contrasting, #fff)`)
-- `--modularity-toc-mobile-handle-bg-hover`: Background color on hover (default: `var(--c-button-primary-color-hover, #222)`)
+The plugin provides archive display capabilities:
 
-### Sliding Track
-- `--toc-border-width`: Width of the sliding track border (default: 4px)
-- `--toc-track-color`: Color of the active sliding indicator (default: #666)
-- `--toc-border-color`: Color of the background track (default: #ccc)
-- `--toc-track-top`: Calculated top position of the sliding indicator
-- `--toc-track-height`: Calculated height of the sliding indicator
-
-### Sticky Positioning
-- `--sticky-sidebar-top`: Top offset for sticky sidebar (default: `calc(50px + var(--wp-admin--admin-bar--height, 0px))`)
-- `--header-height`: Height of the sticky header (used when body has `sticky-header` class)
-
-### General
-- `--base`: Base spacing unit (default: 8px)
-
-## Example CSS Customization
-
-```css
-/* Customize mobile drawer button colors */
-.modularity-mod-toc {
-  --modularity-toc-mobile-handle-bg: #0073aa;
-  --modularity-toc-mobile-handle-color: #ffffff;
-  --modularity-toc-mobile-handle-bg-hover: #005a87;
-}
-
-/* Customize sliding track appearance */
-.modularity-mod-toc {
-  --toc-border-width: 3px;
-  --toc-track-color: #0073aa;
-  --toc-border-color: #e0e0e0;
-}
-
-/* Adjust sticky sidebar offset */
-:root {
-  --sticky-sidebar-top: 100px;
-}
-```
+- Built-in post type archive for notices
+- Option to use a custom page as the archive
+- Configurable URL slug for the post type
+- Breadcrumb integration for navigation
 
 ## Requirements
 
-- WordPress
-- [Modularity](https://github.com/helsingborg-stad/modularity) plugin
-- [Municipio](https://github.com/helsingborg-stad/municipio) theme (v6.0.0 or higher)
-- Advanced Custom Fields (ACF) Pro
+- WordPress 5.0+
+- [Modularity](https://github.com/helsingborg-stad/Modularity) plugin
+- [Advanced Custom Fields PRO](https://www.advancedcustomfields.com/pro/)
+- PHP 7.4+
+
+Recommended:
+- [Municipio](https://github.com/helsingborg-stad/municipio) theme (version 6.0.0+)
 
 ## Installation
 
-1. Clone or download this repository to your WordPress plugins directory
-2. Run `composer install` to install dependencies
-3. Run `npm install && npm run build` to build assets
-4. Activate the plugin through the WordPress admin panel
-5. The "Table of Contents" module will now be available in Modularity
+1. Download or clone the plugin to your `/wp-content/plugins/` directory:
+   ```bash
+   cd wp-content/plugins
+   git clone https://github.com/considbrs-webdev/modularity-noticeboard.git
+   ```
+
+2. Install PHP dependencies:
+   ```bash
+   cd modularity-noticeboard
+   composer install
+   ```
+
+3. Install JavaScript dependencies and build assets:
+   ```bash
+   npm install
+   npm run build
+   ```
+
+4. Activate the plugin through the WordPress admin panel under **Plugins**.
+
+5. Flush permalinks by visiting **Settings → Permalinks** and clicking "Save Changes".
+
+## Configuration
+
+### General Settings
+
+Navigate to **Noticeboard → Settings** in the WordPress admin to configure:
+
+- **Post type slug** – Customize the URL slug for notices (default: `notice`)
+- **Custom archive page** – Optionally use a regular page as the noticeboard archive instead of the default post type archive
+- **Archive page selection** – Choose which page to use as the archive when custom archive is enabled
+
+### Setting Up Notice Types
+
+1. Go to **Noticeboard → Types**
+2. Add the types of notices you'll be publishing (e.g., "Meeting Summons", "Agenda", "Minutes", "Decision")
+3. Configure display settings for each type if needed
+
+### Setting Up Notice Groups
+
+1. Go to **Noticeboard → Groups**
+2. Add groups representing the entities that publish notices (e.g., "Municipal Board", "Building Committee")
+
+### Using the Module
+
+1. Edit a page and add the **Noticeboard** module using Modularity
+2. Configure the module settings:
+   - Choose display style
+   - Set number of notices to display
+   - Select specific notice types to show (optional)
+   - Enable grouping by notice type
+   - Enable archive button to link to full noticeboard
 
 ## Usage
 
-1. Edit a page or post where Modularity is enabled
-2. Add a new module and select "Table of Contents"
-3. Configure the module settings according to your needs
-4. Publish or update the page
-5. The table of contents will automatically populate based on the headings found on the page
+### Creating a Notice
 
-## Mobile Behavior
+1. Go to **Noticeboard → Add New**
+2. Enter the notice title
+3. Add content or attach a PDF document
+4. Select the appropriate notice type
+5. Assign to the relevant group
+6. Set publication and archive dates if applicable
+7. Publish the notice
 
-Below the 78em (1248px) breakpoint, the TOC transforms into a mobile-optimized experience:
+### Displaying Notices
 
-- A fixed toggle button appears on the right side of the screen
-- Clicking opens a slide-out drawer from the right
-- Drawer includes a close button and overlay for dismissal
-- Focus is trapped within the drawer for accessibility
-- Escape key closes the drawer
-- Respects sticky header positioning when present
+Add the Noticeboard module to any page through Modularity to display notices. For a full archive view, either:
 
-## Accessibility Features
+- Use the built-in archive at `/notice/` (or your configured slug)
+- Create a page with the Noticeboard module in archive mode
 
-- **Keyboard Navigation**: Full keyboard support with Tab/Shift+Tab navigation
-- **Focus Trap**: Focus is trapped within the mobile drawer when open
-- **ARIA Attributes**: Proper ARIA labels, roles, and states for screen readers
-- **Escape Key**: Close drawer with Escape key
-- **Focus Management**: Returns focus to trigger button when drawer closes
+## Hooks and Filters
 
-## Development
+The plugin provides several filters for customization:
 
-### Build Assets
-
-```bash
-npm install
-npm run build
-```
-
-### Development Mode
-
-```bash
-npm run dev
-```
-
-### Watch Mode (rebuild on changes)
-
-```bash
-npm run watch
-```
-
-### Build Development Version (unminified)
-
-```bash
-npm run build:dev
-```
+- `Modularity/Module/Noticeboard/GroupIcon` – Customize the group icon
+- `Modularity/Module/Noticeboard/GroupTitleVariant` – Customize group title heading level
+- `Modularity/Module/Noticeboard/NoticeTitleVariant` – Customize notice title heading level
+- `Modularity/Module/Noticeboard/TitleVariant` – Customize module title heading level
+- `Modularity/Module/Noticeboard/ArchiveLabel` – Customize archive button text
+- `Modularity/Module/Noticeboard/ArchiveIcon` – Customize archive button icon
+- `Modularity/Module/Noticeboard/ArchiveButtonStyle` – Customize archive button styling
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details.
 
-## Credits
+## Author
 
-- **Author**: Consid Borås AB
-- **Repository**: [alingsas-kommun/modularity-toc](https://github.com/alingsas-kommun/modularity-toc)
+Developed by [Consid Borås AB](https://github.com/considbrs-webdev)
