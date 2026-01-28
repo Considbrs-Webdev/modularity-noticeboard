@@ -11,9 +11,6 @@ class App
         // Register module
         add_action('init', array($this, 'registerModule'));
 
-        // Register ACF options page
-        add_action('acf/init', array($this, 'registerOptionsPage'));
-
         // Enqueue scripts and styles
         add_action('wp_enqueue_scripts', array($this, 'enqueueStyles'));
         add_action('wp_enqueue_scripts', array($this, 'enqueueScripts'));
@@ -83,25 +80,5 @@ class App
                 'Noticeboard'
             );
         }
-    }
-
-    /**
-     * Register ACF options page
-     * @return void
-     */
-    public function registerOptionsPage()
-    {
-        /* if (function_exists('acf_add_options_page')) {
-            acf_add_options_page(array(
-                'page_title'    => __('Table of Contents Settings', 'modularity-toc'),
-                'menu_title'    => __('Table of Contents', 'modularity-toc'),
-                'menu_slug'     => 'modularity-toc-settings',
-                'post_id'       => 'modularity-noticeboard-settings',
-                'capability'    => 'manage_options',
-                'parent_slug'   => 'options-general.php',
-                'position'      => false,
-                'icon_url'      => false,
-            ));
-        } */
     }
 }
