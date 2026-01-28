@@ -125,6 +125,11 @@ class Settings
         return isset($useCustomArchivePage) && $useCustomArchivePage === true;
     }
 
+    /**
+     * Get the breadcrumb title from ACF options
+     *
+     * @return string
+     */
     public static function getBreadcumbTitle(): string
     {
         if (!function_exists('get_field')) {
@@ -138,5 +143,25 @@ class Settings
         }
 
         return $customTitle;
+    }
+
+    /**
+     * Get the archival action from ACF options
+     *
+     * @return string
+     */
+    public static function getArchivalAction(): string
+    {
+        if (!function_exists('get_field')) {
+            return 'unpublish';
+        }
+
+        $action = get_field('archival_action', self::OPTION_PAGE_SLUG);
+
+        if (empty($action)) {
+            return 'unpublish';
+        }
+
+        return $action;
     }
 }

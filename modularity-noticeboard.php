@@ -54,5 +54,10 @@ add_filter('/Modularity/externalViewPath', function ($arr) {
     return $arr;
 }, 10, 3);
 
+// Register WP-CLI commands
+if (defined('WP_CLI') && WP_CLI) {
+    WP_CLI::add_command('noticeboard', \ModularityNoticeboard\CLI\ArchiveNoticesCommand::class);
+}
+
 // Start application
 new ModularityNoticeboard\App();

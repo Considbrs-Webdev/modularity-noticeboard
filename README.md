@@ -84,6 +84,10 @@ Navigate to **Noticeboard → Settings** in the WordPress admin to configure:
 - **Post type slug** – Customize the URL slug for notices (default: `notice`)
 - **Custom archive page** – Optionally use a regular page as the noticeboard archive instead of the default post type archive
 - **Archive page selection** – Choose which page to use as the archive when custom archive is enabled
+- **Breadcrumb title** – Customize the title displayed in breadcrumbs
+- **Archival action** – Choose what happens when a notice is archived:
+  - **Unpublish** (default) – Sets the notice to draft status, preserving it for future reference
+  - **Delete** – Permanently removes the notice from the database
 
 ### Setting Up Notice Types
 
@@ -136,6 +140,80 @@ The plugin provides several filters for customization:
 - `Modularity/Module/Noticeboard/ArchiveLabel` – Customize archive button text
 - `Modularity/Module/Noticeboard/ArchiveIcon` – Customize archive button icon
 - `Modularity/Module/Noticeboard/ArchiveButtonStyle` – Customize archive button styling
+
+## WP-CLI Commands
+
+The plugin includes WP-CLI commands for managing notices from the command line.
+
+### Archive Notices
+
+Archive notices that have passed their archive date:
+
+```bash
+# Archive all notices with passed archive dates
+wp noticeboard archive
+
+# Preview what would be archived (dry run)
+wp noticeboard archive --dry-run
+```
+
+### List Notices
+
+List all notices with their archive status:
+
+```bash
+# List notices in table format
+wp noticeboard list
+
+# Output as JSON
+wp noticeboard list --format=json
+
+# Output as CSV
+wp noticeboard list --format=csv
+```
+
+## Automatic Archival (Cron Job)
+
+To automatically archive notices when their archive date passes, you need to set up a system cron job. The plugin does **not** automatically archive notices on its own—you must configure a scheduled task.
+
+### Setting Up the Cron Job
+
+Add a cron job to run the archive command daily (or at your preferred interval):
+
+```bash
+# Edit your crontab
+crontab -e
+
+# Add this line to run archival daily at 1:00 AM
+0 1 * * * cd /path/to/wordpress && wp noticeboard archive --path=/path/to/wordpress
+```
+
+Replace `/path/to/wordpress` with the actual path to your WordPress installation.
+
+### Alternative: Using WP-Cron
+
+If you prefer using WordPress's built-in scheduling, you can create a custom plugin or add to your theme's `functions.php`:
+
+```php
+// Schedule the archival check
+add_action('init', function() {
+    if (!wp_next_scheduled('noticeboard_archive_notices')) {
+        wp_schedule_event(time(), 'daily', 'noticeboard_archive_notices');
+    }
+});
+
+// Run the archival
+add_action('noticeboard_archive_notices', function() {
+    if (class_exists('WP_CLI')) {
+        return; // Skip if running via WP-CLI
+    }
+    
+    // Manually trigger archival logic here or use:
+    // shell_exec('wp noticeboard archive --path=' . ABSPATH);
+});
+```
+
+**Note:** System cron is more reliable than WP-Cron for time-sensitive operations like legal notice archival.
 
 ## License
 

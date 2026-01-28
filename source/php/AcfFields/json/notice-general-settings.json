@@ -93,7 +93,7 @@
             "name": "breadcrumb_title",
             "aria-label": "",
             "type": "text",
-            "instructions": "",
+            "instructions": "Will be displayed instead of the regular label of the post type",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -107,6 +107,37 @@
             "placeholder": "Notices",
             "prepend": "",
             "append": ""
+        },
+        {
+            "key": "field_697a69b88e075",
+            "label": "Archival action",
+            "name": "archival_action",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "When a notice is archived, what will happen to it?",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "unpublish": "Unpublish",
+                "delete": "Delete"
+            },
+            "default_value": "unpublish",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0,
+            "allow_custom": 0,
+            "search_placeholder": ""
         }
     ],
     "location": [
