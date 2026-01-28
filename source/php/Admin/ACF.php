@@ -3,6 +3,7 @@
 namespace ModularityNoticeboard\Admin;
 
 use ModularityNoticeboard\Data\Posttype;
+use ModularityNoticeboard\Helper\CacheBust;
 
 class ACF
 {
@@ -149,9 +150,19 @@ class ACF
         }
 
         $handle = 'modularity-noticeboard-admin-archiving';
-        $src = MODULARITY_NOTICEBOARD_URL . '/source/js/admin-archiving.js';
         $deps = ['jquery', 'acf-input'];
-        $ver = file_exists(MODULARITY_NOTICEBOARD_PATH . 'source/js/admin-archiving.js') ? filemtime(MODULARITY_NOTICEBOARD_PATH . 'source/js/admin-archiving.js') : false;
+
+        $assetKey = 'js/admin-archiving.js';
+        $revved = CacheBust::name($assetKey);
+
+        if ($revved) {
+            $src = MODULARITY_NOTICEBOARD_URL . '/assets/dist/' . ltrim($revved, '/');
+            $ver = file_exists(MODULARITY_NOTICEBOARD_PATH . 'assets/dist/' . $revved) ? filemtime(MODULARITY_NOTICEBOARD_PATH . 'assets/dist/' . $revved) : false;
+        } else {
+            $src = MODULARITY_NOTICEBOARD_URL . '/assets/dist/js/admin-archiving.js';
+            $ver = file_exists(MODULARITY_NOTICEBOARD_PATH . 'assets/dist/js/admin-archiving.js') ? filemtime(MODULARITY_NOTICEBOARD_PATH . 'assets/dist/js/admin-archiving.js') : false;
+        }
+
         wp_enqueue_script($handle, $src, $deps, $ver, true);
         wp_localize_script($handle, 'modularityNoticeboard', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
