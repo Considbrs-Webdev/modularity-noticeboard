@@ -3,15 +3,15 @@
 if (function_exists('acf_add_local_field_group')) {
     acf_add_local_field_group(array(
     'key' => 'group_69720e679fc2b',
-    'title' => __('Noticeboard settings', 'modularity-toc'),
+    'title' => __('Noticeboard settings', 'modularity-noticeboard'),
     'fields' => array(
         0 => array(
             'key' => 'field_697a06c6be319',
-            'label' => __('Post type name', 'modularity-toc'),
+            'label' => __('Post type name', 'modularity-noticeboard'),
             'name' => 'post_type_slug',
             'aria-label' => '',
             'type' => 'text',
-            'instructions' => __('If you want a particular name for the notice post type, for instance notis, you can replace this value. Don\'t forget to save permalinks after changing this.', 'modularity-toc'),
+            'instructions' => __('If you want a particular name for the notice post type, for instance notis, you can replace this value. Don\'t forget to save permalinks after changing this.', 'modularity-noticeboard'),
             'required' => 0,
             'conditional_logic' => 0,
             'wrapper' => array(
@@ -22,17 +22,17 @@
             'default_value' => '',
             'maxlength' => '',
             'allow_in_bindings' => 0,
-            'placeholder' => __('notice', 'modularity-toc'),
+            'placeholder' => __('notice', 'modularity-noticeboard'),
             'prepend' => '',
             'append' => '',
         ),
         1 => array(
             'key' => 'field_697221a4b9062',
-            'label' => __('Use specific page for noticeboard', 'modularity-toc'),
+            'label' => __('Use specific page for noticeboard', 'modularity-noticeboard'),
             'name' => 'custom_archive_page',
             'aria-label' => '',
             'type' => 'true_false',
-            'instructions' => __('Don\'t forget to save permalinks after changing this', 'modularity-toc'),
+            'instructions' => __('Don\'t forget to save permalinks after changing this', 'modularity-noticeboard'),
             'required' => 0,
             'conditional_logic' => 0,
             'wrapper' => array(
@@ -49,11 +49,11 @@
         ),
         2 => array(
             'key' => 'field_69720e67a61d4',
-            'label' => __('Noticeboard archive page', 'modularity-toc'),
+            'label' => __('Noticeboard archive page', 'modularity-noticeboard'),
             'name' => 'noticeboard_main_page',
             'aria-label' => '',
             'type' => 'post_object',
-            'instructions' => __('Will be used for module archive button and breadcrumbs', 'modularity-toc'),
+            'instructions' => __('Will be used for module archive button and breadcrumbs', 'modularity-noticeboard'),
             'required' => 1,
             'conditional_logic' => array(
                 0 => array(
@@ -93,11 +93,11 @@
         ),
         3 => array(
             'key' => 'field_697a0cd481bf1',
-            'label' => __('Breadcrumb title', 'modularity-toc'),
+            'label' => __('Breadcrumb title', 'modularity-noticeboard'),
             'name' => 'breadcrumb_title',
             'aria-label' => '',
             'type' => 'text',
-            'instructions' => __('Will be displayed instead of the regular label of the post type', 'modularity-toc'),
+            'instructions' => __('Will be displayed instead of the regular label of the post type', 'modularity-noticeboard'),
             'required' => 0,
             'conditional_logic' => 0,
             'wrapper' => array(
@@ -108,17 +108,17 @@
             'default_value' => '',
             'maxlength' => '',
             'allow_in_bindings' => 0,
-            'placeholder' => __('Notices', 'modularity-toc'),
+            'placeholder' => __('Notices', 'modularity-noticeboard'),
             'prepend' => '',
             'append' => '',
         ),
         4 => array(
             'key' => 'field_697a69b88e075',
-            'label' => __('Archival action', 'modularity-toc'),
+            'label' => __('Archival action', 'modularity-noticeboard'),
             'name' => 'archival_action',
             'aria-label' => '',
             'type' => 'select',
-            'instructions' => __('When a notice is archived, what will happen to it?', 'modularity-toc'),
+            'instructions' => __('When a notice is archived, what will happen to it?', 'modularity-noticeboard'),
             'required' => 0,
             'conditional_logic' => 0,
             'wrapper' => array(
@@ -127,8 +127,8 @@
                 'id' => '',
             ),
             'choices' => array(
-                'unpublish' => __('Unpublish', 'modularity-toc'),
-                'delete' => __('Delete', 'modularity-toc'),
+                'unpublish' => __('Unpublish', 'modularity-noticeboard'),
+                'delete' => __('Delete', 'modularity-noticeboard'),
             ),
             'default_value' => 'unpublish',
             'return_format' => 'value',

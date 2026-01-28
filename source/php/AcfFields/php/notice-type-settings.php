@@ -3,15 +3,15 @@
 if (function_exists('acf_add_local_field_group')) {
     acf_add_local_field_group(array(
     'key' => 'group_696798e2dc065',
-    'title' => __('Noticeboard: Notice type', 'modularity-toc'),
+    'title' => __('Noticeboard: Notice type', 'modularity-noticeboard'),
     'fields' => array(
         0 => array(
             'key' => 'field_696798e397f46',
-            'label' => __('Automatic archiving?', 'modularity-toc'),
+            'label' => __('Automatic archiving?', 'modularity-noticeboard'),
             'name' => 'automatic_archiving',
             'aria-label' => '',
             'type' => 'true_false',
-            'instructions' => __('Requires the cron job for archiving to be set up', 'modularity-toc'),
+            'instructions' => __('Requires the cron job for archiving to be set up', 'modularity-noticeboard'),
             'required' => 0,
             'conditional_logic' => 0,
             'wrapper' => array(
@@ -28,7 +28,7 @@
         ),
         1 => array(
             'key' => 'field_6967992197f47',
-            'label' => __('Archive after X amount of days', 'modularity-toc'),
+            'label' => __('Archive after X amount of days', 'modularity-noticeboard'),
             'name' => 'archiving_days',
             'aria-label' => '',
             'type' => 'number',
@@ -55,11 +55,11 @@
             'placeholder' => '',
             'step' => 1,
             'prepend' => '',
-            'append' => __('days', 'modularity-toc'),
+            'append' => __('days', 'modularity-noticeboard'),
         ),
         2 => array(
             'key' => 'field_696de06fdcf52',
-            'label' => __('Only count work days', 'modularity-toc'),
+            'label' => __('Only count work days', 'modularity-noticeboard'),
             'name' => 'only_count_work_days',
             'aria-label' => '',
             'type' => 'true_false',

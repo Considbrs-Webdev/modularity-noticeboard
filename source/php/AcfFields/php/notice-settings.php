@@ -3,11 +3,11 @@
 if (function_exists('acf_add_local_field_group')) {
     acf_add_local_field_group(array(
     'key' => 'group_69679a7feea9d',
-    'title' => __('Noticeboard: Notice settings', 'modularity-toc'),
+    'title' => __('Noticeboard: Notice settings', 'modularity-noticeboard'),
     'fields' => array(
         0 => array(
             'key' => 'field_69679b0c8b9bf',
-            'label' => __('Notice type', 'modularity-toc'),
+            'label' => __('Notice type', 'modularity-noticeboard'),
             'name' => 'notice_type',
             'aria-label' => '',
             'type' => 'taxonomy',
@@ -37,7 +37,7 @@
         ),
         1 => array(
             'key' => 'field_69679a808b9be',
-            'label' => __('Archive date', 'modularity-toc'),
+            'label' => __('Archive date', 'modularity-noticeboard'),
             'name' => 'archive_date',
             'aria-label' => '',
             'type' => 'date_picker',
@@ -57,7 +57,7 @@
         ),
         2 => array(
             'key' => 'field_69679b488b9c0',
-            'label' => __('Protocol / PDF', 'modularity-toc'),
+            'label' => __('Protocol / PDF', 'modularity-noticeboard'),
             'name' => 'pdf_file',
             'aria-label' => '',
             'type' => 'link',
@@ -74,7 +74,7 @@
         ),
         3 => array(
             'key' => 'field_696de607ef8bd',
-            'label' => __('Group', 'modularity-toc'),
+            'label' => __('Group', 'modularity-noticeboard'),
             'name' => 'group',
             'aria-label' => '',
             'type' => 'taxonomy',

@@ -3,11 +3,11 @@
 if (function_exists('acf_add_local_field_group')) {
     acf_add_local_field_group(array(
     'key' => 'group_6967a7194079d',
-    'title' => __('Noticeboard: Module settings', 'modularity-toc'),
+    'title' => __('Noticeboard: Module settings', 'modularity-noticeboard'),
     'fields' => array(
         0 => array(
             'key' => 'field_6972396dc1287',
-            'label' => __('Display as', 'modularity-toc'),
+            'label' => __('Display as', 'modularity-noticeboard'),
             'name' => 'display_as',
             'aria-label' => '',
             'type' => 'select',
@@ -20,8 +20,8 @@
                 'id' => '',
             ),
             'choices' => array(
-                'card' => __('Card', 'modularity-toc'),
-                'news' => __('News', 'modularity-toc'),
+                'card' => __('Card', 'modularity-noticeboard'),
+                'news' => __('News', 'modularity-noticeboard'),
             ),
             'default_value' => 'card',
             'return_format' => 'value',
@@ -38,11 +38,11 @@
         ),
         1 => array(
             'key' => 'field_696dd85a5f878',
-            'label' => __('Archive mode', 'modularity-toc'),
+            'label' => __('Archive mode', 'modularity-noticeboard'),
             'name' => 'archive_mode',
             'aria-label' => '',
             'type' => 'true_false',
-            'instructions' => __('Will display all notices that are published', 'modularity-toc'),
+            'instructions' => __('Will display all notices that are published', 'modularity-noticeboard'),
             'required' => 0,
             'conditional_logic' => 0,
             'wrapper' => array(
@@ -59,7 +59,7 @@
         ),
         2 => array(
             'key' => 'field_696f68e1fa2cc',
-            'label' => __('Specific types', 'modularity-toc'),
+            'label' => __('Specific types', 'modularity-noticeboard'),
             'name' => 'specific_types',
             'aria-label' => '',
             'type' => 'acfe_taxonomy_terms',
@@ -106,7 +106,7 @@
         ),
         3 => array(
             'key' => 'field_6967a7191f762',
-            'label' => __('Group by notice type', 'modularity-toc'),
+            'label' => __('Group by notice type', 'modularity-noticeboard'),
             'name' => 'group_by_notice_type',
             'aria-label' => '',
             'type' => 'true_false',
@@ -127,7 +127,7 @@
         ),
         4 => array(
             'key' => 'field_696dd87a5f879',
-            'label' => __('Notices to show', 'modularity-toc'),
+            'label' => __('Notices to show', 'modularity-noticeboard'),
             'name' => 'notices_to_show',
             'aria-label' => '',
             'type' => 'number',
@@ -158,11 +158,11 @@
         ),
         5 => array(
             'key' => 'field_69720fd4c8873',
-            'label' => __('Show link to main page', 'modularity-toc'),
+            'label' => __('Show link to main page', 'modularity-noticeboard'),
             'name' => 'archive_button',
             'aria-label' => '',
             'type' => 'true_false',
-            'instructions' => __('Adds a button that links to the main page set in settings', 'modularity-toc'),
+            'instructions' => __('Adds a button that links to the main page set in settings', 'modularity-noticeboard'),
             'required' => 0,
             'conditional_logic' => array(
                 0 => array(

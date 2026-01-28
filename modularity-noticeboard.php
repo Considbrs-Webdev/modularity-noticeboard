@@ -37,7 +37,7 @@ require_once MODULARITY_NOTICEBOARD_PATH . 'Public.php';
 // Acf auto import and export
 add_action('acf/init', function () {
     $acfExportManager = new \AcfExportManager\AcfExportManager();
-    $acfExportManager->setTextdomain('modularity-toc');
+    $acfExportManager->setTextdomain('modularity-noticeboard');
     $acfExportManager->setExportFolder(MODULARITY_NOTICEBOARD_PATH . 'source/php/AcfFields/');
     $acfExportManager->autoExport(array(
         'notice-general-settings' => 'group_69720e679fc2b',
