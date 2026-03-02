@@ -29,7 +29,7 @@ class Breadcrumbs
             return $items;
         }
         
-        if (!is_singular(Posttype::NOTICE_POST_TYPE) && !is_archive(Posttype::NOTICE_POST_TYPE)) {
+        if (!is_singular(Posttype::NOTICE_POST_TYPE) && !is_post_type_archive(Posttype::NOTICE_POST_TYPE)) {
             return $items;
         }
 
