@@ -1,3 +1,61 @@
+// Single notice: metadata (badge, dates) — align with archive WCAG contrast and typography
+.single-noticeboard_notice,
+.post-type-noticeboard_notice {
+  .c-notice-single__meta {
+    font-size: var(--font-size-body, 1rem);
+  }
+
+  .c-notice-single__row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .c-notice-single__tags {
+    --tag-background: #5d3a1a;
+    --tag-border-radius: 8px;
+    --tag-color: #fff;
+
+    .c-tags__tag {
+      background: var(--tag-background);
+      border-radius: var(--tag-border-radius);
+      color: var(--tag-color);
+      display: inline-block;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+
+      &:hover {
+        color: var(--tag-color);
+      }
+    }
+  }
+
+  .c-notice-single__dates {
+    margin: 0;
+  }
+
+  .c-notice-single__date-row {
+    margin: 0 0 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .c-notice-single__term {
+    display: inline;
+    font-weight: 700;
+    margin: 0 0.25rem 0 0;
+  }
+
+  .c-notice-single__desc {
+    display: inline;
+    font-weight: 400;
+    margin: 0;
+  }
+}
+
 .c-card--noticeboard {
   span.label {
     font-weight: 600;

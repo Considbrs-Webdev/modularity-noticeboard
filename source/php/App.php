@@ -2,6 +2,7 @@
 
 namespace ModularityNoticeboard;
 
+use ModularityNoticeboard\Data\Posttype;
 use ModularityNoticeboard\Helper\CacheBust;
 
 class App
@@ -17,16 +18,19 @@ class App
 
         // Register post types
         new Data\Posttype();
-        
+
         // Template data
         new Data\Template();
+
+        // Municipio view paths (for single-noticeboard_notice.blade.php)
+        add_filter('Municipio/viewPaths', array($this, 'addViewPaths'), 999);
 
         // Admin settings
         new Admin\Settings();
 
         // ACF customisation
         new Admin\ACF();
-    
+
         // ACF customisation
         new Frontend\Breadcrumbs();
     }
@@ -80,5 +84,20 @@ class App
                 'Noticeboard'
             );
         }
+    }
+
+    /**
+     * Add plugin view paths to Municipio for custom templates (single).
+     *
+     * @param array<int, string> $paths The existing view paths
+     * @return array<int, string>
+     */
+    public function addViewPaths(array $paths): array
+    {
+        if (is_singular(Posttype::NOTICE_POST_TYPE)) {
+            $paths[] = MODULARITY_NOTICEBOARD_PATH . 'views';
+        }
+
+        return $paths;
     }
 }

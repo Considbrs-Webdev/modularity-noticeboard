@@ -1,8 +1,8 @@
 <?php
 namespace ModularityNoticeboard\Data;
 
+use ModularityNoticeboard\Helper\NoticeHelper;
 use ModularityNoticeboard\ViewCallableProviders\GetExcerpt;
-use ModularityNoticeboard\ViewCallableProviders\GetTextSearchFieldArguments;
 
 /**
  * Class Template
@@ -21,5 +21,78 @@ class Template {
         
             return $data;
         }, 10, 1);
+
+        add_filter(
+            'Municipio/Template/' . Posttype::NOTICE_POST_TYPE . '/single/viewData',
+            array($this, 'filterSingleViewData'),
+            10,
+            1
+        );
+    }
+
+    /**
+     * Add notice type, notice date, and take-down date for the single template.
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    public function filterSingleViewData(array $data): array
+    {
+        $post = $data['post'] ?? null;
+        if (!$post) {
+            return $data;
+        }
+
+        $postId = 0;
+        if (is_object($post) && method_exists($post, 'getId')) {
+            $postId = (int) $post->getId();
+        } elseif (is_object($post) && isset($post->id)) {
+            $postId = (int) $post->id;
+        }
+
+        if ($postId < 1) {
+            return $data;
+        }
+
+        $wpPost = get_post($postId);
+        if (!$wpPost || $wpPost->post_type !== Posttype::NOTICE_POST_TYPE) {
+            return $data;
+        }
+
+        $terms = get_the_terms($postId, Posttype::NOTICE_TAXONOMY);
+        $typeName = '';
+        if (is_array($terms) && !empty($terms)) {
+            $typeName = $terms[0]->name;
+        }
+
+        $noticeTags = array();
+        if ($typeName !== '') {
+            $noticeTags[] = array(
+                'label' => $typeName,
+            );
+        }
+
+        $publishFormatted = NoticeHelper::getPublishDate($wpPost);
+        $takeDownFormatted = NoticeHelper::getArchiveDate($wpPost);
+
+        $publishIso = get_the_date('c', $postId);
+        if (!is_string($publishIso)) {
+            $publishIso = '';
+        }
+
+        $archiveRaw = function_exists('get_field') ? get_field('archive_date', $postId) : null;
+        $takeDownIso = '';
+        if (is_string($archiveRaw) && $archiveRaw !== '') {
+            $takeDownIso = $archiveRaw;
+        }
+
+        $data['noticeSingleTags'] = $noticeTags;
+        $data['noticeTypeName'] = $typeName;
+        $data['noticePublishDateFormatted'] = $publishFormatted;
+        $data['noticePublishDateIso'] = $publishIso;
+        $data['noticeTakeDownDateFormatted'] = $takeDownFormatted;
+        $data['noticeTakeDownDateIso'] = $takeDownIso;
+
+        return $data;
     }
 }
