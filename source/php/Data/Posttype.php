@@ -55,7 +55,7 @@ class Posttype {
                 'with_front' => false
             ],
             'capability_type'       => 'post',
-            'has_archive'           => !Settings::useCustomArchivePage(),
+            'has_archive'           => true,
             'hierarchical'          => false,
             'menu_position'         => 20,
             'supports'              => ['title', 'editor'],

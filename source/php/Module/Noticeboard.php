@@ -3,7 +3,6 @@
 namespace ModularityNoticeboard;
 
 use ModularityNoticeboard\Data\Posttype;
-use ModularityNoticeboard\Admin\Settings;
 use ModularityNoticeboard\Helper\NoticeHelper;
 
 use WPService\WpService;
@@ -44,7 +43,7 @@ class Noticeboard extends \Modularity\Module
         $data = [
             'groupByNoticeType' => $groupByNoticeType,
             'archiveMode' => $archiveMode,
-            'archiveLink' => $archiveLink === true ? Settings::getMainPageUrl() : false,
+            'archiveLink' => $archiveLink === true ? get_post_type_archive_link(Posttype::NOTICE_POST_TYPE) : false,
             'displayAs' => $this->displayAs,
         ];
 
