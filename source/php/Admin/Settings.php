@@ -52,97 +52,41 @@ class Settings
     }
 
     /**
-     * Get the Noticeboard main page ID from ACF options
-     * 
+     * Page used for breadcrumb path (ancestors + label).
+     * Prefer the plugin ACF field; if empty, use Municipio/WordPress
+     * `page_for_{post_type}` (the page chosen for this CPT under Reading-style settings).
+     *
      * @return int|null
      */
-    public static function getMainPageId(): ?int
+    public static function getNoticeboardLandingPageId(): ?int
     {
-        if (!function_exists('get_field')) {
-            return null;
+        if (function_exists('get_field')) {
+            $page = get_field('noticeboard_main_page', self::OPTION_PAGE_SLUG);
+            if ($page && is_numeric($page)) {
+                $id = (int) $page;
+                if ($id > 0 && get_post_status($id) !== false) {
+                    return $id;
+                }
+            }
         }
 
-        $useCustomArchivePage = get_field('custom_archive_page', self::OPTION_PAGE_SLUG);
-
-        if (!isset($useCustomArchivePage) || $useCustomArchivePage !== true) {
-            return null;
-        }
-
-        $page = get_field('noticeboard_main_page', self::OPTION_PAGE_SLUG);
-
-        if (!$page || !is_numeric($page)) {
-            return null;
-        }
-
-        return intval($page);
+        return self::getLandingPageIdFromReadingOption();
     }
 
     /**
-     * Get the Noticeboard main page as a WP_Post from ACF options
-     *
-     * If the stored value is an ID (int or numeric string) this will return
-     * the corresponding `WP_Post`. If already a post object it will be
-     * returned as-is. Returns null when not set or when post cannot be found.
-     *
-     * @return \WP_Post|null
+     * @return int|null
      */
-    public static function getMainPageUrl()
+    public static function getLandingPageIdFromReadingOption(): ?int
     {
-        if (!function_exists('get_field')) {
+        $pageId = get_option('page_for_' . Posttype::NOTICE_POST_TYPE);
+
+        if (!is_numeric($pageId)) {
             return null;
         }
 
-        $useCustomArchivePage = get_field('custom_archive_page', self::OPTION_PAGE_SLUG);
+        $id = (int) $pageId;
 
-        if (!isset($useCustomArchivePage) || $useCustomArchivePage !== true) {
-            return get_post_type_archive_link(Posttype::NOTICE_POST_TYPE);
-        }
-
-        $page = self::getMainPageId();
-
-        if (!$page || !is_numeric($page)) {
-            return get_post_type_archive_link(Posttype::NOTICE_POST_TYPE);
-        }
-
-        $post = get_post(intval($page));
-        
-        return get_permalink($post) ?: get_post_type_archive_link(Posttype::NOTICE_POST_TYPE);
-    }
-
-    /**
-     * Check if a custom archive page is set to be used
-     *
-     * @return bool
-     */
-    public static function useCustomArchivePage(): bool
-    {
-        if (!function_exists('get_field')) {
-            return false;
-        }
-
-        $useCustomArchivePage = get_field('custom_archive_page', self::OPTION_PAGE_SLUG);
-
-        return isset($useCustomArchivePage) && $useCustomArchivePage === true;
-    }
-
-    /**
-     * Get the breadcrumb title from ACF options
-     *
-     * @return string
-     */
-    public static function getBreadcumbTitle(): string
-    {
-        if (!function_exists('get_field')) {
-            return __('Notices', 'modularity-noticeboard');
-        }
-
-        $customTitle = get_field('breadcrumb_title', self::OPTION_PAGE_SLUG);
-
-        if (empty($customTitle)) {
-            return __('Notices', 'modularity-noticeboard');
-        }
-
-        return $customTitle;
+        return $id > 0 && get_post_status($id) !== false ? $id : null;
     }
 
     /**

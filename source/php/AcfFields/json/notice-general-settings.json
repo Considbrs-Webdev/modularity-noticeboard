@@ -24,43 +24,14 @@
             "append": ""
         },
         {
-            "key": "field_697221a4b9062",
-            "label": "Use specific page for noticeboard",
-            "name": "custom_archive_page",
-            "aria-label": "",
-            "type": "true_false",
-            "instructions": "Don't forget to save permalinks after changing this",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "message": "",
-            "default_value": 0,
-            "allow_in_bindings": 0,
-            "ui_on_text": "",
-            "ui_off_text": "",
-            "ui": 1
-        },
-        {
             "key": "field_69720e67a61d4",
-            "label": "Noticeboard archive page",
+            "label": "Noticeboard context page",
             "name": "noticeboard_main_page",
             "aria-label": "",
             "type": "post_object",
-            "instructions": "Will be used for module archive button and breadcrumbs",
-            "required": 1,
-            "conditional_logic": [
-                [
-                    {
-                        "field": "field_697221a4b9062",
-                        "operator": "==",
-                        "value": "1"
-                    }
-                ]
-            ],
+            "instructions": "Optional if the same page is already set as the noticeboard archive under Reading (page for this post type). Otherwise pick the page whose title and ancestors should appear in breadcrumbs. Singles use the post type archive URL for the last crumb when it exists.",
+            "required": 0,
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
@@ -80,33 +51,12 @@
             "acfe_bidirectional": {
                 "acfe_bidirectional_enabled": "0"
             },
-            "allow_null": 0,
+            "allow_null": 1,
             "allow_in_bindings": 0,
             "bidirectional": 0,
             "ui": 1,
             "bidirectional_target": [],
             "save_post_type": ""
-        },
-        {
-            "key": "field_697a0cd481bf1",
-            "label": "Breadcrumb title",
-            "name": "breadcrumb_title",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "Will be displayed instead of the regular label of the post type",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "allow_in_bindings": 0,
-            "placeholder": "Notices",
-            "prepend": "",
-            "append": ""
         },
         {
             "key": "field_697a69b88e075",
@@ -166,4 +116,3 @@
     "acfe_meta": "",
     "acfe_note": ""
 }]
-
