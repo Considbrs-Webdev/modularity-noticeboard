@@ -24,11 +24,8 @@
             'save_terms' => 1,
             'load_terms' => 1,
             'return_format' => 'id',
-            'field_type' => 'select',
+            'field_type' => 'multi_select',
             'allow_null' => 0,
-            'acfe_bidirectional' => array(
-                'acfe_bidirectional_enabled' => '0',
-            ),
             'allow_in_bindings' => 0,
             'bidirectional' => 0,
             'multiple' => 0,
@@ -56,6 +53,24 @@
             'allow_in_bindings' => 0,
         ),
         2 => array(
+            'key' => 'field_6a0eeddaa1aa7',
+            'label' => __('Archive time', 'modularity-noticeboard'),
+            'name' => 'archive_time',
+            'aria-label' => '',
+            'type' => 'time_picker',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'display_format' => 'H:i',
+            'return_format' => 'H:i',
+            'allow_in_bindings' => 0,
+        ),
+        3 => array(
             'key' => 'field_69679b488b9c0',
             'label' => __('Protocol / PDF', 'modularity-noticeboard'),
             'name' => 'pdf_file',
@@ -72,7 +87,7 @@
             'return_format' => 'url',
             'allow_in_bindings' => 0,
         ),
-        3 => array(
+        4 => array(
             'key' => 'field_696de607ef8bd',
             'label' => __('Group', 'modularity-noticeboard'),
             'name' => 'group',
@@ -130,11 +145,7 @@
     'description' => '',
     'show_in_rest' => 0,
     'display_title' => '',
-    'acfe_autosync' => array(
-        0 => 'json',
-    ),
-    'acfe_form' => 0,
-    'acfe_meta' => '',
-    'acfe_note' => '',
+    'allow_ai_access' => false,
+    'ai_description' => '',
 ));
 }

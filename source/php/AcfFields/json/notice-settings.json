@@ -21,11 +21,8 @@
             "save_terms": 1,
             "load_terms": 1,
             "return_format": "id",
-            "field_type": "select",
+            "field_type": "multi_select",
             "allow_null": 0,
-            "acfe_bidirectional": {
-                "acfe_bidirectional_enabled": "0"
-            },
             "allow_in_bindings": 0,
             "bidirectional": 0,
             "multiple": 0,
@@ -49,6 +46,24 @@
             "return_format": "Y-m-d",
             "first_day": 1,
             "default_to_current_date": 0,
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_6a0eeddaa1aa7",
+            "label": "Archive time",
+            "name": "archive_time",
+            "aria-label": "",
+            "type": "time_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "display_format": "H:i",
+            "return_format": "H:i",
             "allow_in_bindings": 0
         },
         {
@@ -125,11 +140,7 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "acfe_autosync": [
-        "json"
-    ],
-    "acfe_form": 0,
-    "acfe_meta": "",
-    "acfe_note": ""
+    "allow_ai_access": false,
+    "ai_description": ""
 }]
 

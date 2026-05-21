@@ -28,7 +28,17 @@ class NoticeHelper
         $archiveDate = get_field('archive_date', $post->ID);
         if ($archiveDate) {
             $dateFormat = get_option('date_format');
-            return date_i18n($dateFormat, strtotime($archiveDate));
+            $formatted  = date_i18n($dateFormat, strtotime($archiveDate));
+
+            $archiveTime = get_field('archive_time', $post->ID);
+            if ($archiveTime) {
+                $timeFormat = get_option('time_format');
+                $timezone   = wp_timezone();
+                $dt         = new \DateTime($archiveDate . ' ' . $archiveTime, $timezone);
+                $formatted .= ' ' . wp_date($timeFormat, $dt->getTimestamp());
+            }
+
+            return $formatted;
         }
         return null;
     }

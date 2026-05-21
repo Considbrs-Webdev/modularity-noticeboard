@@ -61,15 +61,14 @@ class Template {
 
         $terms = get_the_terms($postId, Posttype::NOTICE_TAXONOMY);
         $typeName = '';
+        $noticeTags = array();
         if (is_array($terms) && !empty($terms)) {
             $typeName = $terms[0]->name;
-        }
-
-        $noticeTags = array();
-        if ($typeName !== '') {
-            $noticeTags[] = array(
-                'label' => $typeName,
-            );
+            foreach ($terms as $term) {
+                $noticeTags[] = array(
+                    'label' => $term->name,
+                );
+            }
         }
 
         $publishFormatted = NoticeHelper::getPublishDate($wpPost);
@@ -80,10 +79,17 @@ class Template {
             $publishIso = '';
         }
 
-        $archiveRaw = function_exists('get_field') ? get_field('archive_date', $postId) : null;
+        $archiveRaw  = function_exists('get_field') ? get_field('archive_date', $postId) : null;
+        $archiveTime = function_exists('get_field') ? get_field('archive_time', $postId) : null;
         $takeDownIso = '';
         if (is_string($archiveRaw) && $archiveRaw !== '') {
-            $takeDownIso = $archiveRaw;
+            if (is_string($archiveTime) && $archiveTime !== '') {
+                $timezone    = wp_timezone();
+                $dt          = new \DateTime($archiveRaw . ' ' . $archiveTime, $timezone);
+                $takeDownIso = $dt->format('c');
+            } else {
+                $takeDownIso = $archiveRaw;
+            }
         }
 
         $data['noticeSingleTags'] = $noticeTags;

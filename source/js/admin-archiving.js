@@ -66,6 +66,17 @@
 
         if(!noticeTypeField) { return; }
 
+        // Returns true only when the archive date field has no value yet
+        function isArchiveDateEmpty(){
+            if(archiveField && typeof archiveField.val === 'function'){
+                var v = archiveField.val();
+                if(v && v !== '') { return false; }
+            }
+            var $hidden = $('input[name="acf[' + archiveFieldKey + ']"]').first();
+            if($hidden.length && $hidden.val()) { return false; }
+            return true;
+        }
+
         // Try multiple ways to find the underlying select/input (handles Select2)
         var $select = null;
 
@@ -83,9 +94,9 @@
 
         if(!$select || !$select.length) { return; }
 
-        function onTermSelected(val){
-            if(!val) { return; }
-            fetchTermArchiving(val, function(data){
+        function onTermSelected(termId){
+            if(!termId || !isArchiveDateEmpty()) { return; }
+            fetchTermArchiving(termId, function(data){
                 if(!data) { return; }
 
                 // Prefer server-calculated archive_date
@@ -105,18 +116,21 @@
             });
         }
 
-        // Bind to regular change
-        $select.off('.mod_nb').on('change.mod_nb', function(){
-            var val = $(this).val();
-            onTermSelected(val);
+        // Remove any previously bound mod_nb listeners before re-binding
+        $select.off('.mod_nb');
+
+        // Select2 fires this event for each individual item added in a multi-select,
+        // providing the exact term ID via e.params.data.id
+        $select.on('select2:select.mod_nb', function(e){
+            var termId = e && e.params && e.params.data && e.params.data.id;
+            onTermSelected(termId);
         });
 
-        // Bind to Select2 selection event as well
-        $select.off('select2:select.mod_nb').on('select2:select.mod_nb', function(e){
+        // Fallback change handler for non-Select2 environments only
+        $select.on('change.mod_nb', function(){
+            if($(this).data('select2')) { return; } // Select2 is handled above
             var val = $(this).val();
-            if(!val && e && e.params && e.params.data && e.params.data.id) {
-                val = e.params.data.id;
-            }
+            if(Array.isArray(val)) { val = val[0]; }
             onTermSelected(val);
         });
 

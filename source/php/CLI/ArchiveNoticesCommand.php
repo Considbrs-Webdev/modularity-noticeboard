@@ -35,9 +35,11 @@ class ArchiveNoticesCommand
      */
     public function archive($args, $assoc_args)
     {
-        $dryRun = isset($assoc_args['dry-run']);
-        $action = Settings::getArchivalAction();
-        $today  = date('Y-m-d');
+        $dryRun   = isset($assoc_args['dry-run']);
+        $action   = Settings::getArchivalAction();
+        $now      = current_datetime();
+        $today    = $now->format('Y-m-d');
+        $timezone = wp_timezone();
 
         WP_CLI::log(sprintf(
             'Checking notices for archival (action: %s)%s',
@@ -76,6 +78,18 @@ class ArchiveNoticesCommand
 
         foreach ($notices as $notice) {
             $archiveDate = get_field('archive_date', $notice->ID);
+            $archiveTime = get_field('archive_time', $notice->ID);
+
+            // If archive_time is set and the archive date is today, only archive
+            // once the specified time has passed in the WordPress timezone.
+            if ($archiveTime && $archiveDate === $today) {
+                $archiveDt = new \DateTime($archiveDate . ' ' . $archiveTime, $timezone);
+                if ($archiveDt > new \DateTime('now', $timezone)) {
+                    continue;
+                }
+            }
+
+            $archiveDisplay = $archiveDate . ($archiveTime ? ' ' . $archiveTime : '');
 
             if ($dryRun) {
                 WP_CLI::log(sprintf(
@@ -83,7 +97,7 @@ class ArchiveNoticesCommand
                     $action === 'delete' ? 'delete' : 'unpublish',
                     $notice->post_title,
                     $notice->ID,
-                    $archiveDate
+                    $archiveDisplay
                 ));
                 $archived++;
                 continue;
@@ -97,7 +111,7 @@ class ArchiveNoticesCommand
                     $action === 'delete' ? 'Deleted' : 'Unpublished',
                     $notice->post_title,
                     $notice->ID,
-                    $archiveDate
+                    $archiveDisplay
                 ));
                 $archived++;
             } else {
