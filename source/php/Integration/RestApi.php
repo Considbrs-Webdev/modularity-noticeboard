@@ -2,6 +2,7 @@
 
 namespace ModularityNoticeboard\Integration;
 
+use ModularityNoticeboard\Data\Posttype;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -11,6 +12,10 @@ final class RestApi
 
     public function registerRoute(): void
     {
+        register_rest_route(self::REST_NAMESPACE, '/terms', [
+            'methods' => 'GET', 'callback' => [$this, 'terms'],
+            'permission_callback' => [$this, 'permission'],
+        ]);
         register_rest_route(self::REST_NAMESPACE, '/notices/(?P<external_id>[^/]+)', [
             [
                 'methods' => 'PUT', 'callback' => [$this, 'put'],
@@ -27,6 +32,37 @@ final class RestApi
     {
         $auth = (new Tokens())->authenticate($request);
         return is_wp_error($auth) ? $auth : true;
+    }
+
+    public function terms(WP_REST_Request $request)
+    {
+        $auth = (new Tokens())->authenticate($request);
+        if (is_wp_error($auth)) {
+            return $auth;
+        }
+        $data = ['notice_types' => [], 'groups' => []];
+        foreach ([
+            'notice_types' => [Posttype::NOTICE_TAXONOMY, 'type_ids'],
+            'groups' => [Posttype::NOTICE_GROUP_TAXONOMY, 'group_ids'],
+        ] as $key => [$taxonomy, $policyField]) {
+            $ids = $auth['policy'][$policyField];
+            // An empty include list would return every term in WordPress.
+            if (!$ids) {
+                continue;
+            }
+            $terms = get_terms(['taxonomy' => $taxonomy, 'include' => $ids,
+                'hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC']);
+            if (is_wp_error($terms)) {
+                return Validation::error('noticeboard_terms_failed', 'Noticeboard terms could not be retrieved.', 500);
+            }
+            foreach ($terms as $term) {
+                $data[$key][] = ['id' => (int) $term->term_id, 'name' => $term->name, 'slug' => $term->slug];
+            }
+        }
+        $response = new WP_REST_Response($data, 200);
+        // Results depend on token permissions and must not be shared by caches.
+        $response->header('Cache-Control', 'private, no-store');
+        return $response;
     }
 
     public function put(WP_REST_Request $request)

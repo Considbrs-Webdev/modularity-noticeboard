@@ -28,6 +28,13 @@ function request(string $method, string $id, string $token, ?array $body = null)
     }
     return rest_get_server()->dispatch($r);
 }
+function permittedTerms(string $token, array $query = []): WP_REST_Response
+{
+    $r = new WP_REST_Request('GET', '/noticeboard/v1/terms');
+    $r->set_header('authorization', 'Bearer ' . $token);
+    $r->set_query_params($query);
+    return rest_get_server()->dispatch($r);
+}
 function nova(array $body): WP_REST_Response
 {
     $r = new WP_REST_Request('POST', '/nova/v1/publish');
@@ -47,6 +54,27 @@ try {
     $issued = $tokens->create($source, 'Test integration', ['create', 'update', 'withdraw'], [$typeId], [$groupId]);
     check(!is_wp_error($issued), 'Token issuance');
     $token = $issued['token'];
+    $termsResponse = permittedTerms($token);
+    check($termsResponse->get_status() === 200 && $termsResponse->get_data() === [
+        'notice_types' => [['id' => $typeId, 'name' => $source, 'slug' => $source]],
+        'groups' => [['id' => $groupId, 'name' => $source, 'slug' => $source]],
+    ], 'Discovery exposes only permitted terms, including unused terms, with integer IDs, names and slugs');
+    check($termsResponse->get_headers()['Cache-Control'] === 'private, no-store', 'Discovery response cannot be shared by caches');
+    check(permittedTerms($token, ['type_ids' => [$groupId], 'include' => [], 'hide_empty' => true])->get_data() === $termsResponse->get_data(), 'Query parameters cannot override token discovery policy');
+    check(permittedTerms('')->get_status() === 401 && permittedTerms('invalid')->get_status() === 401, 'Discovery rejects missing and invalid tokens');
+    $_SERVER['HTTPS'] = 'off';
+    check(permittedTerms($token)->get_status() === 403, 'Discovery requires HTTPS');
+    $_SERVER['HTTPS'] = 'on';
+    $emptyToken = $tokens->create($source . '-empty', 'Empty discovery policy', ['create'], [], []);
+    check(permittedTerms($emptyToken['token'])->get_data() === ['notice_types' => [], 'groups' => []], 'Empty discovery policy exposes no terms');
+    $tokens->revoke($emptyToken['token_id']);
+    check(permittedTerms($emptyToken['token'])->get_status() === 401, 'Discovery rejects revoked tokens');
+    $deletedTerm = wp_insert_term($source . '-deleted', 'noticeboard_notice_type');
+    $deletedToken = $tokens->create($source . '-deleted', 'Deleted term policy', ['create'], [(int) $deletedTerm['term_id']], []);
+    wp_delete_term($deletedTerm['term_id'], 'noticeboard_notice_type');
+    check(permittedTerms($deletedToken['token'])->get_data() === ['notice_types' => [], 'groups' => []], 'Discovery omits deleted permitted terms');
+    $tokens->revoke($deletedToken['token_id']);
+
     $data = ['title' => 'Test notice', 'content' => '<p>Allowed</p><script>alert(1)</script>',
         'publish_at' => time() - 300, 'archive_at' => time() + 86400,
         'document_url' => 'https://example.invalid/document.pdf', 'type_ids' => [$typeId], 'group_ids' => [$groupId]];

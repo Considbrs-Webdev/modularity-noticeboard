@@ -37,6 +37,31 @@ Authorization header through the web server/proxy. For TLS-terminating proxies,
 configure WordPress to recognise HTTPS through your trusted proxy configuration.
 Never log this header. Use your gateway's request limits if needed.
 
+### Discover permitted notice types and groups
+
+`GET /terms`
+
+Use the same bearer token as for publication. Returns only existing terms allowed
+by that token, including terms that have no notices yet. No extra read scope is
+required. Empty selections return empty arrays; deleted terms are omitted.
+The response is private and must not be cached.
+
+```sh
+curl --request GET 'https://example.se/wp-json/noticeboard/v1/terms' \
+  --header 'Authorization: Bearer nb_TOKEN_ID.SECRET'
+```
+
+```json
+{
+  "notice_types": [{"id": 12, "name": "Bygglov", "slug": "bygglov"}],
+  "groups": [{"id": 18, "name": "Samhällsbyggnadsnämnden", "slug": "samhallsbyggnadsnamnden"}]
+}
+```
+
+Use these IDs in `type_ids` and `group_ids` when publishing. This endpoint does not
+create terms or change permissions. Refresh the list when configuring an
+integration or when a previously accepted term is rejected.
+
 ### Create or replace a notice
 
 `PUT /notices/{external_id}`
