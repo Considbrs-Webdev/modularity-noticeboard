@@ -112,7 +112,7 @@ final class Admin
                     <span class="nb-integration-label"><?php esc_html_e('API endpoint', 'modularity-noticeboard'); ?></span>
                     <code class="nb-integration-endpoint"><?php echo esc_html(rest_url(RestApi::REST_NAMESPACE . '/notices/{external_id}')); ?></code>
                     <p class="description"><?php esc_html_e('Requests require HTTPS and a bearer token. Each external notice has a unique ID within its source.', 'modularity-noticeboard'); ?></p>
-                    <p><a class="button button-secondary" href="https://github.com/Considbrs-Webdev/modularity-noticeboard/blob/5fe801cd0918c0f805d83e3328baf8f5c80c28d3/docs/integrations.md" target="_blank" rel="noopener noreferrer"><?php esc_html_e('API documentation and request examples', 'modularity-noticeboard'); ?></a></p>
+                    <p><a class="button button-secondary" href="https://github.com/Considbrs-Webdev/modularity-noticeboard/blob/main/docs/integrations.md" target="_blank" rel="noopener noreferrer"><?php esc_html_e('API documentation and request examples', 'modularity-noticeboard'); ?></a></p>
                 </div>
             </section>
 
