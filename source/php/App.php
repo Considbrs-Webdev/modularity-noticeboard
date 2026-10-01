@@ -19,6 +19,8 @@ class App
         // Register post types
         new Data\Posttype();
 
+        (new Integration\Hooks())->register();
+
         // Template data
         new Data\Template();
 

@@ -4,7 +4,9 @@
  * Plugin Name:       Modularity Noticeboard
  * Plugin URI:        https://github.com/considbrs-webdev/modularity-noticeboard.git
  * Description:       A Modularity module that implements a municipal digital noticeboard for publishing legally binding public notices—meeting summons, agendas, adjusted minutes and decisions—replacing the physical noticeboard, managing appeal deadlines under municipal law, and providing accessible, auditable, and integratable publication workflows.
- * Version: 1.0.0
+ * Version:           1.1.0
+ * Requires PHP:      8.2
+ * Requires at least: 5.5
  * Author:            Consid Borås AB
  * Author URI:        https://github.com/considbrs-webdev
  * License:           MIT

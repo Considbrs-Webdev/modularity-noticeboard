@@ -1,0 +1,44 @@
+/* Only enqueued on Noticeboard → Integrations. Keep native WordPress controls. */
+.nb-integrations { max-width: 1280px; }
+.nb-integrations-intro { font-weight: 400; color: #646970; margin: 8px 0 24px; }
+.nb-integration-card { background: #fff; border: 1px solid #c3c4c7; margin-bottom: 20px; min-width: 0; }
+.nb-integration-card-header { border-bottom: 1px solid #dcdcde; padding: 18px 24px; }
+.nb-integration-card-header h2 { margin: 0; font-size: 16px; line-height: 1.5; }
+.nb-integration-card-header p { font-weight: 400; color: #646970; margin: 6px 0 0; }
+.nb-integration-card-body { padding: 20px 24px; }
+.nb-integration-card-body > :first-child { margin-top: 0; }
+.nb-integration-card-body > :last-child { margin-bottom: 0; }
+.nb-integrations-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.nb-integration-label { display: block; font-weight: 600; margin-bottom: 8px; }
+.nb-integration-endpoint { display: inline-block; padding: 8px 12px; background: #f6f7f7; overflow-wrap: anywhere; max-width: 100%; box-sizing: border-box; }
+.nb-integrations .form-table { margin-top: 0; }
+.nb-integrations .form-table th { width: 135px; padding: 16px 12px 16px 0; }
+.nb-integrations .form-table td { padding: 12px 0; }
+.nb-integrations .regular-text { width: 100%; max-width: 32em; }
+.nb-integrations .description { font-weight: 400; font-size: 13px; line-height: 1.6; }
+.nb-integration-checks { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.nb-integration-checks label { font-weight: 400; white-space: nowrap; }
+.nb-integration-terms { border: 1px solid #dcdcde; padding: 12px; max-height: 170px; overflow-y: auto; }
+.nb-integrations .form-table .nb-integration-terms label { display: block; font-weight: 400; margin-bottom: 10px; }
+.nb-integrations .form-table .nb-integration-terms label:last-child { margin-bottom: 0; }
+.nb-integration-term-id { color: #646970; font-size: 13px; }
+.nb-integrations .submit { margin-bottom: 0; padding-bottom: 0; }
+.nb-integration-table-wrap { overflow-x: auto; }
+.nb-integration-table-wrap th, .nb-integration-table-wrap td { padding: 12px; vertical-align: top; }
+.nb-integration-table-wrap code { overflow-wrap: anywhere; }
+.nb-integration-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.nb-integration-status { display: inline-block; padding: 3px 9px; border-radius: 3px; background: #f0f0f1; color: #50575e; font-weight: 600; }
+.nb-integration-status.is-active { background: #edfaef; color: #005b12; }
+.nb-integration-empty { padding: 36px 16px; text-align: center; }
+.nb-integration-empty .dashicons { color: #8c8f94; width: 32px; height: 32px; font-size: 32px; }
+.nb-integration-empty h3 { margin: 16px 0 8px; font-size: 14px; }
+.nb-integration-empty p { margin: 0; }
+.nb-integrations .notice.inline { margin: 0 0 20px; }
+@media (max-width: 1100px) { .nb-integrations-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 782px) {
+    .nb-integration-card-header, .nb-integration-card-body { padding: 16px; }
+    .nb-integrations .form-table th { width: auto; padding: 12px 0 6px; }
+    .nb-integrations .form-table td { padding: 0 0 16px; }
+    .nb-integrations .form-table .nb-integration-terms label { min-height: 28px; line-height: 28px; }
+    .nb-integration-checks { gap: 16px; }
+}

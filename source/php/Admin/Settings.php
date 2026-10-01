@@ -23,8 +23,9 @@ class Settings
         }
 
         acf_add_options_sub_page(array(
-            'page_title'  => 'Noticeboard Settings',
-            'menu_title'  => 'Settings',
+            'page_title'  => __('Noticeboard settings', 'modularity-noticeboard'),
+            'menu_title'  => __('Settings', 'modularity-noticeboard'),
+            'menu_slug'   => 'acf-options-settings',
             'parent_slug' => 'edit.php?post_type=noticeboard_notice',
             'post_id'     => self::OPTION_PAGE_SLUG,
             'capability'  => 'edit_posts',
