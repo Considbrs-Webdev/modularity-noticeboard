@@ -50,3 +50,10 @@ Thumbs.db
 # ignore dist folder
 dist/
 dist
+# Repository release skill for Codex and Claude
+!.agents/
+!.agents/skills/
+!.agents/skills/release/
+!.claude/
+!.claude/skills/
+!.claude/skills/release

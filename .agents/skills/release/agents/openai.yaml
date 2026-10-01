@@ -1,0 +1,4 @@
+interface:
+  display_name: "Noticeboard Release"
+  short_description: "Prepare and publish English noticeboard releases"
+  default_prompt: "Use $release to prepare or publish a Modularity Noticeboard release with an English changelog, Git tag and GitHub release notes."
