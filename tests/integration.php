@@ -247,6 +247,32 @@ try {
     check(strpos($html, '_wpnonce') !== false && strpos($html, 'name="operation"') !== false, 'Admin mutation forms include nonce');
     check(strpos($html, $token) === false && strpos($html, SOKIGO_NOVA_PUBLISH_PASSWORD) === false, 'Admin does not reveal secrets');
     check(!array_key_exists('token_hash', $tokens->listing()[0]), 'Token listing excludes hashes');
+    check(strpos($html, 'nb-api-heading') < strpos($html, 'nb-nova-heading'), 'General API precedes Nova settings');
+    global $wpdb;
+    $storedDate = $wpdb->get_var($wpdb->prepare('SELECT created_at FROM ' . Storage::table('tokens') . ' WHERE token_id = %s', $issued['token_id']));
+    $dateOptions = [];
+    foreach (['timezone_string', 'date_format', 'time_format'] as $option) {
+        $dateOptions[$option] = get_option($option);
+    }
+    try {
+        $wpdb->update(Storage::table('tokens'), ['created_at' => '2026-01-01 23:30:00'], ['token_id' => $issued['token_id']]);
+        update_option('date_format', 'Y-m-d');
+        update_option('time_format', 'H:i');
+        update_option('timezone_string', 'Europe/Stockholm');
+        ob_start(); $admin->render(); $datedHtml = ob_get_clean();
+        check(strpos($datedHtml, 'Created: 2026-01-02 00:30') !== false, 'Admin converts UTC creation time across date boundary to WordPress timezone');
+        update_option('timezone_string', 'America/New_York');
+        update_option('date_format', 'd/m/Y');
+        ob_start(); $admin->render(); $datedHtml = ob_get_clean();
+        check(strpos($datedHtml, 'Created: 01/01/2026 18:30') !== false, 'Admin follows changed WordPress timezone and date format');
+        check(strpos($datedHtml, 'Created (UTC)') === false, 'Admin no longer labels local creation times UTC');
+    } finally {
+        $wpdb->update(Storage::table('tokens'), ['created_at' => $storedDate], ['token_id' => $issued['token_id']]);
+        foreach ($dateOptions as $option => $value) {
+            update_option($option, $value);
+        }
+    }
+
     $tokens->revoke($issued['token_id']);
     check(request('PUT', 'revoked', $token, $data)->get_status() === 401, 'Revoked token rejected');
     check(is_wp_error($tokens->rotate($issued['token_id'])), 'Revoked token cannot be rotated back to active');

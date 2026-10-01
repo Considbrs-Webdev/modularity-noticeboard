@@ -14,6 +14,7 @@ final class Hooks
 
         $admin = new Admin();
         add_action('admin_menu', [$admin, 'menu']);
+        add_action('admin_enqueue_scripts', [$admin, 'enqueueStyles']);
         add_action('admin_post_noticeboard_integrations', [$admin, 'save']);
     }
 }

@@ -7,11 +7,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-22T16:20:01+00:00\n"
-"PO-Revision-Date: 2026-01-22 17:20+0100\n"
+"POT-Creation-Date: 2026-10-01T22:21:48+00:00\n"
+"PO-Revision-Date: 2026-10-02 00:30+0200\n"
 "Language: sv_SE\n"
 "X-Generator: Poedit 3.8\n"
 "X-Domain: modularity-noticeboard\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
 #: modularity-noticeboard.php
@@ -25,8 +26,18 @@ msgstr "https://github.com/considbrs-webdev/modularity-noticeboard.git"
 
 #. Description of the plugin
 #: modularity-noticeboard.php
-msgid "A Modularity module that implements a municipal digital noticeboard for publishing legally binding public notices—meeting summons, agendas, adjusted minutes and decisions—replacing the physical noticeboard, managing appeal deadlines under municipal law, and providing accessible, auditable, and integratable publication workflows."
-msgstr "En Modularity-modul som implementerar en kommunal digital anslagstavla för att publicera juridiskt bindande kungörelser – kallelser till sammanträden, dagordningar, justerade protokoll och beslut – som ersätter den fysiska anslagstavlan, hanterar överklagandefrister enligt kommunallagen och ger tillgängliga, spårbara och integrerbara publiceringsflöden."
+msgid ""
+"A Modularity module that implements a municipal digital noticeboard for "
+"publishing legally binding public notices—meeting summons, agendas, adjusted "
+"minutes and decisions—replacing the physical noticeboard, managing appeal "
+"deadlines under municipal law, and providing accessible, auditable, and "
+"integratable publication workflows."
+msgstr ""
+"En Modularity-modul som implementerar en kommunal digital anslagstavla för "
+"att publicera juridiskt bindande kungörelser – kallelser till sammanträden, "
+"dagordningar, justerade protokoll och beslut – som ersätter den fysiska "
+"anslagstavlan, hanterar överklagandefrister enligt kommunallagen och ger "
+"tillgängliga, spårbara och integrerbara publiceringsflöden."
 
 #. Author of the plugin
 #: modularity-noticeboard.php
@@ -37,6 +48,151 @@ msgstr "Consid Borås AB"
 #: modularity-noticeboard.php
 msgid "https://github.com/considbrs-webdev"
 msgstr "https://github.com/considbrs-webdev"
+
+#: source/php/AcfFields/php/notice-general-settings.php:6
+msgid "Noticeboard settings"
+msgstr "Inställningar för anslagstavla"
+
+#: source/php/AcfFields/php/notice-general-settings.php:10
+msgid "Post type name"
+msgstr "Namn på inläggstyp"
+
+#: source/php/AcfFields/php/notice-general-settings.php:14
+msgid ""
+"If you want a particular name for the notice post type, for instance notis, "
+"you can replace this value. Don't forget to save permalinks after changing "
+"this."
+msgstr ""
+"Om du vill ha ett särskilt namn på inläggstypen för notiser, till exempel "
+"«notis», kan du byta ut detta värde. Glöm inte att spara permalänkar efter "
+"ändringen."
+
+#: source/php/AcfFields/php/notice-general-settings.php:25
+msgid "notice"
+msgstr "notis"
+
+#: source/php/AcfFields/php/notice-general-settings.php:31
+msgid "Noticeboard context page"
+msgstr ""
+
+#: source/php/AcfFields/php/notice-general-settings.php:35
+msgid ""
+"Optional if the same page is already set as the noticeboard archive under "
+"Reading (page for this post type). Otherwise pick the page whose title and "
+"ancestors should appear in breadcrumbs. Singles use the post type archive "
+"URL for the last crumb when it exists."
+msgstr ""
+
+#: source/php/AcfFields/php/notice-general-settings.php:67
+msgid "Archival action"
+msgstr "Åtgärd vid arkivering"
+
+#: source/php/AcfFields/php/notice-general-settings.php:71
+msgid "When a notice is archived, what will happen to it?"
+msgstr "Vad ska hända med en notis när den arkiveras?"
+
+#: source/php/AcfFields/php/notice-general-settings.php:80
+msgid "Unpublish"
+msgstr "Avpublicera"
+
+#: source/php/AcfFields/php/notice-general-settings.php:81
+msgid "Delete"
+msgstr "Radera"
+
+#: source/php/AcfFields/php/notice-module-settings.php:8
+msgid "Noticeboard: Module settings"
+msgstr "Anslagstavla: Modulinställningar"
+
+#: source/php/AcfFields/php/notice-module-settings.php:12
+msgid "Display as"
+msgstr "Visa som"
+
+#: source/php/AcfFields/php/notice-module-settings.php:25
+msgid "Card"
+msgstr "Kort"
+
+#: source/php/AcfFields/php/notice-module-settings.php:26
+msgid "News"
+msgstr "Nyheter"
+
+#: source/php/AcfFields/php/notice-module-settings.php:43
+msgid "Archive mode"
+msgstr "Arkivläge"
+
+#: source/php/AcfFields/php/notice-module-settings.php:47
+msgid "Will display all notices that are published"
+msgstr "Visar alla publicerade notiser"
+
+#: source/php/AcfFields/php/notice-module-settings.php:64
+msgid "Specific types"
+msgstr "Vissa typer"
+
+#: source/php/AcfFields/php/notice-module-settings.php:111
+msgid "Group by notice type"
+msgstr "Gruppera efter notistyp"
+
+#: source/php/AcfFields/php/notice-module-settings.php:132
+msgid "Notices to show"
+msgstr "Notiser att visa"
+
+#: source/php/AcfFields/php/notice-module-settings.php:163
+msgid "Show link to main page"
+msgstr "Visa länk till huvudsida"
+
+#: source/php/AcfFields/php/notice-module-settings.php:167
+msgid "Adds a button that links to the main page set in settings"
+msgstr ""
+"Lägger till en knapp som länkar till den huvudsida som anges i "
+"inställningarna"
+
+#: source/php/AcfFields/php/notice-settings.php:8
+msgid "Noticeboard: Notice settings"
+msgstr "Anslagstavla: Notisinställningar"
+
+#: source/php/AcfFields/php/notice-settings.php:12
+msgid "Notice type"
+msgstr "Notistyp"
+
+#: source/php/AcfFields/php/notice-settings.php:39
+#: source/php/Helper/NoticeHelper.php:66
+msgid "Archive date"
+msgstr "Nedtagningsdatum"
+
+#: source/php/AcfFields/php/notice-settings.php:59
+msgid "Archive time"
+msgstr ""
+
+#: source/php/AcfFields/php/notice-settings.php:77
+msgid "Protocol / PDF"
+msgstr "Protokoll / PDF"
+
+#: source/php/AcfFields/php/notice-settings.php:94
+msgid "Group"
+msgstr "Grupp"
+
+#: source/php/AcfFields/php/notice-type-settings.php:8
+msgid "Noticeboard: Notice type"
+msgstr "Anslagstavla: Notistyp"
+
+#: source/php/AcfFields/php/notice-type-settings.php:12
+msgid "Automatic archiving?"
+msgstr "Automatisk arkivering?"
+
+#: source/php/AcfFields/php/notice-type-settings.php:16
+msgid "Requires the cron job for archiving to be set up"
+msgstr "Kräver att cron-jobb för arkivering är konfigurerat"
+
+#: source/php/AcfFields/php/notice-type-settings.php:33
+msgid "Archive after X amount of days"
+msgstr "Arkivera efter X antal dagar"
+
+#: source/php/AcfFields/php/notice-type-settings.php:60
+msgid "days"
+msgstr "dagar"
+
+#: source/php/AcfFields/php/notice-type-settings.php:64
+msgid "Only count work days"
+msgstr "Räkna endast arbetsdagar"
 
 #: source/php/Admin/ACF.php:65
 msgid "Detailed settings"
@@ -182,173 +338,377 @@ msgstr "Grupper"
 msgid "Link to protocol (PDF)"
 msgstr "Länk till protokoll (PDF)"
 
-#: source/php/Module/Noticeboard.php:23
-msgid "Noticeboard"
-msgstr "Anslagstavla"
-
-#: source/php/Module/Noticeboard.php:24
-msgid "Noticeboards"
-msgstr "Anslagstavlor"
-
-#: source/php/Module/Noticeboard.php:25
-msgid "Display noticeboard messages"
-msgstr "Visa meddelanden från anslagstavlan"
-
-#: source/php/Module/Noticeboard.php:67
-msgid "To noticeboard"
-msgstr "Till anslagstavlan"
-
-#: source/php/Helper/NoticeHelper.php:55
+#: source/php/Helper/NoticeHelper.php:65
 msgid "Published"
 msgstr "Anslagsdatum"
 
-#: source/php/AcfFields/php/notice-settings.php:42
-#: source/php/Helper/NoticeHelper.php:56
-msgid "Archive date"
-msgstr "Nedtagningsdatum"
+#: source/php/Integration/Admin.php:17 source/php/Integration/Admin.php:103
+msgid "Noticeboard integrations"
+msgstr "Anslagstavlans integrationer"
 
-#: source/php/AcfFields/php/notice-general-settings.php:8
-msgid "Noticeboard settings"
-msgstr "Inställningar för anslagstavla"
+#: source/php/Integration/Admin.php:18
+msgid "Integrations"
+msgstr "Integrationer"
 
-#: source/php/AcfFields/php/notice-general-settings.php:12
-msgid "Post type name"
-msgstr "Namn på inläggstyp"
+#: source/php/Integration/Admin.php:24
+msgid "You cannot manage noticeboard integrations."
+msgstr "Du saknar behörighet att hantera anslagstavlans integrationer."
 
-#: source/php/AcfFields/php/notice-general-settings.php:16
-msgid "If you want a particular name for the notice post type, for instance notis, you can replace this value. Don't forget to save permalinks after changing this."
-msgstr "Om du vill ha ett särskilt namn på inläggstypen för notiser, till exempel «notis», kan du byta ut detta värde. Glöm inte att spara permalänkar efter ändringen."
+#: source/php/Integration/Admin.php:31
+msgid "Use HTTPS to create or rotate tokens."
+msgstr "Använd HTTPS för att skapa eller byta token."
 
-#: source/php/AcfFields/php/notice-general-settings.php:27
-msgid "notice"
-msgstr "notis"
+#: source/php/Integration/Admin.php:49
+msgid "Select valid term IDs."
+msgstr "Välj giltiga term-ID:n."
 
-#: source/php/AcfFields/php/notice-general-settings.php:33
-msgid "Use specific page for noticeboard"
-msgstr "Använd särskild sida för anslagstavlan"
+#: source/php/Integration/Admin.php:56
+msgid "Invalid token ID."
+msgstr "Ogiltigt token-ID."
 
-#: source/php/AcfFields/php/notice-general-settings.php:37
-msgid "Don't forget to save permalinks after changing this"
-msgstr "Glöm inte att spara permalänkar efter ändring"
+#: source/php/Integration/Admin.php:60
+msgid "Token could not be revoked."
+msgstr "Token kunde inte återkallas."
 
-#: source/php/AcfFields/php/notice-general-settings.php:54
-msgid "Noticeboard archive page"
-msgstr "Arkivsida för anslagstavlan"
+#: source/php/Integration/Admin.php:63
+msgid "Unknown operation."
+msgstr "Okänd åtgärd."
 
-#: source/php/AcfFields/php/notice-general-settings.php:58
-msgid "Will be used for module archive button and breadcrumbs"
-msgstr "Används för modulens arkivknapp och brödsmulor"
+#: source/php/Integration/Admin.php:72
+msgid "Could not save integration"
+msgstr "Integrationen kunde inte sparas"
 
-#: source/php/AcfFields/php/notice-general-settings.php:98
-msgid "Breadcrumb title"
-msgstr "Titel i brödsmulor"
+#: source/php/Integration/Admin.php:75
+msgid "Copy your token now"
+msgstr "Kopiera din token nu"
 
-#: source/php/AcfFields/php/notice-general-settings.php:102
-msgid "Will be displayed instead of the regular label of the post type"
-msgstr "Visas istället för den ordinarie etiketten för inläggstypen"
+#: source/php/Integration/Admin.php:76
+msgid ""
+"It will not be displayed again. Rotation invalidates the previous token "
+"immediately."
+msgstr ""
+"Den visas inte igen. När du byter token slutar den tidigare att fungera "
+"direkt."
 
-#: source/php/AcfFields/php/notice-general-settings.php:113
-#: source/php/Admin/Settings.php:136
-#: source/php/Admin/Settings.php:142
-msgid "Notices"
-msgstr "Notiser"
+#: source/php/Integration/Admin.php:77
+msgid "Noticeboard token"
+msgstr "Token för anslagstavlan"
 
-#: source/php/AcfFields/php/notice-general-settings.php:119
-msgid "Archival action"
-msgstr "Åtgärd vid arkivering"
+#: source/php/Integration/Admin.php:80
+msgid "Back to integrations"
+msgstr "Tillbaka till integrationer"
 
-#: source/php/AcfFields/php/notice-general-settings.php:123
-msgid "When a notice is archived, what will happen to it?"
-msgstr "Vad ska hända med en notis när den arkiveras?"
+#: source/php/Integration/Admin.php:104
+msgid "Connect external systems to publish notices on your noticeboard."
+msgstr "Anslut externa system för att publicera anslag på din anslagstavla."
 
-#: source/php/AcfFields/php/notice-general-settings.php:132
-msgid "Unpublish"
+#: source/php/Integration/Admin.php:108
+msgid "General publication API"
+msgstr "Generellt publicerings-API"
+
+#: source/php/Integration/Admin.php:109
+msgid ""
+"Create a token for each integration and choose which notices it can manage."
+msgstr ""
+"Skapa en token för varje integration och välj vilka anslag den får hantera."
+
+#: source/php/Integration/Admin.php:112
+msgid "API endpoint"
+msgstr "API-endpoint"
+
+#: source/php/Integration/Admin.php:114
+msgid ""
+"Requests require HTTPS and a bearer token. Each external notice has a unique "
+"ID within its source."
+msgstr ""
+"Anrop kräver HTTPS och en bearer-token. Varje externt anslag har ett unikt "
+"ID inom sin källa."
+
+#: source/php/Integration/Admin.php:121 source/php/Integration/Admin.php:167
+msgid "Create token"
+msgstr "Skapa token"
+
+#: source/php/Integration/Admin.php:122
+msgid "The token is displayed once after creation. Store it securely."
+msgstr "Token visas en gång när den har skapats. Förvara den säkert."
+
+#: source/php/Integration/Admin.php:128
+msgid "Token name"
+msgstr "Tokennamn"
+
+#: source/php/Integration/Admin.php:130
+msgid "A name that helps you recognise the integration."
+msgstr "Ett namn som hjälper dig att känna igen integrationen."
+
+#: source/php/Integration/Admin.php:134
+msgid "Source identifier"
+msgstr "Källidentifierare"
+
+#: source/php/Integration/Admin.php:136
+msgid ""
+"Use a stable identifier, for example building-permits. Tokens with the same "
+"identifier manage the same notices. The identifier nova is reserved."
+msgstr ""
+"Använd en beständig identifierare, till exempel bygglov. Token med samma "
+"identifierare hanterar samma anslag. Identifieraren nova är reserverad."
+
+#: source/php/Integration/Admin.php:140 source/php/Integration/Admin.php:142
+msgid "Permissions"
+msgstr "Behörigheter"
+
+#: source/php/Integration/Admin.php:150
+msgid "Allowed notice types"
+msgstr "Tillåtna anslagstyper"
+
+#: source/php/Integration/Admin.php:150
+msgid "Allowed groups"
+msgstr "Tillåtna grupper"
+
+#: source/php/Integration/Admin.php:159
+msgid "No terms available. Add them to the noticeboard first."
+msgstr "Det finns inga termer. Lägg först till dem i anslagstavlan."
+
+#: source/php/Integration/Admin.php:162
+msgid "Only selected terms are allowed. Leave empty to allow none."
+msgstr ""
+"Endast markerade termer tillåts. Lämna tomt för att inte tillåta några."
+
+#: source/php/Integration/Admin.php:174
+msgid "Existing tokens"
+msgstr "Befintliga token"
+
+#: source/php/Integration/Admin.php:175
+msgid "Rotate a token to replace its secret, or revoke it to stop access."
+msgstr ""
+"Byt token för att ersätta dess hemliga nyckel, eller återkalla den för att "
+"stoppa åtkomsten."
+
+#: source/php/Integration/Admin.php:182
+msgid "No tokens yet"
+msgstr "Inga token ännu"
+
+#: source/php/Integration/Admin.php:183
+msgid "Create a token to connect your first integration."
+msgstr "Skapa en token för att ansluta din första integration."
+
+#: source/php/Integration/Admin.php:189
+msgid "Integration"
+msgstr "Integration"
+
+#: source/php/Integration/Admin.php:190
+msgid "Access"
+msgstr "Åtkomst"
+
+#: source/php/Integration/Admin.php:191
+msgid "Actions"
+msgstr "Åtgärder"
+
+#. translators: %s: Creation date and time in the site's timezone.
+#: source/php/Integration/Admin.php:197
+msgid "Created: %s"
+msgstr "Skapad: %s"
+
+#: source/php/Integration/Admin.php:202
+msgid "Revoked"
+msgstr "Återkallad"
+
+#: source/php/Integration/Admin.php:205
+msgid "Rotate"
+msgstr "Byt token"
+
+#: source/php/Integration/Admin.php:205
+msgid "Revoke"
+msgstr "Återkalla"
+
+#. translators: 1: Token action, 2: Integration name.
+#: source/php/Integration/Admin.php:208
+msgid "%1$s token: %2$s"
+msgstr "%1$s: %2$s"
+
+#: source/php/Integration/Admin.php:228
+msgid "Receive building permit notices and decisions from Sokigo Nova."
+msgstr "Ta emot bygglovskungörelser och beslut från Sokigo Nova."
+
+#: source/php/Integration/Admin.php:232
+msgid ""
+"Another plugin currently handles Nova publications. This setting only "
+"controls the noticeboard integration."
+msgstr ""
+"Ett annat tillägg hanterar just nu publiceringar från Nova. Den här "
+"inställningen styr endast anslagstavlans integration."
+
+#: source/php/Integration/Admin.php:236
+msgid "Status"
+msgstr "Status"
+
+#: source/php/Integration/Admin.php:237
+msgid "Active"
+msgstr "Aktiv"
+
+#: source/php/Integration/Admin.php:237
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: source/php/Integration/Admin.php:238
+msgid "Publication endpoint"
+msgstr "Publiceringsendpoint"
+
+#: source/php/Integration/Admin.php:240
+msgid "Credentials configured"
+msgstr "Inloggningsuppgifter konfigurerade"
+
+#: source/php/Integration/Admin.php:241
+msgid "Yes"
+msgstr "Ja"
+
+#: source/php/Integration/Admin.php:241
+msgid "No"
+msgstr "Nej"
+
+#: source/php/Integration/Admin.php:242
+msgid ""
+"Define SOKIGO_NOVA_PUBLISH_USERNAME and SOKIGO_NOVA_PUBLISH_PASSWORD in "
+"WordPress configuration. Requests require HTTPS."
+msgstr ""
+"Definiera SOKIGO_NOVA_PUBLISH_USERNAME och SOKIGO_NOVA_PUBLISH_PASSWORD i "
+"WordPress konfiguration. Anrop kräver HTTPS."
+
+#: source/php/Integration/Admin.php:243
+msgid "Handled by"
+msgstr "Hanteras av"
+
+#: source/php/Integration/Admin.php:244
+msgid "Noticeboard plugin"
+msgstr "Anslagstavlans tillägg"
+
+#: source/php/Integration/Admin.php:244
+msgid "Another plugin"
+msgstr "Ett annat tillägg"
+
+#: source/php/Integration/Admin.php:244
+msgid "No active endpoint"
+msgstr "Ingen aktiv endpoint"
+
+#: source/php/Integration/Admin.php:245
+msgid "Enable integration"
+msgstr "Aktivera integration"
+
+#: source/php/Integration/Admin.php:246
+msgid "Enable shared Nova adapter"
+msgstr "Aktivera den gemensamma Nova-integrationen"
+
+#: source/php/Integration/Admin.php:248
+msgid "Save Nova configuration"
+msgstr "Spara Nova-inställningar"
+
+#: source/php/Integration/Admin.php:258
+msgid "Create"
+msgstr "Skapa"
+
+#: source/php/Integration/Admin.php:258
+msgid "Update"
+msgstr "Uppdatera"
+
+#: source/php/Integration/Admin.php:258
+msgid "Withdraw"
 msgstr "Avpublicera"
 
-#: source/php/AcfFields/php/notice-general-settings.php:133
-msgid "Delete"
-msgstr "Radera"
+#: source/php/Integration/Admin.php:266 source/php/Integration/Admin.php:273
+msgid "None"
+msgstr "Inga"
 
-#: source/php/AcfFields/php/notice-module-settings.php:8
-msgid "Noticeboard: Module settings"
-msgstr "Anslagstavla: Modulinställningar"
+#: source/php/Integration/Admin.php:273
+msgid "Types:"
+msgstr "Typer:"
 
-#: source/php/AcfFields/php/notice-module-settings.php:12
-msgid "Display as"
-msgstr "Visa som"
+#: source/php/Integration/Admin.php:273
+msgid "Groups:"
+msgstr "Grupper:"
 
-#: source/php/AcfFields/php/notice-module-settings.php:25
-msgid "Card"
-msgstr "Kort"
+#: source/php/Integration/NovaPublicationEndpoint.php:174
+msgid "Case ID"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-module-settings.php:26
-msgid "News"
-msgstr "Nyheter"
+#: source/php/Integration/NovaPublicationEndpoint.php:174
+msgid "Estate"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-module-settings.php:43
-msgid "Archive mode"
-msgstr "Arkivläge"
+#: source/php/Integration/NovaPublicationEndpoint.php:175
+msgid "Decision"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-module-settings.php:47
-msgid "Will display all notices that are published"
-msgstr "Visar alla publicerade notiser"
+#: source/php/Integration/NovaPublicationEndpoint.php:175
+msgid "Decision number"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-module-settings.php:64
-msgid "Specific types"
-msgstr "Vissa typer"
+#: source/php/Integration/NovaPublicationEndpoint.php:176
+msgid "Decision date"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-module-settings.php:111
-msgid "Group by notice type"
-msgstr "Gruppera efter notistyp"
+#: source/php/Integration/NovaPublicationEndpoint.php:176
+msgid "Response date"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-module-settings.php:132
-msgid "Notices to show"
-msgstr "Notiser att visa"
+#: source/php/Integration/Tokens.php:13
+msgid ""
+"Use a source slug other than nova, a label, and at least one valid scope."
+msgstr ""
+"Ange en källidentifierare som inte är nova, ett namn och minst en giltig "
+"behörighet."
 
-#: source/php/AcfFields/php/notice-module-settings.php:163
-msgid "Show link to main page"
-msgstr "Visa länk till huvudsida"
+#: source/php/Integration/Tokens.php:18
+msgid "Select existing permitted taxonomy terms."
+msgstr "Välj befintliga tillåtna taxonomitermer."
 
-#: source/php/AcfFields/php/notice-module-settings.php:167
-msgid "Adds a button that links to the main page set in settings"
-msgstr "Lägger till en knapp som länkar till den huvudsida som anges i inställningarna"
+#: source/php/Integration/Tokens.php:33
+msgid "Token could not be saved."
+msgstr "Token kunde inte sparas."
 
-#: source/php/AcfFields/php/notice-settings.php:8
-msgid "Noticeboard: Notice settings"
-msgstr "Anslagstavla: Notisinställningar"
+#: source/php/Integration/Tokens.php:73
+msgid "Active token could not be rotated."
+msgstr "Den aktiva token kunde inte bytas."
 
-#: source/php/AcfFields/php/notice-settings.php:12
-msgid "Notice type"
-msgstr "Notistyp"
+#: source/php/Module/Noticeboard.php:22
+msgid "Noticeboard"
+msgstr "Anslagstavla"
 
-#: source/php/AcfFields/php/notice-settings.php:62
-msgid "Protocol / PDF"
-msgstr "Protokoll / PDF"
+#: source/php/Module/Noticeboard.php:23
+msgid "Noticeboards"
+msgstr "Anslagstavlor"
 
-#: source/php/AcfFields/php/notice-settings.php:79
-msgid "Group"
-msgstr "Grupp"
+#: source/php/Module/Noticeboard.php:24
+msgid "Display noticeboard messages"
+msgstr "Visa meddelanden från anslagstavlan"
 
-#: source/php/AcfFields/php/notice-type-settings.php:8
-msgid "Noticeboard: Notice type"
-msgstr "Anslagstavla: Notistyp"
+#: source/php/Module/Noticeboard.php:66
+msgid "To noticeboard"
+msgstr "Till anslagstavlan"
 
-#: source/php/AcfFields/php/notice-type-settings.php:12
-msgid "Automatic archiving?"
-msgstr "Automatisk arkivering?"
+#: views/partials/notice-meta.blade.php:22
+msgid "Anslagsdatum"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-type-settings.php:16
-msgid "Requires the cron job for archiving to be set up"
-msgstr "Kräver att cron-jobb för arkivering är konfigurerat"
+#: views/partials/notice-meta.blade.php:30
+msgid "Nedtagningsdatum"
+msgstr ""
 
-#: source/php/AcfFields/php/notice-type-settings.php:33
-msgid "Archive after X amount of days"
-msgstr "Arkivera efter X antal dagar"
+#~ msgid "Use specific page for noticeboard"
+#~ msgstr "Använd särskild sida för anslagstavlan"
 
-#: source/php/AcfFields/php/notice-type-settings.php:60
-msgid "days"
-msgstr "dagar"
+#~ msgid "Don't forget to save permalinks after changing this"
+#~ msgstr "Glöm inte att spara permalänkar efter ändring"
 
-#: source/php/AcfFields/php/notice-type-settings.php:64
-msgid "Only count work days"
-msgstr "Räkna endast arbetsdagar"
+#~ msgid "Noticeboard archive page"
+#~ msgstr "Arkivsida för anslagstavlan"
+
+#~ msgid "Will be used for module archive button and breadcrumbs"
+#~ msgstr "Används för modulens arkivknapp och brödsmulor"
+
+#~ msgid "Breadcrumb title"
+#~ msgstr "Titel i brödsmulor"
+
+#~ msgid "Will be displayed instead of the regular label of the post type"
+#~ msgstr "Visas istället för den ordinarie etiketten för inläggstypen"
+
+#~ msgid "Notices"
+#~ msgstr "Notiser"

@@ -10,12 +10,12 @@ final class Tokens
         if (!preg_match('/^[a-z0-9][a-z0-9_-]{0,63}$/D', $source) || $source === 'nova'
             || trim($label) === '' || strlen($label) > 200 || !$scopes
             || array_diff($scopes, ['create', 'update', 'withdraw'])) {
-            return Validation::error('noticeboard_invalid_token_policy', 'Use a source slug other than nova, a label, and at least one valid scope.');
+            return Validation::error('noticeboard_invalid_token_policy', __('Use a source slug other than nova, a label, and at least one valid scope.', 'modularity-noticeboard'));
         }
         foreach (['noticeboard_notice_type' => $typeIds, 'notice_group' => $groupIds] as $taxonomy => $ids) {
             foreach ($ids as $id) {
                 if (!is_int($id) || $id <= 0 || !term_exists($id, $taxonomy)) {
-                    return Validation::error('noticeboard_invalid_token_policy', 'Select existing permitted taxonomy terms.');
+                    return Validation::error('noticeboard_invalid_token_policy', __('Select existing permitted taxonomy terms.', 'modularity-noticeboard'));
                 }
             }
         }
@@ -30,7 +30,7 @@ final class Tokens
             'created_at' => gmdate('Y-m-d H:i:s'), 'revoked' => 0,
         ]);
         if (!$saved) {
-            return Validation::error('noticeboard_token_save_failed', 'Token could not be saved.', 500);
+            return Validation::error('noticeboard_token_save_failed', __('Token could not be saved.', 'modularity-noticeboard'), 500);
         }
         return ['token_id' => $id, 'token' => 'nb_' . $id . '.' . $secret];
     }
@@ -70,7 +70,7 @@ final class Tokens
         $secret = bin2hex(random_bytes(32));
         $saved = $wpdb->update(Storage::table('tokens'), ['token_hash' => hash('sha256', $secret)], ['token_id' => $id, 'revoked' => 0]);
         if ($saved !== 1) {
-            return Validation::error('noticeboard_token_rotation_failed', 'Active token could not be rotated.', 400);
+            return Validation::error('noticeboard_token_rotation_failed', __('Active token could not be rotated.', 'modularity-noticeboard'), 400);
         }
         return ['token_id' => $id, 'token' => 'nb_' . $id . '.' . $secret];
     }
