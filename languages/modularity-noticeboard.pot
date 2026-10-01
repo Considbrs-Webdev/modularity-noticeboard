@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T22:21:48+00:00\n"
+"POT-Creation-Date: 2026-10-01T22:29:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: modularity-noticeboard\n"
@@ -40,6 +40,7 @@ msgid "https://github.com/considbrs-webdev"
 msgstr ""
 
 #: source/php/AcfFields/php/notice-general-settings.php:6
+#: source/php/Admin/Settings.php:26
 msgid "Noticeboard settings"
 msgstr ""
 
@@ -174,6 +175,10 @@ msgstr ""
 
 #: source/php/Admin/ACF.php:65
 msgid "Detailed settings"
+msgstr ""
+
+#: source/php/Admin/Settings.php:27
+msgid "Settings"
 msgstr ""
 
 #: source/php/Data/Posttype.php:30

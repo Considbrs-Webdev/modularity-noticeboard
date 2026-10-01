@@ -1,15 +1,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Modularity Noticeboard 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/modularity-noticeboard\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/modularity-"
+"noticeboard\n"
+"POT-Creation-Date: 2026-10-01T22:29:54+00:00\n"
+"PO-Revision-Date: 2026-10-02 00:30+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T22:21:48+00:00\n"
-"PO-Revision-Date: 2026-10-02 00:30+0200\n"
-"Language: sv_SE\n"
 "X-Generator: Poedit 3.8\n"
 "X-Domain: modularity-noticeboard\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -50,6 +51,7 @@ msgid "https://github.com/considbrs-webdev"
 msgstr "https://github.com/considbrs-webdev"
 
 #: source/php/AcfFields/php/notice-general-settings.php:6
+#: source/php/Admin/Settings.php:26
 msgid "Noticeboard settings"
 msgstr "Inställningar för anslagstavla"
 
@@ -73,7 +75,7 @@ msgstr "notis"
 
 #: source/php/AcfFields/php/notice-general-settings.php:31
 msgid "Noticeboard context page"
-msgstr ""
+msgstr "Anslagstavlans huvudsida"
 
 #: source/php/AcfFields/php/notice-general-settings.php:35
 msgid ""
@@ -82,6 +84,11 @@ msgid ""
 "ancestors should appear in breadcrumbs. Singles use the post type archive "
 "URL for the last crumb when it exists."
 msgstr ""
+"Valfritt om samma sida redan är vald som anslagstavlans arkivsida under "
+"Inställningar → Läsa (sida för den här inläggstypen). Välj annars den sida "
+"vars titel och överordnade sidor ska visas i brödsmulorna. På enskilda "
+"anslag används inläggstypens arkivadress för den sista brödsmulan, om den "
+"finns."
 
 #: source/php/AcfFields/php/notice-general-settings.php:67
 msgid "Archival action"
@@ -197,6 +204,10 @@ msgstr "Räkna endast arbetsdagar"
 #: source/php/Admin/ACF.php:65
 msgid "Detailed settings"
 msgstr "Detaljerade inställningar"
+
+#: source/php/Admin/Settings.php:27
+msgid "Settings"
+msgstr "Inställningar"
 
 #: source/php/Data/Posttype.php:30
 msgctxt "Post type general name"
