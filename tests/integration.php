@@ -199,22 +199,20 @@ try {
     remove_filter('update_post_metadata', $fail, 10);
     $r = request('PUT', 'failure', $token, $data);
     check($r->get_status() === 200 && $r->get_data()['post_id'] === (int) $pending['post_id'], 'Retry recovers same draft after failure');
-    // Nova contract and legacy identity migration.
+    // Nova publication contract and durable identity.
     $novaId = 'N-' . $source;
     $payload = ['type' => 2, 'id' => $novaId, 'title' => 'Nova decision', 'content' => '<p>Decision</p>',
         'publishDate' => time() - 300, 'publishEndDate' => time() + 86400, 'decisionDate' => time() - 600, 'decisionNumber' => '42'];
-    $legacyId = wp_insert_post(['post_type' => 'noticeboard_notice', 'post_status' => 'publish', 'post_title' => 'Legacy']);
-    update_post_meta($legacyId, '_pitea_nova_publication_id', $novaId);
-    update_post_meta($legacyId, '_pitea_nova_publication_type', 2);
-    wp_set_object_terms($legacyId, [$groupId], 'notice_group');
-    update_post_meta($legacyId, 'pdf_file', ['url' => 'https://example.invalid/legacy.pdf', 'title' => '', 'target' => '']);
     $r = nova($payload);
-    check($r->get_status() === 200 && $r->get_data() === ['success' => true, 'post_id' => $legacyId], 'Nova migrates existing ID and preserves response contract');
-    check(get_post_meta($legacyId, NoticeWriter::SOURCE_META, true) === 'nova', 'Neutral migration provenance');
-    check(wp_get_object_terms($legacyId, 'notice_group', ['fields' => 'ids']) === [$groupId], 'Nova preserves locally assigned groups');
-    check(get_post_meta($legacyId, 'pdf_file', true)['url'] === 'https://example.invalid/legacy.pdf', 'Nova preserves attached document');
-    check(get_post_meta($legacyId, '_pitea_nova_publication_payload', true) === '', 'Raw payload not retained');
-    check(nova($payload)->get_data()['post_id'] === $legacyId, 'Nova retry idempotent');
+    check($r->get_status() === 200 && $r->get_data()['success'] === true, 'Nova creates notice and preserves response contract');
+    $novaPostId = $r->get_data()['post_id'];
+    check(get_post_meta($novaPostId, NoticeWriter::SOURCE_META, true) === 'nova', 'Nova records neutral source provenance');
+    check(get_post_meta($novaPostId, NoticeWriter::ID_META, true) === '2:' . $novaId, 'Nova records neutral external identity');
+    wp_set_object_terms($novaPostId, [$groupId], 'notice_group');
+    update_post_meta($novaPostId, 'pdf_file', ['url' => 'https://example.invalid/document.pdf', 'title' => '', 'target' => '']);
+    check(nova($payload)->get_data()['post_id'] === $novaPostId, 'Nova retry updates same notice');
+    check(wp_get_object_terms($novaPostId, 'notice_group', ['fields' => 'ids']) === [$groupId], 'Nova preserves locally assigned groups');
+    check(get_post_meta($novaPostId, 'pdf_file', true)['url'] === 'https://example.invalid/document.pdf', 'Nova preserves attached document');
     check(nova(array_replace($payload, ['type' => 1.9]))->get_status() === 400, 'Fractional Nova type rejected');
     check(nova(array_replace($payload, ['decisionDate' => []]))->get_status() === 400, 'Non-scalar Nova date rejected');
     foreach ([1 => ['Bygglov', 'Kungörelser'], 2 => ['Beslut', 'Bygglov'], 3 => ['Bygglov']] as $type => $expected) {
@@ -224,14 +222,15 @@ try {
         sort($names); sort($expected);
         check($names === $expected, 'Nova taxonomy mapping ' . $type);
     }
-    $legacyDraft = wp_insert_post(['post_type' => 'noticeboard_notice', 'post_status' => 'draft', 'post_title' => 'Archived legacy']);
-    update_post_meta($legacyDraft, '_pitea_nova_publication_id', $novaId . '-draft');
-    update_post_meta($legacyDraft, '_pitea_nova_publication_type', 2);
     $draftResponse = nova(array_replace($payload, ['id' => $novaId . '-draft']));
-    check($draftResponse->get_status() === 200 && $draftResponse->get_data()['post_id'] === $legacyDraft && get_post_status($legacyDraft) === 'publish', 'Nova updates existing drafts as the original endpoint did');
+    check($draftResponse->get_status() === 200, 'Nova creates draft-update fixture');
+    $novaDraftId = $draftResponse->get_data()['post_id'];
+    wp_update_post(['ID' => $novaDraftId, 'post_status' => 'draft']);
+    $draftResponse = nova(array_replace($payload, ['id' => $novaId . '-draft']));
+    check($draftResponse->get_status() === 200 && $draftResponse->get_data()['post_id'] === $novaDraftId && get_post_status($novaDraftId) === 'publish', 'Nova republishes its existing draft without duplicating it');
     $pastResponse = nova(array_replace($payload, ['id' => $novaId . '-past', 'publishDate' => time() - 7200, 'publishEndDate' => time() - 3600]));
-    check($pastResponse->get_status() === 200 && get_post_status($pastResponse->get_data()['post_id']) === 'publish', 'Nova stores past archive dates without changing the original publication flow');
-    Storage::saveIdentity(Storage::key('nova', '2:' . $novaId . '-draft'), 'nova', '2:' . $novaId . '-draft', $legacyDraft, 'expired');
+    check($pastResponse->get_status() === 200 && get_post_status($pastResponse->get_data()['post_id']) === 'publish', 'Nova stores past archive dates for the standard archival job');
+    Storage::saveIdentity(Storage::key('nova', '2:' . $novaId . '-draft'), 'nova', '2:' . $novaId . '-draft', $novaDraftId, 'expired');
     check(nova(array_replace($payload, ['id' => $novaId . '-draft']))->get_status() === 200, 'Generic API closed-identity rules do not alter Nova updates');
     $status = NovaPublicationEndpoint::getStatus();
     check($status['active'] && $status['owner'] === 'noticeboard', 'Shared status interface');

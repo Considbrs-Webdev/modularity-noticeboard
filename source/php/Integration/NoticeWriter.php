@@ -15,8 +15,8 @@ final class NoticeWriter
         'pdf_file' => 'field_69679b488b9c0',
     ];
 
-    /** @return array|WP_Error $legacy is internal Nova identity information, never request data. */
-    public function upsert(string $source, string $id, array $data, ?array $legacy = null)
+    /** @return array|WP_Error $nova selects the internal Nova publication mode, never request data. */
+    public function upsert(string $source, string $id, array $data, bool $nova = false)
     {
         $scopes = $data['_scopes'] ?? ['create', 'update'];
         $data = Validation::notice($data);
@@ -39,17 +39,17 @@ final class NoticeWriter
             return Validation::error('noticeboard_busy', 'Publication is busy; retry the request.', 503);
         }
         try {
-            return $this->writeLocked($key, $source, $id, $data, $legacy, $scopes);
+            return $this->writeLocked($key, $source, $id, $data, $nova, $scopes);
         } finally {
             Storage::unlock($key);
         }
     }
 
     /** @return array|WP_Error */
-    private function writeLocked(string $key, string $source, string $id, array $data, ?array $legacy, array $scopes)
+    private function writeLocked(string $key, string $source, string $id, array $data, bool $nova, array $scopes)
     {
         $row = Storage::identity($key);
-        if (!$legacy && $row && in_array($row['state'], ['withdrawn', 'expired'], true)) {
+        if (!$nova && $row && in_array($row['state'], ['withdrawn', 'expired'], true)) {
             return Validation::error('noticeboard_closed', 'This external ID is withdrawn or expired; use a new ID for a new publication.', 409);
         }
         $postId = $row ? (int) $row['post_id'] : 0;
@@ -57,24 +57,9 @@ final class NoticeWriter
         if (!in_array($creationPending ? 'create' : 'update', $scopes, true)) {
             return Validation::error('noticeboard_forbidden_scope', 'Token does not permit this publication operation.', 403);
         }
-        if ($legacy && (!$postId || !get_post($postId) || get_post_status($postId) === 'trash')) {
+        if ($nova && (!$postId || !get_post($postId) || get_post_status($postId) === 'trash')) {
             $postId = 0;
             $creationPending = true;
-        }
-        if (!$postId && $legacy) {
-            $matches = get_posts([
-                'post_type' => Posttype::NOTICE_POST_TYPE,
-                'post_status' => ['publish', 'future', 'draft', 'pending', 'private'],
-                'posts_per_page' => 2, 'fields' => 'ids', 'suppress_filters' => true,
-                'meta_query' => [
-                    ['key' => '_pitea_nova_publication_id', 'value' => $legacy['id']],
-                    ['key' => '_pitea_nova_publication_type', 'value' => $legacy['type'], 'type' => 'NUMERIC'],
-                ],
-            ]);
-            if (count($matches) > 1) {
-                return Validation::error('noticeboard_legacy_conflict', 'Multiple legacy notices match this identity; resolve them before retrying.', 409);
-            }
-            $postId = $matches ? (int) $matches[0] : 0;
         }
         $post = $postId ? get_post($postId) : null;
         if ($postId && (!$post || $post->post_type !== Posttype::NOTICE_POST_TYPE)) {
@@ -84,12 +69,12 @@ final class NoticeWriter
             && get_post_meta($postId, self::SOURCE_META, true) !== $source) {
             return Validation::error('noticeboard_owner_conflict', 'Notice ownership does not match this integration.', 409);
         }
-        if (!$legacy && $post && ($post->post_status === 'trash' || ($row && $row['state'] === 'active'
+        if (!$nova && $post && ($post->post_status === 'trash' || ($row && $row['state'] === 'active'
             && !in_array($post->post_status, ['publish', 'future'], true)))) {
             return Validation::error('noticeboard_closed', 'The notice was unpublished locally; use a new external ID.', 409);
         }
         $oldArchive = $postId ? NoticeLifecycle::archiveTimestamp($postId) : null;
-        if (!$legacy && $post && (!$row || $row['state'] === 'active') && $oldArchive !== null && $oldArchive <= time()) {
+        if (!$nova && $post && (!$row || $row['state'] === 'active') && $oldArchive !== null && $oldArchive <= time()) {
             if (!Storage::saveIdentity($key, $source, $id, $postId, 'expired')) {
                 return $this->saveError();
             }
@@ -103,7 +88,7 @@ final class NoticeWriter
         $publish = (new \DateTimeImmutable('@' . $data['publish_at']))->setTimezone(wp_timezone());
         $postData = [
             'post_type' => Posttype::NOTICE_POST_TYPE,
-            'post_status' => $legacy ? ($data['publish_at'] > time() ? 'future' : 'publish') : 'draft',
+            'post_status' => $nova ? ($data['publish_at'] > time() ? 'future' : 'publish') : 'draft',
             'post_title' => $data['title'], 'post_content' => $data['content'],
             'post_date' => $publish->format('Y-m-d H:i:s'),
             'post_date_gmt' => gmdate('Y-m-d H:i:s', $data['publish_at']),
@@ -134,7 +119,7 @@ final class NoticeWriter
             }
         }
         foreach ([Posttype::NOTICE_TAXONOMY => $data['type_ids'], Posttype::NOTICE_GROUP_TAXONOMY => $data['group_ids']] as $taxonomy => $ids) {
-            if ($legacy && $taxonomy === Posttype::NOTICE_GROUP_TAXONOMY) {
+            if ($nova && $taxonomy === Posttype::NOTICE_GROUP_TAXONOMY) {
                 continue; // Nova's existing contract does not own locally assigned groups.
             }
             $terms = wp_set_object_terms($postId, $ids, $taxonomy, false);
@@ -147,8 +132,8 @@ final class NoticeWriter
         foreach (['archive_date' => $archive ? $archive->format('Ymd') : '',
             'archive_time' => $archive ? $archive->format('H:i') : '',
             'pdf_file' => $data['document_url'] === '' ? '' : ['title' => '', 'url' => $data['document_url'], 'target' => '']] as $name => $value) {
-            if ($legacy && $name === 'pdf_file') {
-                continue; // Preserve locally attached documents during Nova updates/migration.
+            if ($nova && $name === 'pdf_file') {
+                continue; // Preserve locally attached documents during Nova updates.
             }
             if (function_exists('update_field')) {
                 update_field(self::FIELDS[$name], $value, $postId);
@@ -162,26 +147,19 @@ final class NoticeWriter
                 return $this->saveError();
             }
         }
-        if ($legacy) {
-            foreach (['_pitea_nova_publication_id' => $legacy['id'], '_pitea_nova_publication_type' => (string) $legacy['type']] as $name => $value) {
-                if (!$this->meta($postId, $name, $value)) {
-                    return $this->saveError();
-                }
-            }
-        }
         $archiveSeconds = $data['archive_at'] === null ? '' : (string) (intdiv($data['archive_at'], 60) * 60);
         if (!$this->meta($postId, '_noticeboard_archive_at', $archiveSeconds)) {
             return $this->saveError();
         }
         // Match the existing minute-resolution archive fields, conservatively rounding down.
-        $expired = !$legacy && $data['archive_at'] !== null && (intdiv($data['archive_at'], 60) * 60) <= time();
+        $expired = !$nova && $data['archive_at'] !== null && (intdiv($data['archive_at'], 60) * 60) <= time();
         $state = $expired ? 'expired' : 'active';
         if (!Storage::saveIdentity($key, $source, $id, $postId, $state)) {
             return $this->saveError();
         }
         $status = $expired ? 'draft' : ($data['publish_at'] > time() ? 'future' : 'publish');
         // Nova already saved its requested status above, matching its original flow.
-        $result = $legacy ? $postId : wp_update_post(['ID' => $postId, 'post_status' => $status], true);
+        $result = $nova ? $postId : wp_update_post(['ID' => $postId, 'post_status' => $status], true);
         if (is_wp_error($result) || !$result) {
             Storage::saveIdentity($key, $source, $id, $postId, $creationPending ? 'creating' : 'pending');
             return $this->saveError();
