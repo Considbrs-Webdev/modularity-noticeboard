@@ -5,6 +5,23 @@ All notable changes to this project are documented here in English.
 The format follows Keep a Changelog and Semantic Versioning. These first releases
 were published retroactively; the dates below are their publication dates.
 
+## [1.2.0] - 2026-10-02
+
+### Added
+
+- Administrators can permanently delete revoked publication tokens from the integrations screen, removing their credential records from the database and token list.
+- A confirmation prompt explains that deleting a token leaves published notices intact.
+- Swedish translations for token deletion controls and messages.
+
+### Security
+
+- Active tokens must be revoked before they can be deleted. The database deletion enforces this condition, including for manually submitted requests.
+- Token deletion retains published notices and durable external identities, preserving duplicate-delivery and ownership protection.
+
+### Changed
+
+- Release documentation focuses on the shared noticeboard integration functionality.
+
 ## [1.1.0] - 2026-10-02
 
 ### Added
