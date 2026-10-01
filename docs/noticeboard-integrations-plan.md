@@ -1,6 +1,14 @@
 # Noticeboard integrations implementation plan
 
-Status: planned; this branch initially contains documentation only.
+Status: implemented on the feature branch. See [the API and rollout contract](integrations.md)
+and [verification instructions](../tests/README.md). Automated integration and
+concurrency checks pass locally; paired Piteå cleanup and full staging rollout are
+separate release steps.
+
+Local verification: PHP 8.4.17 / WordPress 7.0.2; 89 integration assertions passed
+both with ACF Pro and without ACF, six-worker concurrency and lock timeout/retry
+passed, and WP-CLI dry-run/unpublish/delete archival checks passed. Composer
+validation and PHP syntax checks passed. No dependency versions were changed.
 
 ## Goal
 

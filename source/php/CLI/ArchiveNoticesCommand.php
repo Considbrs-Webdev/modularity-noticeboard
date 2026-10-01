@@ -5,6 +5,9 @@ namespace ModularityNoticeboard\CLI;
 use ModularityNoticeboard\Admin\Settings;
 use ModularityNoticeboard\Data\Posttype;
 use WP_CLI;
+use ModularityNoticeboard\Integration\NoticeWriter;
+use ModularityNoticeboard\Integration\NoticeLifecycle;
+use ModularityNoticeboard\Integration\Storage;
 
 /**
  * WP-CLI commands for managing noticeboard notices.
@@ -83,8 +86,10 @@ class ArchiveNoticesCommand
             // If archive_time is set and the archive date is today, only archive
             // once the specified time has passed in the WordPress timezone.
             if ($archiveTime && $archiveDate === $today) {
-                $archiveDt = new \DateTime($archiveDate . ' ' . $archiveTime, $timezone);
-                if ($archiveDt > new \DateTime('now', $timezone)) {
+                $imported = get_post_meta($notice->ID, NoticeWriter::SOURCE_META, true) !== '';
+                $archiveTimestamp = $imported ? NoticeLifecycle::archiveTimestamp((int) $notice->ID)
+                    : (new \DateTime($archiveDate . ' ' . $archiveTime, $timezone))->getTimestamp();
+                if ($archiveTimestamp !== null && $archiveTimestamp > $now->getTimestamp()) {
                     continue;
                 }
             }
@@ -149,6 +154,32 @@ class ArchiveNoticesCommand
      * @return bool True on success, false on failure.
      */
     private function archiveNotice($notice, $action)
+    {
+        $source = (string) get_post_meta($notice->ID, NoticeWriter::SOURCE_META, true);
+        if ($source === '') {
+            return $this->performArchive($notice, $action);
+        }
+        $id = (string) get_post_meta($notice->ID, NoticeWriter::ID_META, true);
+        $key = Storage::key($source, $id);
+        if (!Storage::lock($key)) {
+            return false;
+        }
+        try {
+            // The query may predate an API update: recheck expiration under the same lock.
+            $archive = NoticeLifecycle::archiveTimestamp((int) $notice->ID);
+            if ($archive === null || $archive > time()) {
+                return true;
+            }
+            if (!Storage::saveIdentity($key, $source, $id, (int) $notice->ID, 'expired')) {
+                return false;
+            }
+            return $this->performArchive($notice, $action);
+        } finally {
+            Storage::unlock($key);
+        }
+    }
+
+    private function performArchive($notice, $action)
     {
         if ($action === 'delete') {
             $result = wp_delete_post($notice->ID, true);

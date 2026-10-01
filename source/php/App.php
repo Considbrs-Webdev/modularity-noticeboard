@@ -19,6 +19,15 @@ class App
         // Register post types
         new Data\Posttype();
 
+        // Shared external publication integrations (schema upgrades also cover plugin updates).
+        add_action('init', [Integration\Storage::class, 'install'], 20);
+        add_action('rest_api_init', [new Integration\RestApi(), 'registerRoute']);
+        add_action('rest_api_init', [new Integration\NovaPublicationEndpoint(), 'registerRoute'], 99);
+        new Integration\Admin();
+        remove_action('publish_future_post', 'check_and_publish_future_post', 10);
+        add_action('publish_future_post', [Integration\NoticeLifecycle::class, 'scheduledPublish'], 10);
+        add_filter('application_password_is_api_request', [Integration\NovaPublicationEndpoint::class, 'applicationPasswordRequest']);
+
         // Template data
         new Data\Template();
 

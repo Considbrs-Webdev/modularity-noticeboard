@@ -41,12 +41,23 @@ The plugin provides archive display capabilities:
 - Configurable URL slug for the post type
 - Breadcrumb integration for navigation
 
+## External Publications
+
+From version 1.1.0, **Noticeboard → Integrations** provides a shared Sokigo Nova
+adapter and a general HTTPS bearer-token API for creating, updating and withdrawing
+notices. Tokens are scoped to an integration source, operations and taxonomy terms.
+The Nova adapter preserves the existing publication route and credential constants,
+and recognises existing Piteå publications without duplicating their post IDs.
+
+See [API setup, request examples and migration instructions](docs/integrations.md)
+and [isolated integration tests](tests/README.md).
+
 ## Requirements
 
-- WordPress 5.0+
+- WordPress 5.5+
 - [Modularity](https://github.com/helsingborg-stad/Modularity) plugin
 - [Advanced Custom Fields PRO](https://www.advancedcustomfields.com/pro/)
-- PHP 7.4+
+- PHP 8.2+
 
 Recommended:
 - [Municipio](https://github.com/helsingborg-stad/municipio) theme (version 6.0.0+)
