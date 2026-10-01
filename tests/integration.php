@@ -304,6 +304,23 @@ try {
     $tokens->revoke($issued['token_id']);
     check(request('PUT', 'revoked', $token, $data)->get_status() === 401, 'Revoked token rejected');
     check(is_wp_error($tokens->rotate($issued['token_id'])), 'Revoked token cannot be rotated back to active');
+    $deletionToken = $tokens->create($source . '-delete', 'Deletion test', ['create', 'update'], [$typeId], [$groupId]);
+    $deletionResponse = request('PUT', 'keep-notice', $deletionToken['token'], $data);
+    check($deletionResponse->get_status() === 201, 'Create notice before token deletion');
+    $deletionPostId = $deletionResponse->get_data()['post_id'];
+    $deletionKey = Storage::key($source . '-delete', 'keep-notice');
+    $identityBefore = Storage::identity($deletionKey);
+    check(!$tokens->deleteRevoked($deletionToken['token_id']), 'Active token cannot be permanently deleted');
+    check(permittedTerms($deletionToken['token'])->get_status() === 200, 'Failed active-token deletion preserves access');
+    $tokens->revoke($deletionToken['token_id']);
+    ob_start(); $admin->render(); $revokedHtml = ob_get_clean();
+    check(strpos($revokedHtml, 'Delete revoked token: Deletion test') !== false, 'Revoked token has deletion control');
+    check($tokens->deleteRevoked($deletionToken['token_id']), 'Revoked token can be permanently deleted');
+    check(!$wpdb->get_var($wpdb->prepare('SELECT token_id FROM ' . Storage::table('tokens') . ' WHERE token_id = %s', $deletionToken['token_id'])), 'Deleted credential removed from database');
+    check(!in_array($deletionToken['token_id'], array_column($tokens->listing(), 'token_id'), true), 'Deleted credential removed from admin listing');
+    check(permittedTerms($deletionToken['token'])->get_status() === 401, 'Deleted token remains unusable');
+    check(get_post_status($deletionPostId) === 'publish' && Storage::identity($deletionKey) === $identityBefore, 'Token deletion preserves published notice and external identity');
+    check(!$tokens->deleteRevoked($deletionToken['token_id']), 'Deleting missing token is rejected');
     echo "PASS: $checks integration assertions" . (function_exists('update_field') ? ' with ACF' : ' without ACF') . "\n";
 } catch (Throwable $error) {
     fwrite(STDERR, 'FAIL after ' . $checks . ' checks: ' . $error->getMessage() . "\n" . $error->getTraceAsString() . "\n");

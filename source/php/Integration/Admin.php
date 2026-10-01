@@ -50,12 +50,16 @@ final class Admin
             } else {
                 $result = $tokens->create($source, $label, $scopes, $types, $groups);
             }
-        } elseif (in_array($operation, ['rotate', 'revoke'], true)) {
+        } elseif (in_array($operation, ['rotate', 'revoke', 'delete'], true)) {
             $id = $this->text('token_id');
             if (!preg_match('/^[a-f0-9]{32}$/D', $id)) {
                 $result = Validation::error('noticeboard_invalid_token', __('Invalid token ID.', 'modularity-noticeboard'));
             } elseif ($operation === 'rotate') {
                 $result = $tokens->rotate($id);
+            } elseif ($operation === 'delete') {
+                if (!$tokens->deleteRevoked($id)) {
+                    $result = Validation::error('noticeboard_token_delete_failed', __('Token could not be deleted. Only revoked tokens can be deleted.', 'modularity-noticeboard'));
+                }
             } elseif (!$tokens->revoke($id)) {
                 $result = Validation::error('noticeboard_token_save_failed', __('Token could not be revoked.', 'modularity-noticeboard'), 500);
             }
@@ -200,7 +204,13 @@ final class Admin
                                             <td><?php $this->renderPolicy((string) $row['policy']); ?></td>
                                             <td>
                                                 <?php if ((int) $row['revoked']) : ?>
-                                                    <span class="nb-integration-status"><?php esc_html_e('Revoked', 'modularity-noticeboard'); ?></span>
+                                                    <div class="nb-integration-actions">
+                                                        <span class="nb-integration-status"><?php esc_html_e('Revoked', 'modularity-noticeboard'); ?></span>
+                                                        <?php $this->form('delete'); ?>
+                                                        <input type="hidden" name="token_id" value="<?php echo esc_attr($row['token_id']); ?>">
+                                                        <button type="submit" class="button button-secondary" aria-label="<?php /* translators: %s: Integration name. */ echo esc_attr(sprintf(__('Delete revoked token: %s', 'modularity-noticeboard'), $row['label'])); ?>" onclick="<?php echo esc_attr('return confirm(' . wp_json_encode(__('Permanently delete this revoked token? Published notices will not be deleted.', 'modularity-noticeboard')) . ');'); ?>"><?php esc_html_e('Delete token', 'modularity-noticeboard'); ?></button>
+                                                        </form>
+                                                    </div>
                                                 <?php else : ?>
                                                     <div class="nb-integration-actions">
                                                         <?php foreach (['rotate' => __('Rotate', 'modularity-noticeboard'), 'revoke' => __('Revoke', 'modularity-noticeboard')] as $operation => $label) : ?>

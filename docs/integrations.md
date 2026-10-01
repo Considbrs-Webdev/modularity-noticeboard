@@ -24,6 +24,10 @@ previous secret and retains the source and policy. Revocation is permanent for t
 token record. Create a replacement token if required. A request already authorised
 and executing when a token is revoked may finish.
 
+Revoked tokens can be permanently deleted from administration. Active tokens must
+be revoked first. Deleting a token removes only its credential record; published
+notices and external identities remain intact.
+
 Empty permitted-term selections allow no terms. Integrators cannot create taxonomy
 terms through the generic API. Create terms in the WordPress administration first.
 

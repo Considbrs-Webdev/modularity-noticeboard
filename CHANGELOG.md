@@ -9,7 +9,7 @@ were published retroactively; the dates below are their publication dates.
 
 ### Added
 
-- Shared Sokigo Nova integration for receiving building permit notices and decisions, preserving the existing publication route and credentials.
+- Shared Sokigo Nova integration for receiving building permit notices and decisions.
 - HTTPS publication API with revocable bearer tokens, source ownership and separate create, update and withdrawal permissions.
 - Token-scoped discovery of permitted notice types and groups through `GET /noticeboard/v1/terms`.
 - Integration administration with token creation, rotation and revocation, Nova configuration and links to API instructions.
@@ -24,7 +24,6 @@ were published retroactively; the dates below are their publication dates.
 
 - Requires PHP 8.2+, WordPress 5.5+, Modularity and ACF PRO; Municipio is recommended.
 - WordPress's native scheduled publication behavior is preserved. The existing noticeboard archival job must remain configured.
-- The Nova adapter recognises existing Piteå publication IDs. If another plugin owns the Nova endpoint, it retains ownership until that implementation is removed. The paired Piteå cleanup has not been included in this release; see `docs/integrations.md` before migrating.
 - The attached WordPress ZIP includes compiled assets and production Composer dependencies. GitHub's automatic source archives do not include these generated files.
 
 ## [1.0.0] - 2026-10-02

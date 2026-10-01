@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T23:11:53+00:00\n"
+"POT-Creation-Date: 2026-10-01T23:30:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: modularity-noticeboard\n"
@@ -326,7 +326,7 @@ msgid "Published"
 msgstr ""
 
 #: source/php/Integration/Admin.php:17
-#: source/php/Integration/Admin.php:103
+#: source/php/Integration/Admin.php:107
 msgid "Noticeboard integrations"
 msgstr ""
 
@@ -350,244 +350,263 @@ msgstr ""
 msgid "Invalid token ID."
 msgstr ""
 
-#: source/php/Integration/Admin.php:60
+#: source/php/Integration/Admin.php:61
+msgid "Token could not be deleted. Only revoked tokens can be deleted."
+msgstr ""
+
+#: source/php/Integration/Admin.php:64
 msgid "Token could not be revoked."
 msgstr ""
 
-#: source/php/Integration/Admin.php:63
+#: source/php/Integration/Admin.php:67
 msgid "Unknown operation."
 msgstr ""
 
-#: source/php/Integration/Admin.php:72
+#: source/php/Integration/Admin.php:76
 msgid "Could not save integration"
 msgstr ""
 
-#: source/php/Integration/Admin.php:75
+#: source/php/Integration/Admin.php:79
 msgid "Copy your token now"
 msgstr ""
 
-#: source/php/Integration/Admin.php:76
+#: source/php/Integration/Admin.php:80
 msgid "It will not be displayed again. Rotation invalidates the previous token immediately."
 msgstr ""
 
-#: source/php/Integration/Admin.php:77
+#: source/php/Integration/Admin.php:81
 msgid "Noticeboard token"
 msgstr ""
 
-#: source/php/Integration/Admin.php:80
+#: source/php/Integration/Admin.php:84
 msgid "Back to integrations"
 msgstr ""
 
-#: source/php/Integration/Admin.php:104
+#: source/php/Integration/Admin.php:108
 msgid "Connect external systems to publish notices on your noticeboard."
 msgstr ""
 
-#: source/php/Integration/Admin.php:108
+#: source/php/Integration/Admin.php:112
 msgid "General publication API"
 msgstr ""
 
-#: source/php/Integration/Admin.php:109
+#: source/php/Integration/Admin.php:113
 msgid "Create a token for each integration and choose which notices it can manage."
 msgstr ""
 
-#: source/php/Integration/Admin.php:112
+#: source/php/Integration/Admin.php:116
 msgid "API endpoint"
 msgstr ""
 
-#: source/php/Integration/Admin.php:114
+#: source/php/Integration/Admin.php:118
 msgid "Requests require HTTPS and a bearer token. Each external notice has a unique ID within its source."
 msgstr ""
 
-#: source/php/Integration/Admin.php:115
+#: source/php/Integration/Admin.php:119
 msgid "API documentation and request examples"
 msgstr ""
 
-#: source/php/Integration/Admin.php:122
-#: source/php/Integration/Admin.php:168
+#: source/php/Integration/Admin.php:126
+#: source/php/Integration/Admin.php:172
 msgid "Create token"
 msgstr ""
 
-#: source/php/Integration/Admin.php:123
+#: source/php/Integration/Admin.php:127
 msgid "The token is displayed once after creation. Store it securely."
 msgstr ""
 
-#: source/php/Integration/Admin.php:129
+#: source/php/Integration/Admin.php:133
 msgid "Token name"
 msgstr ""
 
-#: source/php/Integration/Admin.php:131
+#: source/php/Integration/Admin.php:135
 msgid "A name that helps you recognise the integration."
 msgstr ""
 
-#: source/php/Integration/Admin.php:135
+#: source/php/Integration/Admin.php:139
 msgid "Source identifier"
 msgstr ""
 
-#: source/php/Integration/Admin.php:137
+#: source/php/Integration/Admin.php:141
 msgid "Use a stable identifier, for example building-permits. Tokens with the same identifier manage the same notices. The identifier nova is reserved."
 msgstr ""
 
-#: source/php/Integration/Admin.php:141
-#: source/php/Integration/Admin.php:143
+#: source/php/Integration/Admin.php:145
+#: source/php/Integration/Admin.php:147
 msgid "Permissions"
 msgstr ""
 
-#: source/php/Integration/Admin.php:151
+#: source/php/Integration/Admin.php:155
 msgid "Allowed notice types"
 msgstr ""
 
-#: source/php/Integration/Admin.php:151
+#: source/php/Integration/Admin.php:155
 msgid "Allowed groups"
 msgstr ""
 
-#: source/php/Integration/Admin.php:160
+#: source/php/Integration/Admin.php:164
 msgid "No terms available. Add them to the noticeboard first."
 msgstr ""
 
-#: source/php/Integration/Admin.php:163
+#: source/php/Integration/Admin.php:167
 msgid "Only selected terms are allowed. Leave empty to allow none."
 msgstr ""
 
-#: source/php/Integration/Admin.php:175
+#: source/php/Integration/Admin.php:179
 msgid "Existing tokens"
 msgstr ""
 
-#: source/php/Integration/Admin.php:176
+#: source/php/Integration/Admin.php:180
 msgid "Rotate a token to replace its secret, or revoke it to stop access."
 msgstr ""
 
-#: source/php/Integration/Admin.php:183
+#: source/php/Integration/Admin.php:187
 msgid "No tokens yet"
 msgstr ""
 
-#: source/php/Integration/Admin.php:184
+#: source/php/Integration/Admin.php:188
 msgid "Create a token to connect your first integration."
 msgstr ""
 
-#: source/php/Integration/Admin.php:190
+#: source/php/Integration/Admin.php:194
 msgid "Integration"
 msgstr ""
 
-#: source/php/Integration/Admin.php:191
+#: source/php/Integration/Admin.php:195
 msgid "Access"
 msgstr ""
 
-#: source/php/Integration/Admin.php:192
+#: source/php/Integration/Admin.php:196
 msgid "Actions"
 msgstr ""
 
 #. translators: %s: Creation date and time in the site's timezone.
-#: source/php/Integration/Admin.php:198
+#: source/php/Integration/Admin.php:202
 msgid "Created: %s"
 msgstr ""
 
-#: source/php/Integration/Admin.php:203
+#: source/php/Integration/Admin.php:208
 msgid "Revoked"
 msgstr ""
 
-#: source/php/Integration/Admin.php:206
+#. translators: %s: Integration name.
+#: source/php/Integration/Admin.php:211
+msgid "Delete revoked token: %s"
+msgstr ""
+
+#. translators: %s: Integration name.
+#: source/php/Integration/Admin.php:211
+msgid "Permanently delete this revoked token? Published notices will not be deleted."
+msgstr ""
+
+#. translators: %s: Integration name.
+#: source/php/Integration/Admin.php:211
+msgid "Delete token"
+msgstr ""
+
+#: source/php/Integration/Admin.php:216
 msgid "Rotate"
 msgstr ""
 
-#: source/php/Integration/Admin.php:206
+#: source/php/Integration/Admin.php:216
 msgid "Revoke"
 msgstr ""
 
 #. translators: 1: Token action, 2: Integration name.
-#: source/php/Integration/Admin.php:209
+#: source/php/Integration/Admin.php:219
 msgid "%1$s token: %2$s"
 msgstr ""
 
-#: source/php/Integration/Admin.php:229
+#: source/php/Integration/Admin.php:239
 msgid "Receive building permit notices and decisions from Sokigo Nova."
 msgstr ""
 
-#: source/php/Integration/Admin.php:233
+#: source/php/Integration/Admin.php:243
 msgid "Another plugin currently handles Nova publications. This setting only controls the noticeboard integration."
 msgstr ""
 
-#: source/php/Integration/Admin.php:237
+#: source/php/Integration/Admin.php:247
 msgid "Status"
 msgstr ""
 
-#: source/php/Integration/Admin.php:238
+#: source/php/Integration/Admin.php:248
 msgid "Active"
 msgstr ""
 
-#: source/php/Integration/Admin.php:238
+#: source/php/Integration/Admin.php:248
 msgid "Inactive"
 msgstr ""
 
-#: source/php/Integration/Admin.php:239
+#: source/php/Integration/Admin.php:249
 msgid "Publication endpoint"
 msgstr ""
 
-#: source/php/Integration/Admin.php:241
+#: source/php/Integration/Admin.php:251
 msgid "Credentials configured"
 msgstr ""
 
-#: source/php/Integration/Admin.php:242
+#: source/php/Integration/Admin.php:252
 msgid "Yes"
 msgstr ""
 
-#: source/php/Integration/Admin.php:242
+#: source/php/Integration/Admin.php:252
 msgid "No"
 msgstr ""
 
-#: source/php/Integration/Admin.php:243
+#: source/php/Integration/Admin.php:253
 msgid "Define SOKIGO_NOVA_PUBLISH_USERNAME and SOKIGO_NOVA_PUBLISH_PASSWORD in WordPress configuration. Requests require HTTPS."
 msgstr ""
 
-#: source/php/Integration/Admin.php:244
+#: source/php/Integration/Admin.php:254
 msgid "Handled by"
 msgstr ""
 
-#: source/php/Integration/Admin.php:245
+#: source/php/Integration/Admin.php:255
 msgid "Noticeboard plugin"
 msgstr ""
 
-#: source/php/Integration/Admin.php:245
+#: source/php/Integration/Admin.php:255
 msgid "Another plugin"
 msgstr ""
 
-#: source/php/Integration/Admin.php:245
+#: source/php/Integration/Admin.php:255
 msgid "No active endpoint"
 msgstr ""
 
-#: source/php/Integration/Admin.php:246
+#: source/php/Integration/Admin.php:256
 msgid "Enable integration"
 msgstr ""
 
-#: source/php/Integration/Admin.php:247
+#: source/php/Integration/Admin.php:257
 msgid "Enable shared Nova adapter"
 msgstr ""
 
-#: source/php/Integration/Admin.php:249
+#: source/php/Integration/Admin.php:259
 msgid "Save Nova configuration"
 msgstr ""
 
-#: source/php/Integration/Admin.php:259
+#: source/php/Integration/Admin.php:269
 msgid "Create"
 msgstr ""
 
-#: source/php/Integration/Admin.php:259
+#: source/php/Integration/Admin.php:269
 msgid "Update"
 msgstr ""
 
-#: source/php/Integration/Admin.php:259
+#: source/php/Integration/Admin.php:269
 msgid "Withdraw"
 msgstr ""
 
-#: source/php/Integration/Admin.php:267
-#: source/php/Integration/Admin.php:274
+#: source/php/Integration/Admin.php:277
+#: source/php/Integration/Admin.php:284
 msgid "None"
 msgstr ""
 
-#: source/php/Integration/Admin.php:274
+#: source/php/Integration/Admin.php:284
 msgid "Types:"
 msgstr ""
 
-#: source/php/Integration/Admin.php:274
+#: source/php/Integration/Admin.php:284
 msgid "Groups:"
 msgstr ""
 
@@ -627,7 +646,7 @@ msgstr ""
 msgid "Token could not be saved."
 msgstr ""
 
-#: source/php/Integration/Tokens.php:73
+#: source/php/Integration/Tokens.php:80
 msgid "Active token could not be rotated."
 msgstr ""
 

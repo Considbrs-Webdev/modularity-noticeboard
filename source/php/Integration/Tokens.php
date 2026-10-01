@@ -63,6 +63,13 @@ final class Tokens
         return false !== $wpdb->update(Storage::table('tokens'), ['revoked' => 1], ['token_id' => $id]);
     }
 
+    /** Permanently remove a revoked credential without touching publications or identities. */
+    public function deleteRevoked(string $id): bool
+    {
+        global $wpdb;
+        return 1 === $wpdb->delete(Storage::table('tokens'), ['token_id' => $id, 'revoked' => 1]);
+    }
+
     /** @return array|\WP_Error Rotation replaces the secret while retaining source and policy. */
     public function rotate(string $id)
     {
