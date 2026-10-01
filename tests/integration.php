@@ -113,7 +113,7 @@ try {
     check((bool) wp_next_scheduled('publish_future_post', [$scheduledId]), 'WordPress publication event exists');
     check(request('DELETE', 'scheduled', $token)->get_status() === 200 && !wp_next_scheduled('publish_future_post', [$scheduledId]), 'Withdrawal clears future job');
     $r = request('PUT', 'near-future', $token, array_replace($data, ['publish_at' => time() + 30]));
-    check($r->get_status() === 201 && $r->get_data()['status'] === 'future', 'Publication within one minute is not premature');
+    check($r->get_status() === 201 && $r->get_data()['status'] === 'publish', 'Near-future dates follow WordPress standard minute threshold');
     request('DELETE', 'near-future', $token);
     foreach ([strtotime('2027-10-31T00:30:00Z'), strtotime('2027-10-31T01:30:00Z')] as $index => $archiveAt) {
         $r = request('PUT', 'dst-' . $index, $token, array_replace($data, ['archive_at' => $archiveAt]));
@@ -137,13 +137,30 @@ try {
     $r = request('PUT', 'local-delete', $token, $data);
     wp_delete_post($r->get_data()['post_id'], true);
     check(request('PUT', 'local-delete', $token, $data)->get_status() === 409, 'Permanent deletion not recreated');
-    // A delayed cron event must not publish after its archive deadline.
+    // Keep the native publisher and other plugins' callbacks intact.
+    check(has_action('publish_future_post', 'check_and_publish_future_post') === 10, 'Native WordPress publisher retained');
+    $observed = [];
+    $observer = static function ($id) use (&$observed) { $observed[] = $id; };
+    add_action('publish_future_post', $observer, 20);
     $r = request('PUT', 'late-cron', $token, $future);
     $lateId = $r->get_data()['post_id'];
     update_post_meta($lateId, 'archive_date', wp_date('Ymd', time() - 3600));
     update_post_meta($lateId, 'archive_time', wp_date('H:i', time() - 3600));
+    global $wpdb;
+    $wpdb->update($wpdb->posts, ['post_date_gmt' => gmdate('Y-m-d H:i:s', time() - 60)], ['ID' => $lateId]);
+    clean_post_cache($lateId);
     do_action('publish_future_post', $lateId);
-    check(get_post_status($lateId) === 'draft', 'Delayed scheduled publication blocked after expiry');
+    check(get_post_status($lateId) === 'publish', 'Imported scheduling remains WordPress standard; archival is handled by the archive job');
+    $ordinary = wp_insert_post(['post_type' => 'post', 'post_title' => 'Ordinary scheduled post', 'post_status' => 'future',
+        'post_date' => wp_date('Y-m-d H:i:s', time() + 3600), 'post_date_gmt' => gmdate('Y-m-d H:i:s', time() + 3600)]);
+    $wpdb->update($wpdb->posts, ['post_date_gmt' => gmdate('Y-m-d H:i:s', time() - 60)], ['ID' => $ordinary]);
+    clean_post_cache($ordinary);
+    do_action('publish_future_post', $ordinary);
+    check(get_post_status($ordinary) === 'publish', 'Ordinary scheduled posts retain native publication');
+    check($observed === [$lateId, $ordinary], 'Other plugin callbacks retained for all scheduled posts');
+    remove_action('publish_future_post', $observer, 20);
+    do_action('publish_future_post', $scheduledId);
+    check(get_post_status($scheduledId) === 'draft', 'Native publisher does not resurrect a withdrawn draft');
     // Inject metadata failure and confirm a retry completes the same unpublished draft.
     $fail = static function ($value, $objectId, $key) { return $key === 'archive_date' ? false : $value; };
     add_filter('update_post_metadata', $fail, 10, 3);
@@ -182,7 +199,12 @@ try {
     $legacyDraft = wp_insert_post(['post_type' => 'noticeboard_notice', 'post_status' => 'draft', 'post_title' => 'Archived legacy']);
     update_post_meta($legacyDraft, '_pitea_nova_publication_id', $novaId . '-draft');
     update_post_meta($legacyDraft, '_pitea_nova_publication_type', 2);
-    check(nova(array_replace($payload, ['id' => $novaId . '-draft']))->get_status() === 409, 'Archived legacy draft not resurrected');
+    $draftResponse = nova(array_replace($payload, ['id' => $novaId . '-draft']));
+    check($draftResponse->get_status() === 200 && $draftResponse->get_data()['post_id'] === $legacyDraft && get_post_status($legacyDraft) === 'publish', 'Nova updates existing drafts as the original endpoint did');
+    $pastResponse = nova(array_replace($payload, ['id' => $novaId . '-past', 'publishDate' => time() - 7200, 'publishEndDate' => time() - 3600]));
+    check($pastResponse->get_status() === 200 && get_post_status($pastResponse->get_data()['post_id']) === 'publish', 'Nova stores past archive dates without changing the original publication flow');
+    Storage::saveIdentity(Storage::key('nova', '2:' . $novaId . '-draft'), 'nova', '2:' . $novaId . '-draft', $legacyDraft, 'expired');
+    check(nova(array_replace($payload, ['id' => $novaId . '-draft']))->get_status() === 200, 'Generic API closed-identity rules do not alter Nova updates');
     $status = NovaPublicationEndpoint::getStatus();
     check($status['active'] && $status['owner'] === 'noticeboard', 'Shared status interface');
     update_option(NovaPublicationEndpoint::ENABLED_OPTION, '0');

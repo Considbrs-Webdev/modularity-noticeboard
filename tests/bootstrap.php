@@ -37,8 +37,4 @@ if ($testAcfPath) {
 (new ModularityNoticeboard\Data\Posttype())->register_taxonomy();
 ModularityNoticeboard\Integration\Storage::install();
 update_option('timezone_string', 'Europe/Stockholm');
-add_action('rest_api_init', [new ModularityNoticeboard\Integration\RestApi(), 'registerRoute']);
-add_action('rest_api_init', [new ModularityNoticeboard\Integration\NovaPublicationEndpoint(), 'registerRoute'], 99);
-remove_action('publish_future_post', 'check_and_publish_future_post', 10);
-add_action('publish_future_post', [ModularityNoticeboard\Integration\NoticeLifecycle::class, 'scheduledPublish'], 10);
-add_filter('application_password_is_api_request', [ModularityNoticeboard\Integration\NovaPublicationEndpoint::class, 'applicationPasswordRequest']);
+(new ModularityNoticeboard\Integration\Hooks())->register();

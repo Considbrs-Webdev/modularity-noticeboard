@@ -49,7 +49,7 @@ final class NoticeWriter
     private function writeLocked(string $key, string $source, string $id, array $data, ?array $legacy, array $scopes)
     {
         $row = Storage::identity($key);
-        if ($row && in_array($row['state'], ['withdrawn', 'expired'], true)) {
+        if (!$legacy && $row && in_array($row['state'], ['withdrawn', 'expired'], true)) {
             return Validation::error('noticeboard_closed', 'This external ID is withdrawn or expired; use a new ID for a new publication.', 409);
         }
         $postId = $row ? (int) $row['post_id'] : 0;
@@ -57,10 +57,14 @@ final class NoticeWriter
         if (!in_array($creationPending ? 'create' : 'update', $scopes, true)) {
             return Validation::error('noticeboard_forbidden_scope', 'Token does not permit this publication operation.', 403);
         }
-        if (!$row && $legacy) {
+        if ($legacy && (!$postId || !get_post($postId) || get_post_status($postId) === 'trash')) {
+            $postId = 0;
+            $creationPending = true;
+        }
+        if (!$postId && $legacy) {
             $matches = get_posts([
                 'post_type' => Posttype::NOTICE_POST_TYPE,
-                'post_status' => ['publish', 'future', 'draft', 'pending', 'private', 'trash'],
+                'post_status' => ['publish', 'future', 'draft', 'pending', 'private'],
                 'posts_per_page' => 2, 'fields' => 'ids', 'suppress_filters' => true,
                 'meta_query' => [
                     ['key' => '_pitea_nova_publication_id', 'value' => $legacy['id']],
@@ -80,16 +84,12 @@ final class NoticeWriter
             && get_post_meta($postId, self::SOURCE_META, true) !== $source) {
             return Validation::error('noticeboard_owner_conflict', 'Notice ownership does not match this integration.', 409);
         }
-        if ($post && ($post->post_status === 'trash' || ($row && $row['state'] === 'active'
+        if (!$legacy && $post && ($post->post_status === 'trash' || ($row && $row['state'] === 'active'
             && !in_array($post->post_status, ['publish', 'future'], true)))) {
             return Validation::error('noticeboard_closed', 'The notice was unpublished locally; use a new external ID.', 409);
         }
-        // Legacy archived drafts must never be re-published by a retry.
-        if ($post && !$row && !in_array($post->post_status, ['publish', 'future'], true)) {
-            return Validation::error('noticeboard_closed', 'The legacy notice is not active; resolve it manually.', 409);
-        }
         $oldArchive = $postId ? NoticeLifecycle::archiveTimestamp($postId) : null;
-        if ($post && (!$row || $row['state'] === 'active') && $oldArchive !== null && $oldArchive <= time()) {
+        if (!$legacy && $post && (!$row || $row['state'] === 'active') && $oldArchive !== null && $oldArchive <= time()) {
             if (!Storage::saveIdentity($key, $source, $id, $postId, 'expired')) {
                 return $this->saveError();
             }
@@ -102,7 +102,8 @@ final class NoticeWriter
         $created = !$postId;
         $publish = (new \DateTimeImmutable('@' . $data['publish_at']))->setTimezone(wp_timezone());
         $postData = [
-            'post_type' => Posttype::NOTICE_POST_TYPE, 'post_status' => 'draft',
+            'post_type' => Posttype::NOTICE_POST_TYPE,
+            'post_status' => $legacy ? ($data['publish_at'] > time() ? 'future' : 'publish') : 'draft',
             'post_title' => $data['title'], 'post_content' => $data['content'],
             'post_date' => $publish->format('Y-m-d H:i:s'),
             'post_date_gmt' => gmdate('Y-m-d H:i:s', $data['publish_at']),
@@ -173,26 +174,14 @@ final class NoticeWriter
             return $this->saveError();
         }
         // Match the existing minute-resolution archive fields, conservatively rounding down.
-        $expired = $data['archive_at'] !== null && (intdiv($data['archive_at'], 60) * 60) <= time();
+        $expired = !$legacy && $data['archive_at'] !== null && (intdiv($data['archive_at'], 60) * 60) <= time();
         $state = $expired ? 'expired' : 'active';
         if (!Storage::saveIdentity($key, $source, $id, $postId, $state)) {
             return $this->saveError();
         }
         $status = $expired ? 'draft' : ($data['publish_at'] > time() ? 'future' : 'publish');
-        // Core normally converts future dates less than a minute away to immediate
-        // publication. Preserve the external system's requested instant instead.
-        $keepFuture = static function ($postData, $postarr) use ($postId, $status) {
-            if ($status === 'future' && (int) ($postarr['ID'] ?? 0) === $postId) {
-                $postData['post_status'] = 'future';
-            }
-            return $postData;
-        };
-        add_filter('wp_insert_post_data', $keepFuture, PHP_INT_MAX, 2);
-        try {
-            $result = wp_update_post(['ID' => $postId, 'post_status' => $status], true);
-        } finally {
-            remove_filter('wp_insert_post_data', $keepFuture, PHP_INT_MAX);
-        }
+        // Nova already saved its requested status above, matching its original flow.
+        $result = $legacy ? $postId : wp_update_post(['ID' => $postId, 'post_status' => $status], true);
         if (is_wp_error($result) || !$result) {
             Storage::saveIdentity($key, $source, $id, $postId, $creationPending ? 'creating' : 'pending');
             return $this->saveError();
@@ -235,6 +224,6 @@ final class NoticeWriter
 
     private function saveError(): WP_Error
     {
-        return Validation::error('noticeboard_save_failed', 'Publication could not be saved completely; retry or contact the administrator. Incomplete writes remain unpublished.', 500);
+        return Validation::error('noticeboard_save_failed', 'Publication could not be saved completely; inspect the notice and retry or contact the administrator.', 500);
     }
 }

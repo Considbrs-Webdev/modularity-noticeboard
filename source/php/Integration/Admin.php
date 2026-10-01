@@ -6,12 +6,6 @@ final class Admin
 {
     public const PAGE = 'noticeboard-integrations';
 
-    public function __construct()
-    {
-        add_action('admin_menu', [$this, 'menu']);
-        add_action('admin_post_noticeboard_integrations', [$this, 'save']);
-    }
-
     public static function url(): string
     {
         return admin_url('edit.php?post_type=noticeboard_notice&page=' . self::PAGE);

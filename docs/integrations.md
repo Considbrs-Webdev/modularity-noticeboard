@@ -83,7 +83,10 @@ guarantee that it is publicly readable. Scheduled notices rely on WordPress cron
 Archive metadata has minute resolution, so `archive_at` is rounded down to a minute
 in the WordPress timezone. The imported Unix instant is also retained to disambiguate
 the repeated hour when daylight saving ends. Already-expired deliveries remain unpublished and their
-identity is closed. A delayed scheduling job also refuses to publish after expiry.
+identity is closed for the generic API. Scheduled publication uses WordPress's
+native handler, including its minute threshold for near-future dates. No global
+publication callback is removed or replaced. Expiration of scheduled/public notices
+is handled by the configured archival job; run it at the interval your policy needs.
 
 Sequential and simultaneous retries of an active identity update the same post.
 The `create`/`update` scope is checked under the identity lock. A failed write returns
@@ -93,7 +96,7 @@ Third-party hooks and abrupt process termination can leave an incomplete draft;
 inspect drafts after an interrupted request. Database writes are not a distributed
 transaction with plugins' side effects.
 
-An identity that was withdrawn, expired, locally unpublished, trashed, or permanently
+A generic API identity that was withdrawn, expired, locally unpublished, trashed, or permanently
 deleted cannot be republished by a PUT: expect `409` and use a new ID for a genuinely
 new publication. Locally changing imported content while API jobs run is not supported.
 
@@ -158,7 +161,10 @@ The shared adapter owns title/content, publication dates, archive metadata and n
 types; it preserves locally attached documents and groups. Existing
 `_pitea_nova_publication_id/type` metadata is recognised on the first delivery and
 retained alongside neutral provenance for rollback. Multiple matching legacy posts
-return `409`, including matches in trash. Archived legacy drafts are not resurrected.
+return `409`. As in the original endpoint, draft/pending/private notices can be
+updated and republished, while trash is excluded from legacy lookup. Nova stores
+archive dates and leaves archival to the existing job; the generic API's closed-ID
+and already-expired-delivery rules do not change Nova's publication behaviour.
 Old stored `_pitea_nova_publication_payload` values are left untouched for an explicit
 retention decision; they are never copied to new metadata.
 

@@ -5,10 +5,13 @@ and [verification instructions](../tests/README.md). Automated integration and
 concurrency checks pass locally; paired Piteå cleanup and full staging rollout are
 separate release steps.
 
-Local verification: PHP 8.4.17 / WordPress 7.0.2; 89 integration assertions passed
-both with ACF Pro and without ACF, six-worker concurrency and lock timeout/retry
-passed, and WP-CLI dry-run/unpublish/delete archival checks passed. Composer
-validation and PHP syntax checks passed. No dependency versions were changed.
+Implementation adjustment: integration hooks are centralised in `Integration/Hooks`.
+WordPress retains its native scheduled-publication callback and status handling.
+Nova keeps its original draft-update/publication lifecycle; generic API identity
+and withdrawal rules are scoped to the generic API. Archival remains the plugin's
+existing configured job. Local verification: 95 integration checks pass with and without ACF, including native
+publication and preservation of third-party callbacks. Concurrency, archival
+dry-run/unpublish/delete, PHP syntax checks and Composer validation pass.
 
 ## Goal
 
@@ -28,8 +31,9 @@ Clients must be able to use the integration without installing Piteå-specific c
 - Ensure sequential retries and concurrent deliveries do not create duplicate
   notices; choose and document an atomic identity/locking mechanism before coding.
 - Define ownership of imported fields, handling of local edits, and behaviour for
-  archived, trashed, withdrawn, and already-expired publications. Expired notices
-  must not briefly become public. Retries must not undo an explicit withdrawal.
+  archived, trashed, withdrawn, and already-expired generic API publications.
+  Already-expired generic API deliveries must not briefly become public; Nova
+  retains its original publication flow and the existing archival job. Retries must not undo an explicit withdrawal.
 - Reuse noticeboard scheduling and archival settings. Document the required
   WordPress scheduling and existing `wp noticeboard archive` job setup.
 - Return actionable errors for failed post, taxonomy, or metadata writes and define
