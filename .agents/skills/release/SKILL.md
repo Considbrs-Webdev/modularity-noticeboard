@@ -58,9 +58,9 @@ Create `CHANGELOG.md` on the first release if absent. Use Keep a Changelog style
 `Deprecated`, `Removed` or `Security` sections. Use the user's timezone for the
 release date. Describe observable behavior and migration requirements, rather
 than listing internal classes or copying commit messages. Preserve prior entries.
-Include installation or rollout requirements that affect this release; for the
-initial Nova extraction, consult `docs/integrations.md` and verify the paired
-Piteå cleanup before claiming migration is complete.
+Include installation or rollout requirements that affect this release; consult
+`docs/integrations.md` and verify endpoint ownership and configuration on staging
+before claiming an integration rollout is complete.
 
 ## Validation and packaging
 

@@ -57,6 +57,6 @@ Syntax validation:
 find source/php/Integration tests -name '*.php' -exec php -l {} \;
 ```
 
-Before release, additionally test the full plugin and paired Piteå cleanup in staging,
+Before release, additionally test the full plugin and endpoint ownership in staging,
 including the actual server's Authorization forwarding, TLS proxy configuration,
 scheduled publication, archival CLI job and settings navigation.

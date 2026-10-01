@@ -239,7 +239,7 @@ try {
     $disabled = nova($payload);
     check($disabled->get_status() === 401, 'Disabled Nova rejects request even with existing route: ' . wp_json_encode($disabled->get_data()));
     update_option(NovaPublicationEndpoint::ENABLED_OPTION, '1');
-    // Simulate old Piteå registration. Shared adapter must leave the old callback intact.
+    // Simulate another route owner. Shared adapter must leave its callback intact.
     $GLOBALS['wp_rest_server'] = null;
     $legacyRoute = static function (): void {
         register_rest_route('nova/v1', '/publish', ['methods' => 'POST', 'callback' => '__return_true', 'permission_callback' => '__return_true']);

@@ -47,7 +47,7 @@ From version 1.1.0, **Noticeboard → Integrations** provides a shared Sokigo No
 adapter and a general HTTPS bearer-token API for creating, updating and withdrawing
 notices. Tokens are scoped to an integration source, operations and taxonomy terms.
 The Nova adapter preserves the existing publication route and credential constants,
-and recognises existing Piteå publications without duplicating their post IDs.
+and uses durable external identities to avoid duplicate publications.
 
 See [API setup, request examples and migration instructions](docs/integrations.md)
 and [isolated integration tests](tests/README.md).

@@ -186,21 +186,17 @@ dates are integral Unix seconds. IDs and decision numbers may also be integers.
 Empty optional date strings are ignored. The end date must follow publication.
 Unknown vendor fields are ignored, but raw payloads are not newly retained.
 
-The shared adapter owns title/content, publication dates, archive metadata and notice
-types; it preserves locally attached documents and groups. Existing
-`_pitea_nova_publication_id/type` metadata is recognised on the first delivery and
-retained alongside neutral provenance for rollback. Multiple matching legacy posts
-return `409`. As in the original endpoint, draft/pending/private notices can be
-updated and republished, while trash is excluded from legacy lookup. Nova stores
-archive dates and leaves archival to the existing job; the generic API's closed-ID
-and already-expired-delivery rules do not change Nova's publication behaviour.
-Old stored `_pitea_nova_publication_payload` values are left untouched for an explicit
-retention decision; they are never copied to new metadata.
+The adapter owns title/content, publication dates, archive metadata and notice
+types; it preserves locally attached documents and groups. Deliveries are tracked
+by a durable external identity so retries update the same notice. Draft, pending
+and private notices can be updated and republished. Nova stores archive dates and
+leaves archival to the existing job; the generic API's closed-ID and
+already-expired-delivery rules do not change Nova's publication behaviour.
 
-Shared registration runs after legacy registration and does not override an existing
-Nova route. While the old Piteå plugin owns it, its original behaviour continues;
-the shared enable switch only controls this plugin's adapter. Disabling the shared
-switch does not disable another plugin's endpoint.
+Registration runs after other plugins and does not override an existing Nova
+route. When another plugin owns the route, its behaviour continues; the enable
+switch only controls this plugin's adapter. Disabling it does not disable another
+plugin's endpoint.
 
 ### Client customisation interface
 
@@ -232,14 +228,13 @@ add_filter('Modularity/Noticeboard/Nova/Content', function ($html, $payload) {
 ## Rollout, storage and rollback
 
 1. Back up the database and configuration. Validate credentials, representative
-   Nova types, timezones, existing publications and actual archival jobs on staging.
-2. Deploy noticeboard 1.1.0 first. The old Piteå route retains ownership, avoiding two
-   competing callbacks. Generic API tokens can be configured independently.
-3. Deploy the paired Piteå cleanup that removes its Nova route registration/class and
-   reads shared status from its existing panel. The shared adapter takes over on the
-   next request without an endpoint URL or credential change.
-4. Verify route owner `noticeboard`, retry an existing Nova publication and confirm
-   its post ID, content, taxonomy, publication date and ACF archive date/time.
+   Nova types, timezones, publications and actual archival jobs on staging.
+2. Deploy the noticeboard plugin and configure the integrations you need. Generic
+   API tokens can be configured independently of the Nova adapter.
+3. Check the Nova route owner. If another plugin registers the same endpoint,
+   coordinate its removal or disablement before enabling this adapter as the owner.
+4. Verify route owner `noticeboard` and test repeated deliveries. Confirm post IDs,
+   content, taxonomy, publication dates and ACF archive dates/times.
 5. Configure WordPress scheduling and the existing `wp noticeboard archive` command.
    Run archival at the interval your publication policy needs, not just daily when
    minute-level deadlines matter. The CLI and API share locks for imported notices.
@@ -250,16 +245,16 @@ permissions. Identities and withdrawal records persist even when archival delete
 post, preventing retry resurrection. Do not delete those tables as routine cleanup.
 No full incoming payload or plaintext token is added to logs/storage by this plugin.
 
-For rollback, restore the legacy Piteå route owner before downgrading the shared
-plugin; retain legacy metadata. The old implementation does not enforce shared
-withdrawal/expiry tombstones or generic token policies, so pause incoming deliveries
-and review affected notices before rolling back. Generic integrations must remain
-paused if the shared API is unavailable. Do not deploy Piteå removal alone.
+For rollback, pause incoming deliveries and back up integration tables before
+changing plugin versions or endpoint ownership. Review affected notices and the
+capabilities of the version being restored; older implementations may not enforce
+withdrawal records or token policies. Keep generic integrations paused until a
+compatible API is available. Do not remove integration tables during rollback.
 
 ## Verification
 
 See [the isolated test instructions](../tests/README.md). Automated checks cover
 validation, authentication/scopes, source isolation, token rotation/revocation,
-retry/withdraw semantics, expiry, Nova migration/mappings, settings output, injected
+retry/withdraw semantics, expiry, Nova mappings, settings output, injected
 metadata failure, and actual concurrent PHP processes. Staging verification of the
-paired Piteå deployment and the production cron/proxy setup remains a release step.
+full plugin, endpoint ownership and production cron/proxy setup remains a release step.

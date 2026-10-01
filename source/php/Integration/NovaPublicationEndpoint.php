@@ -49,7 +49,7 @@ final class NovaPublicationEndpoint
 
     public function registerRoute(): void
     {
-        // Priority 99 lets the old Piteå plugin retain ownership until its cleanup ships.
+        // Priority 99 lets an existing route owner register before this adapter.
         $routes = rest_get_server()->get_routes();
         if (!self::isConfigured() || !self::isEnabled()
             || isset($routes['/' . self::REST_NAMESPACE . self::REST_ROUTE])) {
