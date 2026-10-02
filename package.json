@@ -1,6 +1,6 @@
 {
     "name": "@considbrs-webdev/modularity-noticeboard",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "A Modularity module that implements a municipal digital noticeboard for publishing legally binding public notices—meeting summons, agendas, adjusted minutes and decisions—replacing the physical noticeboard, managing appeal deadlines under municipal law, and providing accessible, auditable, and integratable publication workflows.",
     "main": "",
     "repository": {

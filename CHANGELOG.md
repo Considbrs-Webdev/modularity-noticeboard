@@ -5,6 +5,28 @@ All notable changes to this project are documented here in English.
 The format follows Keep a Changelog and Semantic Versioning. These first releases
 were published retroactively; the dates below are their publication dates.
 
+## [1.2.1] - 2026-10-02
+
+### Security
+
+- Publication tokens must permit at least one notice type, and every notice published through the general API must carry at least one permitted type. Previously a token could publish untyped notices, which appear on unfiltered noticeboards regardless of the token's type restrictions.
+
+### Fixed
+
+- Updating a published notice through the general API no longer takes it offline while the update is written, and no longer fires publication hooks again. New notices are still staged as drafts until complete.
+- External IDs in plain-permalink requests (`?rest_route=`) are no longer URL-decoded twice.
+- The integration schema marker is autoloaded, avoiding an extra database query on every request.
+
+### Changed
+
+- `type_ids` is required on `PUT /noticeboard/v1/notices/{external_id}` and must contain at least one permitted notice type ID. Requests without one return `400`.
+- Existing tokens without a permitted notice type can no longer publish. Revoke them and create replacements with at least one type.
+- Integration documentation clarifies that source ownership, not term policy, governs which tokens may update or withdraw existing notices.
+
+### Removed
+
+- Nova deliveries no longer adopt notices created by an earlier standalone Nova plugin through its legacy metadata.
+
 ## [1.2.0] - 2026-10-02
 
 ### Added
