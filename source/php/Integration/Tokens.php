@@ -12,6 +12,9 @@ final class Tokens
             || array_diff($scopes, ['create', 'update', 'withdraw'])) {
             return Validation::error('noticeboard_invalid_token_policy', __('Use a source slug other than nova, a label, and at least one valid scope.', 'modularity-noticeboard'));
         }
+        if (!$typeIds) {
+            return Validation::error('noticeboard_invalid_token_policy', __('Select at least one permitted notice type.', 'modularity-noticeboard'));
+        }
         foreach (['noticeboard_notice_type' => $typeIds, 'notice_group' => $groupIds] as $taxonomy => $ids) {
             foreach ($ids as $id) {
                 if (!is_int($id) || $id <= 0 || !term_exists($id, $taxonomy)) {

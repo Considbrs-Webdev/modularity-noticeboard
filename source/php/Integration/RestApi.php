@@ -88,14 +88,17 @@ final class RestApi
         if (is_wp_error($data)) {
             return $data;
         }
+        // A notice type is required, so the type policy limits every notice a token can publish.
+        if (!$data['type_ids']) {
+            return Validation::error('noticeboard_missing_type', 'type_ids must contain at least one permitted notice type ID.');
+        }
         foreach (['type_ids', 'group_ids'] as $field) {
             if (array_diff($data[$field], $auth['policy'][$field])) {
                 return Validation::error('noticeboard_forbidden_terms', 'Token does not permit the requested taxonomy terms.', 403);
             }
         }
         // The writer checks scope inside the identity lock, avoiding create/update races.
-        $data['_scopes'] = $auth['policy']['scopes'];
-        $result = (new NoticeWriter())->upsert($auth['source'], $id, $data);
+        $result = (new NoticeWriter())->upsert($auth['source'], $id, $data, $auth['policy']['scopes']);
         return is_wp_error($result) ? $result : new WP_REST_Response(['success' => true] + $result, $result['created'] ? 201 : 200);
     }
 
@@ -116,11 +119,26 @@ final class RestApi
         return is_wp_error($result) ? $result : new WP_REST_Response($result, 200);
     }
 
+    private function routeFromQuery(WP_REST_Request $request): bool
+    {
+        // WordPress reads rest_route from POST, then GET, before permalink matches.
+        foreach ([$_POST, $_GET] as $input) {
+            if (isset($input['rest_route']) && is_string($input['rest_route'])) {
+                return untrailingslashit(wp_unslash($input['rest_route'])) === untrailingslashit($request->get_route());
+            }
+        }
+        return false;
+    }
+
     private function id(WP_REST_Request $request)
     {
         // URL params must win over JSON/query params; decode exactly once.
         $params = $request->get_url_params();
-        $id = rawurldecode((string) ($params['external_id'] ?? ''));
+        $id = (string) ($params['external_id'] ?? '');
+        // Pretty permalinks pass the route still percent-encoded; ?rest_route= is already decoded by PHP.
+        if (!$this->routeFromQuery($request)) {
+            $id = rawurldecode($id);
+        }
         return Validation::externalId($id) ? $id : Validation::error('noticeboard_invalid_id', 'External ID must be 1–200 bytes, without whitespace, slashes, markup, or control characters.');
     }
 }

@@ -160,7 +160,7 @@ final class NovaPublicationEndpoint
             $ids[] = (int) (is_array($term) ? $term['term_id'] : $term);
         }
         $valid['type_ids'] = array_values(array_unique($ids));
-        $result = (new NoticeWriter())->upsert('nova', $type . ':' . $id, $valid, true);
+        $result = (new NoticeWriter())->upsert('nova', $type . ':' . $id, $valid, ['create', 'update'], true);
         return is_wp_error($result) ? $result : new WP_REST_Response(['success' => true, 'post_id' => $result['post_id']], 200);
     }
 

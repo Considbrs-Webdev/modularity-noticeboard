@@ -17,7 +17,7 @@ $data = ['title' => 'Archival test notice', 'content' => 'Body', 'publish_at' =>
 $command = new ArchiveNoticesCommand();
 foreach (['unpublish', 'delete'] as $action) {
     update_field('field_697a69b88e075', $action, Settings::OPTION_PAGE_SLUG);
-    $result = $writer->upsert($source, $action, $data);
+    $result = $writer->upsert($source, $action, $data, ['create', 'update']);
     if (is_wp_error($result)) {
         throw new RuntimeException('Could not create archival fixture');
     }
@@ -37,7 +37,7 @@ foreach (['unpublish', 'delete'] as $action) {
     if (Storage::identity(Storage::key($source, $action))['state'] !== 'expired') {
         throw new RuntimeException('Archival identity not closed');
     }
-    $retry = $writer->upsert($source, $action, $data);
+    $retry = $writer->upsert($source, $action, $data, ['create', 'update']);
     if (!is_wp_error($retry) || $retry->get_error_data()['status'] !== 409) {
         throw new RuntimeException('Retry recreated an archived notice');
     }

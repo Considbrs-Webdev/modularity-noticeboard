@@ -5,7 +5,8 @@ namespace ModularityNoticeboard\Integration;
 /** Durable identities/tombstones and credentials. Tables are per WordPress site. */
 final class Storage
 {
-    private const VERSION = '1';
+    // Version 2 only re-saves the schema marker as autoloaded, avoiding a query per request.
+    private const VERSION = '2';
 
     public static function table(string $suffix): string
     {
@@ -43,7 +44,7 @@ final class Storage
         ) $charset;");
         if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($identities))) === $identities
             && $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($tokens))) === $tokens) {
-            update_option('noticeboard_integration_schema', self::VERSION, false);
+            update_option('noticeboard_integration_schema', self::VERSION, true);
         }
     }
 

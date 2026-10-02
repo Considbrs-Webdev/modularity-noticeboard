@@ -65,8 +65,9 @@ try {
     $_SERVER['HTTPS'] = 'off';
     check(permittedTerms($token)->get_status() === 403, 'Discovery requires HTTPS');
     $_SERVER['HTTPS'] = 'on';
-    $emptyToken = $tokens->create($source . '-empty', 'Empty discovery policy', ['create'], [], []);
-    check(permittedTerms($emptyToken['token'])->get_data() === ['notice_types' => [], 'groups' => []], 'Empty discovery policy exposes no terms');
+    check(is_wp_error($tokens->create($source . '-untyped', 'Untyped policy', ['create'], [], [])), 'Token policy requires a notice type');
+    $emptyToken = $tokens->create($source . '-empty', 'Empty group policy', ['create'], [$typeId], []);
+    check(permittedTerms($emptyToken['token'])->get_data()['groups'] === [], 'Empty group policy exposes no groups');
     $tokens->revoke($emptyToken['token_id']);
     check(permittedTerms($emptyToken['token'])->get_status() === 401, 'Discovery rejects revoked tokens');
     $deletedTerm = wp_insert_term($source . '-deleted', 'noticeboard_notice_type');
@@ -90,19 +91,61 @@ try {
     check(wp_get_object_terms($postId, 'noticeboard_notice_type', ['fields' => 'ids']) === [$typeId], 'Notice type saved');
     $r = request('PUT', 'case-1', $token, $data);
     check($r->get_status() === 200 && $r->get_data()['post_id'] === $postId, 'Retry preserves post ID');
-    $r = request('PUT', 'case-1', $token, array_diff_key($data, array_flip(['archive_at', 'document_url', 'type_ids', 'group_ids'])));
+    $r = request('PUT', 'case-1', $token, array_diff_key($data, array_flip(['archive_at', 'document_url', 'group_ids'])));
     check($r->get_status() === 200 && get_post_meta($postId, 'archive_date', true) === '', 'PUT clears omitted optional fields');
-    check(wp_get_object_terms($postId, 'noticeboard_notice_type', ['fields' => 'ids']) === [], 'PUT clears taxonomy');
+    check(wp_get_object_terms($postId, 'notice_group', ['fields' => 'ids']) === [], 'PUT clears omitted groups');
+    check(request('PUT', 'case-1', $token, array_diff_key($data, ['type_ids' => true]))->get_status() === 400, 'Omitted notice type rejected');
+    request('PUT', 'case-1', $token, $data);
     check(request('PUT', 'bad-token', 'invalid', $data)->get_status() === 401, 'Invalid token rejected');
     $_SERVER['HTTPS'] = 'off';
     check(request('PUT', 'insecure', $token, $data)->get_status() === 403, 'HTTP rejected');
     $_SERVER['HTTPS'] = 'on';
-    foreach ([['publish_at' => 1.5], ['title' => []], ['archive_at' => $data['publish_at']], ['document_url' => 'javascript:alert(1)'], ['type_ids' => ['1']], ['type_ids' => null], ['document_url' => null], ['source' => 'nova']] as $change) {
+    foreach ([['publish_at' => 1.5], ['title' => []], ['archive_at' => $data['publish_at']], ['document_url' => 'javascript:alert(1)'], ['type_ids' => ['1']], ['type_ids' => null], ['type_ids' => []], ['document_url' => null], ['source' => 'nova']] as $change) {
         check(request('PUT', 'invalid', $token, array_replace($data, $change))->get_status() === 400, 'Malformed field rejected: ' . key($change));
     }
     check(request('PUT', 'invalid', $token, array_replace($data, ['type_ids' => [$typeId + 999999]]))->get_status() === 403, 'Unpermitted term rejected');
     check(request('PUT', 'bad/id', $token, $data)->get_status() === 400, 'Encoded slash rejected');
     check(request('PUT', 'bad id', $token, $data)->get_status() === 400, 'Encoded whitespace rejected');
+    $r = request('PUT', "O'Brien+50%", $token, $data);
+    check($r->get_status() === 201 && get_post_meta($r->get_data()['post_id'], NoticeWriter::ID_META, true) === "O'Brien+50%", 'Permalink-encoded ID decoded once');
+    // Plain permalinks: PHP has already decoded ?rest_route=, so the ID must not be decoded again.
+    $_GET['rest_route'] = '/noticeboard/v1/notices/query%41';
+    $r = new WP_REST_Request('PUT', $_GET['rest_route']);
+    $r->set_header('authorization', 'Bearer ' . $token);
+    $r->set_header('content-type', 'application/json');
+    $r->set_body(wp_json_encode($data));
+    check(rest_get_server()->dispatch($r)->get_status() === 400, 'Query-string route ID not decoded twice');
+    unset($_GET['rest_route']);
+    // Updates must not take a public notice offline or replay its publication.
+    $liveId = request('PUT', 'live-update', $token, $data)->get_data()['post_id'];
+    $statuses = [];
+    $republished = 0;
+    $watchStatus = static function ($check, $objectId, $key) use (&$statuses, $liveId) {
+        if ((int) $objectId === $liveId && $key === 'archive_date') {
+            clean_post_cache($liveId);
+            $statuses[] = get_post_status($liveId);
+        }
+        return $check;
+    };
+    $watchPublish = static function ($new, $old, $post) use (&$republished, $liveId) {
+        if ($post->ID === $liveId && $new === 'publish' && $old !== 'publish') {
+            ++$republished;
+        }
+    };
+    add_filter('update_post_metadata', $watchStatus, 5, 3);
+    add_action('transition_post_status', $watchPublish, 10, 3);
+    $r = request('PUT', 'live-update', $token, array_replace($data, ['title' => 'Updated live notice']));
+    remove_filter('update_post_metadata', $watchStatus, 5);
+    remove_action('transition_post_status', $watchPublish, 10);
+    check($r->get_status() === 200 && get_the_title($liveId) === 'Updated live notice', 'Live notice updated');
+    check($statuses && array_unique($statuses) === ['publish'] && $republished === 0, 'Update keeps notice public without republishing it');
+    $failUpdate = static function ($value, $objectId, $key) { return $key === 'archive_date' ? false : $value; };
+    add_filter('update_post_metadata', $failUpdate, 10, 3);
+    $changedArchive = array_replace($data, ['archive_at' => $data['archive_at'] + 2 * DAY_IN_SECONDS]);
+    $failed = request('PUT', 'live-update', $token, $changedArchive); clean_post_cache($liveId);
+    check($failed->get_status() === 500 && get_post_status($liveId) === 'publish', 'Failed update leaves notice public');
+    remove_filter('update_post_metadata', $failUpdate, 10);
+    check(request('PUT', 'live-update', $token, $changedArchive)->get_status() === 200 && get_post_status($liveId) === 'publish', 'Failed update can be retried');
     $r = new WP_REST_Request('PUT', '/noticeboard/v1/notices/array');
     $r->set_header('authorization', 'Bearer ' . $token);
     $r->set_header('content-type', 'application/json');

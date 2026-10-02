@@ -164,7 +164,9 @@ final class Admin
                                                 <p class="description"><?php esc_html_e('No terms available. Add them to the noticeboard first.', 'modularity-noticeboard'); ?></p>
                                             <?php endif; ?>
                                         </fieldset>
-                                        <p class="description"><?php esc_html_e('Only selected terms are allowed. Leave empty to allow none.', 'modularity-noticeboard'); ?></p>
+                                        <p class="description"><?php echo esc_html($field === 'type_ids'
+                                            ? __('Select at least one. Every notice must have at least one of the selected types.', 'modularity-noticeboard')
+                                            : __('Only selected terms are allowed. Leave empty to allow none.', 'modularity-noticeboard')); ?></p>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

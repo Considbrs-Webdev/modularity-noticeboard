@@ -15,8 +15,10 @@ Create a token with a stable source slug (for example `building-permits`), label
 scopes (`create`, `update`, `withdraw`), and permitted notice type/group IDs.
 Sources are lowercase ASCII slugs, at most 64 characters; `nova` is reserved.
 Tokens with the same source share notice ownership, which is useful during a
-planned rotation or for multiple workers of one integration. Assign a different
-source to each independent integrator.
+planned rotation or for multiple workers of one integration. Ownership is the
+boundary for existing notices: any same-source token with the matching scope can
+update or withdraw them, whatever terms they carry. Permitted terms limit only which
+terms a token may assign. Assign a different source to each independent integrator.
 
 Copy the token from the one-time result page. Only its SHA-256 secret hash is stored;
 the secret is generated from 32 random bytes. Rotation immediately invalidates the
@@ -28,8 +30,12 @@ Revoked tokens can be permanently deleted from administration. Active tokens mus
 be revoked first. Deleting a token removes only its credential record; published
 notices and external identities remain intact.
 
-Empty permitted-term selections allow no terms. Integrators cannot create taxonomy
-terms through the generic API. Create terms in the WordPress administration first.
+Every token must permit at least one notice type, and every published notice must
+carry at least one permitted type, so the type selection limits what a token can
+publish. An empty group selection allows no groups. Integrators cannot create
+taxonomy terms through the generic API. Create terms in the WordPress
+administration first. Tokens created before 1.2.1 without a permitted notice type
+can no longer publish; revoke them and create replacements.
 
 ## General API
 
@@ -86,10 +92,11 @@ fields are cleared. Local edits to those fields are overwritten by the next PUT.
 | `publish_at` | Yes | Positive integral Unix seconds (integer or digit string), through year 9999 |
 | `archive_at` | No | Integral Unix seconds after `publish_at`, or `null` |
 | `document_url` | No | HTTP(S) URL up to 2048 bytes, or empty string |
-| `type_ids` | No | Array of up to 50 permitted integer notice type IDs |
+| `type_ids` | Yes | Array of 1–50 permitted integer notice type IDs |
 | `group_ids` | No | Array of up to 50 permitted integer group IDs |
 
-The route ID always comes from the URL path, never a query/body override. Neither a
+The route ID always comes from the URL path, never a query/body override. With
+plain permalinks, URL-encode the ID once inside the `rest_route` query value. Neither a
 WordPress post ID nor integration source is accepted in the body.
 
 ```bash
@@ -118,11 +125,12 @@ publication callback is removed or replaced. Expiration of scheduled/public noti
 is handled by the configured archival job; run it at the interval your policy needs.
 
 Sequential and simultaneous retries of an active identity update the same post.
-The `create`/`update` scope is checked under the identity lock. A failed write returns
-an error and keeps its draft for recovery; retry the complete PUT to finish it.
-Updates temporarily stage the notice as a draft while the replacement is written.
-Third-party hooks and abrupt process termination can leave an incomplete draft;
-inspect drafts after an interrupted request. Database writes are not a distributed
+The `create`/`update` scope is checked under the identity lock. A new notice is staged as a draft until every field is written; if
+creation fails, the draft is kept for recovery. Updates keep the notice's current
+status, so a public notice stays online and is not republished. A failed update
+returns an error and may leave the notice partly updated but still public; retry the
+complete PUT to finish it. Third-party hooks and abrupt process termination can
+leave incomplete notices; inspect them after an interrupted request. Database writes are not a distributed
 transaction with plugins' side effects.
 
 A generic API identity that was withdrawn, expired, locally unpublished, trashed, or permanently
@@ -158,7 +166,7 @@ Errors use WordPress REST shape: `{"code":"...","message":"...","data":{"status"
 | 400 | Invalid JSON, unsupported field, invalid data/ID/term | Correct the request |
 | 401 | Invalid/revoked token or Nova credentials | Correct credentials |
 | 403 | HTTPS, scope, or term policy violation | Correct URL or token policy |
-| 409 | Closed/removed identity or ambiguous legacy match | Resolve locally or use a new publication ID |
+| 409 | Closed or removed identity | Resolve locally or use a new publication ID |
 | 413 | Valid JSON request exceeds 256 KiB | Reduce request size |
 | 500 | Save/mapping failure | Retry same identity; contact administrator if persistent |
 | 503 | Busy identity or unavailable noticeboard | Retry with backoff |

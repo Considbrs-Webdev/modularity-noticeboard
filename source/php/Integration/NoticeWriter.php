@@ -15,10 +15,12 @@ final class NoticeWriter
         'pdf_file' => 'field_69679b488b9c0',
     ];
 
-    /** @return array|WP_Error $nova selects the internal Nova publication mode, never request data. */
-    public function upsert(string $source, string $id, array $data, bool $nova = false)
+    /**
+     * @param string[] $scopes Permitted operations; callers must pass them explicitly.
+     * @return array|WP_Error $nova selects the internal Nova publication mode, never request data.
+     */
+    public function upsert(string $source, string $id, array $data, array $scopes, bool $nova = false)
     {
-        $scopes = $data['_scopes'] ?? ['create', 'update'];
         $data = Validation::notice($data);
         if (is_wp_error($data)) {
             return $data;
@@ -88,11 +90,17 @@ final class NoticeWriter
         $publish = (new \DateTimeImmutable('@' . $data['publish_at']))->setTimezone(wp_timezone());
         $postData = [
             'post_type' => Posttype::NOTICE_POST_TYPE,
-            'post_status' => $nova ? ($data['publish_at'] > time() ? 'future' : 'publish') : 'draft',
             'post_title' => $data['title'], 'post_content' => $data['content'],
             'post_date' => $publish->format('Y-m-d H:i:s'),
             'post_date_gmt' => gmdate('Y-m-d H:i:s', $data['publish_at']),
         ];
+        if ($nova) {
+            $postData['post_status'] = $data['publish_at'] > time() ? 'future' : 'publish';
+        } elseif ($created) {
+            // Stage new notices as drafts until every field is written.
+            $postData['post_status'] = 'draft';
+        }
+        // Existing generic notices keep their status, so updates never take a public notice offline.
         if ($postId) {
             // Record pending before changing an active notice, so failed writes can be retried.
             if (!Storage::saveIdentity($key, $source, $id, $postId, $creationPending ? 'creating' : 'pending')) {
@@ -159,7 +167,8 @@ final class NoticeWriter
         }
         $status = $expired ? 'draft' : ($data['publish_at'] > time() ? 'future' : 'publish');
         // Nova already saved its requested status above, matching its original flow.
-        $result = $nova ? $postId : wp_update_post(['ID' => $postId, 'post_status' => $status], true);
+        $result = $nova || get_post_status($postId) === $status ? $postId
+            : wp_update_post(['ID' => $postId, 'post_status' => $status], true);
         if (is_wp_error($result) || !$result) {
             Storage::saveIdentity($key, $source, $id, $postId, $creationPending ? 'creating' : 'pending');
             return $this->saveError();

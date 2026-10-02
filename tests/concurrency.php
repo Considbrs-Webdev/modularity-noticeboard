@@ -29,11 +29,13 @@ function finishWorker(array $worker): array
 }
 try {
     $source = 'concurrent-' . bin2hex(random_bytes(4));
-    $issued = (new Tokens())->create($source, 'Concurrent test', ['create', 'update', 'withdraw'], [], []);
+    $type = wp_insert_term($source, 'noticeboard_notice_type');
+    $issued = is_wp_error($type) ? $type : (new Tokens())->create($source, 'Concurrent test', ['create', 'update', 'withdraw'], [(int) $type['term_id']], []);
     if (is_wp_error($issued)) {
         throw new RuntimeException('Could not issue test token');
     }
-    $data = ['title' => 'Concurrent notice', 'content' => 'Body', 'publish_at' => time() - 300, 'archive_at' => time() + 86400];
+    $data = ['title' => 'Concurrent notice', 'content' => 'Body', 'publish_at' => time() - 300, 'archive_at' => time() + 86400,
+        'type_ids' => [(int) $type['term_id']]];
     $workers = [];
     for ($i = 0; $i < 6; ++$i) {
         $workers[] = startWorker('PUT', 'same-id', $issued['token'], $data);
