@@ -19,6 +19,7 @@ class App
         // Register post types
         new Data\Posttype();
 
+        // External integration
         (new Integration\Hooks())->register();
 
         // Template data
