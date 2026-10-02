@@ -183,48 +183,54 @@ wp noticeboard list --format=json
 wp noticeboard list --format=csv
 ```
 
-## Automatic Archival (Cron Job)
+## Scheduled Tasks (Cron)
 
-To automatically archive notices when their archive date passes, you need to set up a system cron job. The plugin does **not** automatically archive notices on its own—you must configure a scheduled task.
+The plugin does **not** archive notices on its own, and scheduled publication
+depends on WordPress cron. Configure both tasks below as system cron jobs on the
+server, running as the web server user.
 
-### Setting Up the Cron Job
+### Archival
 
-Add a cron job to run the archive command daily (or at your preferred interval):
+`wp noticeboard archive` unpublishes or deletes notices whose archive date and time
+have passed, according to the configured archival action. A notice stays public
+until the next run after its archive time, so the run interval is the maximum
+delay before a notice is archived. Choose it from how promptly notices must be
+removed; archive times have minute resolution.
 
 ```bash
-# Edit your crontab
+# Edit the web server user's crontab
 crontab -e
 
-# Add this line to run archival daily at 1:00 AM
-0 1 * * * cd /path/to/wordpress && wp noticeboard archive --path=/path/to/wordpress
+# Archive expired notices every 5 minutes. Adjust */5 to your required interval.
+*/5 * * * * cd /path/to/wordpress && flock -n /tmp/noticeboard-archive.lock wp noticeboard archive --quiet
 ```
 
-Replace `/path/to/wordpress` with the actual path to your WordPress installation.
+Replace `/path/to/wordpress` with the WordPress installation path. `flock`
+prevents a slow run from overlapping the next one.
 
-### Alternative: Using WP-Cron
+On multisite, the command only runs for the site given by `--url`. Add one line per
+site that uses the noticeboard, with its own lock file:
 
-If you prefer using WordPress's built-in scheduling, you can create a custom plugin or add to your theme's `functions.php`:
-
-```php
-// Schedule the archival check
-add_action('init', function() {
-    if (!wp_next_scheduled('noticeboard_archive_notices')) {
-        wp_schedule_event(time(), 'daily', 'noticeboard_archive_notices');
-    }
-});
-
-// Run the archival
-add_action('noticeboard_archive_notices', function() {
-    if (class_exists('WP_CLI')) {
-        return; // Skip if running via WP-CLI
-    }
-    
-    // Manually trigger archival logic here or use:
-    // shell_exec('wp noticeboard archive --path=' . ABSPATH);
-});
+```bash
+*/5 * * * * cd /path/to/wordpress && flock -n /tmp/noticeboard-archive-example.lock wp noticeboard archive --url=https://example.se/ --quiet
 ```
 
-**Note:** System cron is more reliable than WP-Cron for time-sensitive operations like legal notice archival.
+Test the command with `--dry-run` before enabling the job.
+
+### Scheduled publication
+
+Notices with a future publication date, including those delivered through the
+integrations, are published by WordPress cron. If `DISABLE_WP_CRON` is set, which is
+recommended for predictable timing, run due events from system cron. Skip this if
+the server already runs WordPress cron for the site.
+
+```bash
+# Single site
+*/5 * * * * cd /path/to/wordpress && wp cron event run --due-now --quiet
+
+# Multisite: run due events for every site
+*/5 * * * * cd /path/to/wordpress && wp site list --field=url | xargs -I{} wp cron event run --due-now --url={} --quiet
+```
 
 ## License
 
