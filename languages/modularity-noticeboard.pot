@@ -674,14 +674,6 @@ msgstr ""
 msgid "To noticeboard"
 msgstr ""
 
-#: views/partials/notice-meta.blade.php:22
-msgid "Anslagsdatum"
-msgstr ""
-
-#: views/partials/notice-meta.blade.php:30
-msgid "Nedtagningsdatum"
-msgstr ""
-
 #: source/php/AcfFields/php/notice-general-settings.php:90
 msgid "Log integration requests"
 msgstr ""

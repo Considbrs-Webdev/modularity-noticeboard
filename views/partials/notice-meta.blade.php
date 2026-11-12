@@ -19,7 +19,7 @@
         <dl class="c-notice-single__dates u-margin__top--2 u-margin__bottom--0">
             @if (!empty($noticePublishDateFormatted))
                 <div class="c-notice-single__date-row">
-                    <dt class="c-notice-single__term">{{ __('Anslagsdatum', 'modularity-noticeboard') }}:</dt>
+                    <dt class="c-notice-single__term">{{ __('Published', 'modularity-noticeboard') }}:</dt>
                     <dd class="c-notice-single__desc">
                         <time datetime="{{ $noticePublishDateIso ?? '' }}">{{ $noticePublishDateFormatted }}</time>
                     </dd>
@@ -27,7 +27,7 @@
             @endif
             @if (!empty($noticeTakeDownDateFormatted))
                 <div class="c-notice-single__date-row">
-                    <dt class="c-notice-single__term">{{ __('Nedtagningsdatum', 'modularity-noticeboard') }}:</dt>
+                    <dt class="c-notice-single__term">{{ __('Archive date', 'modularity-noticeboard') }}:</dt>
                     <dd class="c-notice-single__desc">
                         @if (!empty($noticeTakeDownDateIso))
                             <time datetime="{{ $noticeTakeDownDateIso }}">{{ $noticeTakeDownDateFormatted }}</time>

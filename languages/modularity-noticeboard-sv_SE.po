@@ -167,7 +167,7 @@ msgstr "Nedtagningsdatum"
 
 #: source/php/AcfFields/php/notice-settings.php:59
 msgid "Archive time"
-msgstr ""
+msgstr "Nedtagningstid"
 
 #: source/php/AcfFields/php/notice-settings.php:77
 msgid "Protocol / PDF"
@@ -730,14 +730,6 @@ msgstr "Visa meddelanden från anslagstavlan"
 #: source/php/Module/Noticeboard.php:66
 msgid "To noticeboard"
 msgstr "Till anslagstavlan"
-
-#: views/partials/notice-meta.blade.php:22
-msgid "Anslagsdatum"
-msgstr ""
-
-#: views/partials/notice-meta.blade.php:30
-msgid "Nedtagningsdatum"
-msgstr ""
 
 #~ msgid "Use specific page for noticeboard"
 #~ msgstr "Använd särskild sida för anslagstavlan"
