@@ -670,27 +670,27 @@ msgstr "Grupper:"
 
 #: source/php/Integration/NovaPublicationEndpoint.php:174
 msgid "Case ID"
-msgstr ""
+msgstr "Ärendenummer"
 
 #: source/php/Integration/NovaPublicationEndpoint.php:174
 msgid "Estate"
-msgstr ""
+msgstr "Fastighet"
 
 #: source/php/Integration/NovaPublicationEndpoint.php:175
 msgid "Decision"
-msgstr ""
+msgstr "Beslut"
 
 #: source/php/Integration/NovaPublicationEndpoint.php:175
 msgid "Decision number"
-msgstr ""
+msgstr "Beslutsnummer"
 
 #: source/php/Integration/NovaPublicationEndpoint.php:176
 msgid "Decision date"
-msgstr ""
+msgstr "Beslutsdatum"
 
 #: source/php/Integration/NovaPublicationEndpoint.php:176
 msgid "Response date"
-msgstr ""
+msgstr "Svarsdatum"
 
 #: source/php/Integration/Tokens.php:13
 msgid ""
