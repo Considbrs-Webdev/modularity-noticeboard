@@ -251,7 +251,13 @@ Schema upgrades run on `init` and create two per-site tables with your WordPress
 prefix: `noticeboard_identities` and `noticeboard_tokens`. DB user needs table/schema
 permissions. Identities and withdrawal records persist even when archival deletes a
 post, preventing retry resurrection. Do not delete those tables as routine cleanup.
-No full incoming payload or plaintext token is added to logs/storage by this plugin.
+By default no incoming payload or plaintext token is added to logs/storage by this plugin.
+For troubleshooting, enable *Log integration requests* in the Noticeboard settings. Requests
+to the general API and the Nova endpoint (method, route, IP, selected headers, full payload,
+response status and error) are then written as JSON lines to
+`uploads/noticeboard-logs/integrations-<hash>.log` (protected with `.htaccess`; on nginx deny
+that directory in the server config; rotated at 5 MB). `Authorization` headers are never
+logged, but payloads may contain personal data, so switch logging off when done.
 
 For rollback, pause incoming deliveries and back up integration tables before
 changing plugin versions or endpoint ownership. Review affected notices and the

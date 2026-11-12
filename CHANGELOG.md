@@ -5,6 +5,12 @@ All notable changes to this project are documented here in English.
 The format follows Keep a Changelog and Semantic Versioning. These first releases
 were published retroactively; the dates below are their publication dates.
 
+## [Unreleased]
+
+### Added
+
+- Optional request logging for the integration endpoints, enabled with a checkbox in the Noticeboard settings. Requests, payloads and responses are written to a protected, rotated log file in the uploads folder; credentials are never logged.
+
 ## [1.2.1] - 2026-10-02
 
 ### Security

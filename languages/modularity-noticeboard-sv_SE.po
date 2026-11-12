@@ -759,3 +759,11 @@ msgstr ""
 
 #~ msgid "Notices"
 #~ msgstr "Notiser"
+
+#: source/php/AcfFields/php/notice-general-settings.php:90
+msgid "Log integration requests"
+msgstr "Logga integrationsanrop"
+
+#: source/php/AcfFields/php/notice-general-settings.php:93
+msgid "Logs incoming requests to the integration endpoints (including payloads, but never credentials) to a protected file in the uploads folder (uploads/noticeboard-logs). Turn on while troubleshooting and off again afterwards, since payloads may contain personal data."
+msgstr "Loggar inkommande anrop till integrationernas endpoints (inklusive payload, men aldrig inloggningsuppgifter) till en skyddad fil i uploads-mappen (uploads/noticeboard-logs). Slå på vid felsökning och stäng av igen efteråt, eftersom payloads kan innehålla personuppgifter."

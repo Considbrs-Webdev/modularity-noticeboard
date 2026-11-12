@@ -681,3 +681,11 @@ msgstr ""
 #: views/partials/notice-meta.blade.php:30
 msgid "Nedtagningsdatum"
 msgstr ""
+
+#: source/php/AcfFields/php/notice-general-settings.php:90
+msgid "Log integration requests"
+msgstr ""
+
+#: source/php/AcfFields/php/notice-general-settings.php:93
+msgid "Logs incoming requests to the integration endpoints (including payloads, but never credentials) to a protected file in the uploads folder (uploads/noticeboard-logs). Turn on while troubleshooting and off again afterwards, since payloads may contain personal data."
+msgstr ""

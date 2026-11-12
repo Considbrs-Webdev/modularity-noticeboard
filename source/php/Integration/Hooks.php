@@ -8,6 +8,7 @@ final class Hooks
     public function register(): void
     {
         add_action('init', [Storage::class, 'install'], 20);
+        (new RequestLogger())->register();
         add_action('rest_api_init', [new RestApi(), 'registerRoute']);
         add_action('rest_api_init', [new NovaPublicationEndpoint(), 'registerRoute'], 99);
         add_filter('application_password_is_api_request', [NovaPublicationEndpoint::class, 'applicationPasswordRequest']);

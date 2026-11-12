@@ -93,6 +93,27 @@ if (function_exists('acf_add_local_field_group')) {
                 'allow_custom' => 0,
                 'search_placeholder' => '',
             ),
+            3 => array(
+                'key' => 'field_6a0c1d4e5f001',
+                'label' => __('Log integration requests', 'modularity-noticeboard'),
+                'name' => 'enable_request_logging',
+                'aria-label' => '',
+                'type' => 'true_false',
+                'instructions' => __('Logs incoming requests to the integration endpoints (including payloads, but never credentials) to a protected file in the uploads folder (uploads/noticeboard-logs). Turn on while troubleshooting and off again afterwards, since payloads may contain personal data.', 'modularity-noticeboard'),
+                'required' => 0,
+                'conditional_logic' => 0,
+                'wrapper' => array(
+                    'width' => '',
+                    'class' => '',
+                    'id' => '',
+                ),
+                'message' => '',
+                'default_value' => 0,
+                'allow_in_bindings' => 0,
+                'ui_on_text' => '',
+                'ui_off_text' => '',
+                'ui' => 1,
+            ),
         ),
         'location' => array(
             0 => array(
