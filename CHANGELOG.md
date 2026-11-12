@@ -5,11 +5,15 @@ All notable changes to this project are documented here in English.
 The format follows Keep a Changelog and Semantic Versioning. These first releases
 were published retroactively; the dates below are their publication dates.
 
-## [Unreleased]
+## [1.3.0] - 2026-11-12
 
 ### Added
 
-- Optional request logging for the integration endpoints, enabled with a checkbox in the Noticeboard settings. Requests, payloads and responses are written to a protected, rotated log file in the uploads folder; credentials are never logged.
+- Optional request logging for the integration endpoints, enabled with a checkbox in the Noticeboard settings. Requests, payloads and responses are written to a protected, rotated log file in the uploads folder; credentials are never logged. Logging is off by default; payloads may contain personal data, so turn it off after troubleshooting.
+
+### Changed
+
+- The integration documentation now describes the archival and scheduled publication cron jobs and the request log.
 
 ## [1.2.1] - 2026-10-02
 
